@@ -1,0 +1,16 @@
+{
+    "BaseUrl":  "https://wtt-api-dev.azurewebsites.net/api/",
+    "SapBaseUrl":  "https://ds4.westpharma.net:44303",
+    "AuthenTokenScope":  "http://DS4CLNT200/user_impersonation",
+    "ServiceBaseUrl":  "https://ds4.westpharma.net:44303/sap/opu/odata/SAP/ZMYSAP_LOGON_SRV",
+    "AuthTokenUrl":  "https://login.microsoftonline.com/61a70d37-ff63-45e3-bb68-f0edbf718ffd/oauth2/token",
+    "AuthTokenRedirectUrl":  "https://ds4.westpharma.net:44303/sap/opu/odata/SAP/ZMYSAP_LOGON_SRV",
+    "TokenEndpointUrl":  "https://login.microsoftonline.com/61a70d37-ff63-45e3-bb68-f0edbf718ffd/oauth2/v2.0/authorize?response_type=code\u0026redirect_url={0}\u0026scope={1}\u0026state=anystate\u0026client_id={2}",
+    "GraphAPIResourceUrl":  "https://graph.microsoft.com/v1.0",
+    "ApiResource":  "api://b36a83e6-42b1-493f-99d5-2a4206045812",
+    "ClientId":  "cac78be3-00a2-4c2c-b9e0-af008b4a1fad",
+    "ClientSecret":  "IdJLVd1.WLOm]E/8R:PwYm9QcCcm6sWB",
+    "DevopsPatToken":  "gyjxtbcmbqzwi5lrsbvpuwjgugyhbc3undq76ezo7c6oglbynnuq",
+    "TimeoutSeconds":  "15",
+    "RetryCount":  "2"
+}
