@@ -1,0 +1,655 @@
+﻿@model WAS.Application.Features.Notification.CreateView.Response
+@{
+    ViewData["Title"] = "Notification";
+    var templateContent = new WAS.Application.Features.Template.GetAll.Response();
+}
+
+@if (Model.Templates != null && Model.TemplateCategories != null && Model.Templates.Any() && Model.TemplateCategories.Any())
+{
+    templateContent.Templates = Model.Templates;
+    templateContent.TemplateCategories = Model.TemplateCategories;
+}
+<link href="~/was/css/Notification/createNotification.css" rel="stylesheet" />
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-8">
+                    <h1 class="m-0 text-dark"> Notification </h1>
+                </div><!-- /.col -->
+                <div class="col-sm-4">
+
+                </div><!-- /.col -->
+
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <div class="content was_notification_create">
+        <div class="container">
+            <div class="row">
+
+                <!-- /.col-md-6 -->
+
+                <div class="col-lg-3">
+                    <div class="card Was_template_select shadow">
+                        <div class="card-header template_open">
+                            <h3 class="card-title">
+                                Templates
+                            </h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body mobile_empty">
+                            <div class="container">
+                                <div class="row" id="idTemplateParent">
+                                    @{
+                                        await Html.RenderPartialAsync("_TemplateContent", @templateContent);
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+
+                <div class="col-lg-9">
+                    <div class="card NewDesignWAS shadow">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                Create Notification
+                            </h3>
+                            <img class="float-right" title="Reset Form" id="idRefreshNotification" src="/was/img/form_reset.svg" width="23" alt="reset Icon" />
+                        </div>
+                        <!-- /.card-header -->
+                        <form action="/WAS/Notification/Create" method="post">
+                            <div class="card-body">
+                                <input type="hidden" value="" id="idCreatedTimeZone" name="CreatedTimeZone" />
+                                <input type="hidden" value="" id="idCreatedEventName" name="NewEventName" />
+                                <input type="hidden" value=@ViewBag.groupId id="groupselected" />
+                                <div class="QuesforNotification"><span class="classQuestionNumber">1</span><span class="ques-list-new">What type of Notification is this ?</span></div>
+                                <div class="row">
+                                    <div class="col-12 tile-text">
+                                        <div class="radio-toolbar">
+                                            <input type="radio" id="NotificationRadio" name="Name" value="Notification" checked>
+                                            <label class="shadow mr-3" for="NotificationRadio"><i class="fas fa-envelope" aria-hidden="true"></i> <p> Notification </p></label>
+
+                                            <input type="radio" id="ReadRadio" name="Name" value="Read Confirmation">
+                                            <label class="shadow" for="ReadRadio" title="A followup message will be sent to ask user to respond for the notification"><i class="fas fa-check-circle" aria-hidden="true"></i><p> Read Confirmation </p></label>
+
+                                            <input type="radio" id="SurveyRadio" name="r1" value="survey" class="DN">
+                                            <label for="SurveyRadio" class="classDisable DN"><i class="fas fa-poll-h" aria-hidden="true"></i><p> Survey </p></label>
+
+                                            <input type="radio" id="ConferenceRadio" name="r1" value="conference" class="DN">
+                                            <label for="ConferenceRadio" class="classDisable DN"><i class="fas fa-users" aria-hidden="true"></i><p> Conference </p></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="QuesforNotification mt-3"><span class="classQuestionNumber">2</span><span class="ques-list-new">What type of publishing is this ?</span></div>
+                                <div class="row">
+                                    <div class="col-12 tile-text">
+                                        <div class="check-toolbar">
+                                            <input type="checkbox" id="TextCheckbox" name="IsText" class="classNotificationType">
+                                            <label class="shadow mr-3" for="TextCheckbox"><i class="fas fa-sms" aria-hidden="true"></i><p> SMS </p></label>
+
+                                            <input type="checkbox" id="VoiceCheckbox" name="IsVoice" class="classNotificationType">
+                                            <label class="shadow mr-3" for="VoiceCheckbox"><i class="fas fa-microphone-alt" aria-hidden="true"></i><p> Voice </p></label>
+
+                                            <input type="checkbox" id="EmailCheckbox" name="IsEmail" class="classNotificationType">
+                                            <label class="shadow mr-3" for="EmailCheckbox"><i class="fas fa-envelope-open-text" aria-hidden="true"></i><p> Email </p></label>
+
+                                            <input type="checkbox" id="WhatsappCheckbox" name="IsWhatsapp" onclick="WhatsappCheckboxClicked()" class="classNotificationType">
+                                            <label class="shadow" for="WhatsappCheckbox"><i class="fab fa-whatsapp-square" aria-hidden="true"></i><p> Whatsapp </p></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 colParentForToggle">
+                                        <div class="QuesforNotification mt-3 mb-2">
+                                            <span class="classQuestionNumber">3</span><span class="ques-list-new">What message do you want to Send?</span>
+                                            <div class="EmailSignatureDiv ml-auto">
+                                                <input type="hidden" value="" id="idNotificationWithSignature" name="IsSignatureRequired" />
+                                                <img class="mr-2 float-left float-md-none" src="/was/img/signature_icon_WAS.svg" width="25" alt="" title="Include my name as sender" />
+                                                <label class="switch_toggle_Custom classShowDeleteGroups float-md-right mb-0 mt-1" for="idIsSignatureRequired">
+                                                    <input type="checkbox" id="idIsSignatureRequired">
+                                                    <div class="slider_Custom_list round"></div>
+                                                </label>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card card-primary card-outline card-outline-tabs">
+                                            <div class="card-header p-0 border-bottom-0">
+                                                <ul class="nav nav-tabs" id="TabList" role="tablist">
+                                                    <li class="nav-item">
+                                                        <a class="nav-link active" id="TextTab" data-toggle="pill" href="#TextTabContent" role="tab" aria-controls="TextTabContent" aria-selected="true">SMS</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" id="VoiceTab" data-toggle="pill" href="#VoiceTabContent" role="tab" aria-controls="VoiceTabContent" aria-selected="false">Voice</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" id="EmailTab" data-toggle="pill" href="#EmailTabContent" role="tab" aria-controls="EmailTabContent" aria-selected="false">Email</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" id="WhatsAppTab" data-toggle="pill" href="#WhatsAppTabContent" role="tab" aria-controls="WhatsAppTabContent" aria-selected="false">WhatsApp</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="tab-content" id="TabContent">
+                                                    <div class="tab-pane fade publishTabContent show active" id="TextTabContent" role="tabpanel" aria-labelledby="TextTab">
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <!-- textarea -->
+                                                                <div class="form-group">
+                                                                    <label>Text Message</label>
+                                                                    <textarea class="form-control notificationContentClass" rows="3" maxlength="500" placeholder="Enter ..." name="MessageText" id="MessageText" onchange="SMSModified()"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <p> <span id="remaining">160</span> <span id="smsValidTxt">Characters remaining</span> <strong>[<span id="messages">1</span> text Message(s)]</strong></p>
+                                                        <p> <span id="totalSmsRemaining">500</span> Characters remaining</p>
+                                                    </div>
+                                                    <div class="tab-pane fade publishTabContent" id="VoiceTabContent" role="tabpanel" aria-labelledby="VoiceTab">
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <!-- textarea -->
+                                                                <div class="form-group">
+                                                                    <label>Voice Message</label>
+                                                                    <textarea class="form-control notificationContentClass" maxlength="500" rows="3" placeholder="Enter ..." name="VoiceMessage" id="VoiceMessage" onchange="VoiceModified()"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label>Message Repeat Count</label>
+                                                                    <input type="number" class="form-control" value="1" placeholder="1" name="VoiceRepeatCount" id="idVoiceRepeatCount" onkeydown="return (event.keyCode!=13);">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <p> <span id="voiceEnteredChar">500</span> Characters remaining</p>
+                                                    </div>
+                                                    <div class="tab-pane fade publishTabContent" id="EmailTabContent" role="tabpanel" aria-labelledby="EmailTab">
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label>Subject</label>
+                                                                    <input type="text" class="form-control" maxlength="100" placeholder="Enter Subject" value="Notification from West Alert System" name="EmailSubject" id="idEmailSubject">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Email Message</label>
+                                                                    <textarea class="form-control notificationContentClass" rows="3" placeholder="Enter ..." name="EmailBody" id="EmailBody" onchange="EmailModified()"></textarea>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>File input</label>
+                                                                    <div class="input-group control-fluid">
+                                                                        <div class="col-lg-12 control-section">
+                                                                            <div class="control_wrapper">
+                                                                                <ejs-uploader id="EmailAttachment" removing="onFileRemove" maxFileSize="Convert.ToDouble(@Model.FileProperties.FileSize)" allowedExtensions="@Model.FileProperties.FileType" dropArea=".control-fluid">
+                                                                                </ejs-uploader>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" id="idSelectedAttachmentText">
+                                                                    <label>Attachment pre-Loaded from Template,kindly Select required Attachment</label>
+                                                                </div>
+                                                                <div class="form-group" id="idAdditionalAttachments">
+                                                                </div>
+                                                                <div class="form-group" id="idselectedEmailAttachments">
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <p> <span id="emailEnteredChar">0</span> Characters entered</p>
+                                                    </div>
+                                                    <div class="tab-pane fade publishTabContent" id="WhatsAppTabContent" role="tabpanel" aria-labelledby="WhatsAppTab">
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <!-- textarea -->
+                                                                <div class="form-group">
+                                                                    <select class="form-control" name="WhatsAppTemplate" id="WhatsAppTemplate">
+                                                                        @if (Model.WhatsAppTemplates != null)
+                                                                        {
+                                                                            <option value="">Select Template</option>
+
+                                                                            foreach (var item in @Model.WhatsAppTemplates)
+                                                                            {
+                                                                                <option value="@item.Id">@item.Name</option>
+                                                                            }
+                                                                        }
+                                                                    </select>
+                                                                    <label class="mt-2">WhatsApp Message</label>
+                                                                    <textarea class="form-control notificationContentClass" rows="3" maxlength="500" placeholder="Enter ..." name="WhatsAppMessage" id="WhatsAppMessage" onchange="WhatsappModified()"></textarea>
+                                                                    <input type="hidden" id="templateDescription" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <p> <span id="whatsappremainingchars">500</span> Characters remaining </p>
+                                                        <div id="previewMessage" style="display:none">
+                                                            <label>WhatsApp Message Preview</label>
+                                                            <p style="color:darkorange" id="whatsappfinalmessage"></p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="validateAfterWarning small_warning">
+                                                        <i class="fas fa-exclamation" aria-hidden="true"></i>
+                                                        <div class="ValidateAfterText overflow-hidden">
+                                                            <p>A Message is needed for each selected item</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /.card -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="QuesforNotification mt-3 mb-2">
+                                    <span class="classQuestionNumber">4</span>
+                                    <span class="ques-list-new">Who do you want to send this to?</span>
+                                    <div class="ml-auto">
+                                        @{
+                                            await Html.RenderPartialAsync("_peopleCount", false);
+                                        }
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group" id="idselectForGroups">
+                                            <select asp-for="GroupId" id="idSelectGroups"
+                                                    class="select2" multiple="multiple" data-placeholder="Select one or multiple groups" style="width: 100%;">
+                                                @{
+                                                    foreach (var item in Model.Groups)
+                                                    {
+                                                        <option value="@item.Id" totalsubscribers="@item.SubscriptionCount" emailsubscribers="@item.EmailSubscriptionCount"
+                                                                smssubscribers="@item.TextSubscriptionCount" voicesubscribers="@item.VoiceSubscriptionCount" whatsappsubscribers="@item.WhatsAppSubscriptionCount">
+                                                            @item.Name
+                                                        </option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                        <br />
+                                        <div class="form-group" id="idselectForPeople">
+                                            <select asp-for="SubscriptionId" id="idSelectPeople"
+                                                    class="select2" multiple="multiple" data-placeholder="Select one or multiple people" style="width: 100%;">
+                                                @{
+                                                    foreach (var item in Model.Subscriptions)
+                                                    {
+                                                        <option value="@item.Id">
+                                                            @item.LastName, @item.FirstName
+                                                        </option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                        <p>
+                                            <i class="groupDetailNavigation" aria-hidden="true">Click</i>
+                                            <a class="groupDetailNavigation" id="idAlertForGroupnavigation" href="" data-toggle="modal" data-target="#modal-alertPopup">here</a>
+                                            <i class="groupDetailNavigation" aria-hidden="true">to add a new group.</i>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="QuesforNotification mb-2"><span class="classQuestionNumber">5</span><span class="ques-list-new">Select an Event</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="row" id="idExistingEventPopup">
+                                    <div class="col-12">
+                                        <div class="input-group mb-4">
+                                            <select class="form-control" id="idExistingEvents"
+                                                    name="EventId"
+                                                    asp-items="@(new SelectList(Model.Events, "Id", "Name"))">
+                                            </select>
+                                            <div class="input-group-prepend">
+                                                <i class="fas fa-plus" aria-hidden="true" data-toggle="modal" data-target="#modal-eg" id="idCreateEventNewly"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12 colParentForToggle">
+                                        <div class="QuesforNotification">
+                                            <span class="classQuestionNumber">6</span><span class="ques-list-new">Is this a private notification? <i aria-hidden="true" title="Private Notifications will be visible only for the administrator who created them. Notification content, delivery reports, or responses from employees will not be visible to any other administrators." class="far fa-question-circle info-toolTip"></i></span>
+                                            <div class="ml-3">
+                                                <input type="hidden" value="" id="idTextIsPrvateNotifiation" name="IsPrivateNotification" />
+                                                <div class="custom-control custom-switch classToggleMainParent">
+                                                    <label class="classToggleLabel" for="idIsPrvateNotifiation" id="idNotPrivateNotification">No</label>
+                                                    <input type="checkbox" class="custom-control-input" id="idIsPrvateNotifiation">
+                                                    <label class="custom-control-label" for="idIsPrvateNotifiation" id="idYesPrivateNotification" style="cursor: pointer;">Yes</label>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                                @if (Model.EnableApprover)
+                                {
+                                    <div class="row">
+                                        <div class="col-12 colParentForToggle">
+                                            <div class="QuesforNotification">
+                                                <span class="classQuestionNumber">7</span><span class="ques-list-new">Does this notification require approval?</span>
+
+                                                <div class="ml-3">
+                                                    <input type="hidden" value="" id="idTextSendWithApproval" name="IsApprovalRequired" />
+                                                    <div class="custom-control custom-switch classToggleMainParent">
+                                                        <label class="classToggleLabel" for="idSendWithoutApproval" id="idlabelWithoutApproval">No</label>
+                                                        <input type="checkbox" class="custom-control-input" id="idSendWithoutApproval">
+                                                        <label class="custom-control-label" for="idSendWithoutApproval" id="idlabelWithApproval" style="cursor: pointer;">Yes</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                }
+
+                                <div class="row" id="idselectForPrivateApprover">
+                                    <div class="col-12">
+                                        <div class="QuesforNotification mt-3 mb-2">
+                                            <span class="classQuestionNumber">8</span><span class="ques-list-new">Select an approver for private notification</span></div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <select name="ApproverForPrivate" id="idselectPrivateApprover"
+                                                        class="select2" multiple="multiple" data-placeholder="Select approver" previousvalue="" style="width: 100%;">
+                                                    @{
+                                                        foreach (var item in (Model.Subscriptions.Where(i => i.OfficialEmail != @User.Identity.Name)))
+                                                        {
+                                                            <option value="@item.OfficialEmail" content="@item.LastName, @item.FirstName">
+                                                                @item.LastName, @item.FirstName
+                                                            </option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <br />
+                                <div class="NewNotifiFooter">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <button type="button" class="btn btn-outline-secondary btn-reset" style="display:none;">Preview and Send Test</button>
+                                        </div>
+                                        <div class="col-md-9 text-right classNotificationButtonParent">
+                                            <div class="d-inline-block BlockOnMobile">
+                                                <div id="CombineSaveMenu" class="dropdown">
+                                                    <button class="btn btn-primary dropdown-toggle text-left" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Save
+                                                    </button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                                        <button id="idSaveAsExistingTemplate" class="dropdown-item saveAsExistingTemplate" type="button" data-toggle="modal" data-target="#modal-mg">Save Template</button>
+                                                        <button class="dropdown-item saveAsTemplate" type="button" data-toggle="modal" data-target="#modal-mg">Save as New Template</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="btn btn-primary saveAsTemplate hideOnTemplateSelect" data-toggle="modal" data-target="#modal-mg">Save as New Template</button>
+                                            <button type="button" class="btn btn-primary classPublishselectCheck" data-toggle="modal" data-target="#modal-lg" id="schedule" onclick="LoadTimeZones()">Schedule</button>
+                                            <button type="submit" class="btn btn-success classPublishselectCheck classforApproval">Send for Approval</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="modal fade" id="modal-lg">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title mb-0">Schedule</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Select Date</label>
+                                                        <input type="datetime-local" class="form-control" name="ScheduledTime" id="ScheduledTime">
+                                                        <input type="hidden" value="" id="TimeZone" name="TimeZone" />
+                                                        <input type="hidden" value="" id="TimeZoneOffset" name="TimeZoneOffset" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Select TimeZone</label>
+                                                        <select class="form-control selectpicker" data-live-search="true" id="SelectTimeZone"></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer justify-content-between">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-success" onclick="GetTimeZone()">Send for Approval</button>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
+                        </form>
+                        <!-- /.card-body -->
+                    </div>
+                    <br /><br />
+                </div>
+
+                <br /><br />
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Read Confirmation</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- text input -->
+                        <div class="form-group">
+                            <label>Retries</label>
+                            <input type="text" class="form-control" placeholder="Enter ...">
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <!-- text input -->
+                        <div class="form-group">
+                            <label>Retries Delay</label>
+                            <input type="text" class="form-control" placeholder="Enter ...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade ModalSendConfirmation" id="modal-send">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="card-body pt-0 pb-0">
+                <div class="row GroupPeopleConfirmation">
+                    <div class="col-sm-12 mb-4">
+                        <em class="fas fa-exclamation FAWarning"></em> <p class="m-0 overflow-hidden h5">Please confirm to send Notfication to these audience</p>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="mb-4">
+                            <span id="Modal-GroupName"></span>
+                        </div>
+                        <div class="clearfix mb-3"></div>
+                        <div class="mb-2">
+                            <span id="Modal-PeopleName"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-sm-12">
+                        @{
+                            await Html.RenderPartialAsync("_peopleCount",false);
+                        }
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="classButtonForConfirmation">
+                <input type="hidden" id="isModal"/>
+                <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success" id="SendResponse">Send Now</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-mg" value="">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title mb-0">Create Template</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="idTemplateName">Name *</label>
+                            <input type="text" class="form-control" name="Name" id="idTemplateName" placeholder="Enter Template Name" maxlength="50" required>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <div class="input-group">
+                                <select class="form-control" id="idTemplatesCatList">
+                                    <option value="">Select Category</option>
+                                    @{
+                                        foreach (var item in @Model.TemplateCategories)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                                <div class="input-group-prepend idCreateCategoryParent">
+                                    <i class="fas fas fa-plus" isselected="false" aria-hidden="true" id="idCreateCategoryNewly"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="idNewCategoryDiv">
+                    <div class="col-lg-6"></div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="idNewCategoryName">Category Name *</label>
+                            <input type="text" class="form-control" id="idNewCategoryName" placeholder="Enter Category Name" maxlength="50">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 p-0">
+                    <div class="form-group">
+                        <label for="idTemplateDescription">Description</label>
+                        <textarea class="form-control" name="Description" id="idTemplateDescription" placeholder="Enter Description"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" value=@User.Identity.Name id="idTemplateCreatedBy" name="CreatedBy" />
+
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" id="idbuttonCreateTemplate">Submit</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade just" id="modalselection" value="" operatnType="">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to copy the same message for other publishing type(s)?</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+
+                <button type="button" class="btn btn-primary btn-reset float-right" style="margin-left: 31%; width: 34% !important;" data-dismiss="modal" data-id="true" id="okbutton">Ok</button>
+                <button type="button" class="btn btn-default btn-reset" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<!--Create new event popup -->
+<div class="modal fade" id="modal-eg">
+    @{
+        await Html.RenderPartialAsync("~/Views/Event/_CreateEvent.cshtml", new WAS.Application.Features.Events.GetTypeAndUrgency.Response());
+    }
+</div>
+<script>
+    jQuery(document).ready(function ($) {
+        var alterClass = function () {
+            var ww = window.innerWidth;
+            if (ww < 767) {
+                $('.template_open').addClass('mob_drop_down');
+            } else if (ww >= 767) {
+                $('.template_open').removeClass('mob_drop_down');
+            };
+        };
+        $(window).resize(function () {
+            alterClass();
+        });
+        alterClass();
+    });
+    $(document).on('click', '.mob_drop_down', function () {
+        $(this).toggleClass('sub_opened');
+        $('.mobile_empty').slideToggle();
+    });
+</script>
+<script src="~/was/js/GetPeopleAndGroupCount.js"></script>
+<script src="~/was/js/Notification/notification.js"></script>

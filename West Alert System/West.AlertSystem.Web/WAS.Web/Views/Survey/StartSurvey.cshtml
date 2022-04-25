@@ -1,0 +1,122 @@
+﻿@model WAS.Application.Features.Survey.GetByBroadcastId.Response;
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Start Survey</title>
+    <link rel="icon" href="/was/favicon.ico" type="image/favicon.ico" sizes="16x16">
+    <link rel="stylesheet" href="~/was/css/adminlte.min.css">
+    <link href="~/was/css/site.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/was/css/Survey/startSurvey.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="logoForSurvey mt-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2">
+
+                </div>
+                <div class="col-md-8">
+                    <div class="LogoforSurveyInner">
+                        <img src="~/was/img/was-logo-04.png" width="100" alt="WAS Logo" />
+                        <img src="~/was/img/west-logo.png" width="100" alt="West Pharma Logo" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container">
+                <div class="row">
+                    <!-- /.col-md-6 -->
+                    @if (Model != null)
+                    {
+                        <div class="classStartSurvey">
+                            <div class="SurveyEmailLanding shadow-lg">
+                                <div class="WelcomeUserSurvey">
+                                    <img src="~/was/img/email_start_survey.svg" alt="" width="60" />
+                                    <p>Welcome</p>
+                                    <h3>@ViewBag.UserName</h3>
+                                </div>
+                                <div class="classStartSurveyHeader">
+                                    <h4>Survey Details</h4>
+                                </div>
+                                <div class="classStartSurveyContent">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="required">Subject:</label>
+                                                <span>@Model.Subject</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="required">Description:</label>
+                                                <span>@Model.Description</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="required">Number of Questions:</label>
+                                                <span>@Model.NumberofQuestions</span>
+                                            </div>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(Model.AvgTime))
+                                        {
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label class="required">Average time taken to complete this survey:</label>
+                                                    <span>@Model.AvgTime</span>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="col-md-12 surveyButton mt-2">
+                                        @if (Model.IsWizard)
+                                        {
+                                            <a href="/was/Survey/SurveyWizard?id=@Model.Id" class="btn btn-success">Start Survey <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-right" class="svg-inline--fa fa-arrow-right fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"></path></svg></a>
+                                        }
+                                        else
+                                        {
+                                            <a href="/was/Survey/FillSurvey?id=@Model.Id" class="btn btn-success">Start Survey <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-right" class="svg-inline--fa fa-arrow-right fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"></path></svg></a>
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    else if (Model == null && @ViewBag.message == "timeout")
+                    {
+                        @await Html.PartialAsync("~/Views/Survey/_SessionExpired.cshtml", (Guid)ViewBag.broadcastId)
+                    }
+
+                    else if (Model == null && @ViewBag.message == "exist")
+                    {
+                        ViewData.Add(new KeyValuePair<string, object>("CurrUser", (string)ViewBag.UserName));
+                        @await Html.PartialAsync("~/Views/Survey/_SurveyCompleted.cshtml", "",ViewData)
+                    }
+
+                    else
+                    {
+                        @await Html.PartialAsync("~/Views/Survey/_SurveyExpired.cshtml", "You are not authorized to access this survey")
+                    }
+                </div>
+
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+</body>
+</html>

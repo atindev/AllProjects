@@ -1,0 +1,55 @@
+﻿@model WAS.Application.Features.Report.GetReports.Response;
+@{
+    ViewData["Title"] = "Reports";
+}
+@using Syncfusion.EJ2;
+@{ 
+    var palettes = new String[] { "#005696", "#6658a8", "#a954a6", "#df4f91", "#ff5b6f", "#ff7c44", "#ffa600" };
+    var palettes2 = new String[] { "#a954a6", "#86C14D", "#CCCF5F", "#FFDE82" };
+    var palettes3 = new String[] { "#41D083", "#D84A49" };
+    var palettes4 = new String[] { "#005595", "#007EB4", "#00A5B6", "#00C7A0", "#8BE481", "#F9F871" };
+    var palettes5 = new string[] { "#00C7A0" };
+    var palettes6 = new string[] { "#2f4b7c", "#665191", "#f95d6a", "#ff7c43", "#ffa600" };
+    var palettes7 = new string[] { "#2DB268", "#9EB0A2" };
+}
+<script src="~/was/js/Reports.js"></script>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark"> Reports</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <select name="location" class="form-control WidthAdjust float-sm-right mt-2 mt-sm-0" id="locations" onchange="getLocations()">
+                        @{
+                                <option value="0">Global</option>
+                            foreach(var item in Model.Locations)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                         }
+                    </select>
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <div class="content">
+        <div class="container">
+            <div class="row" id="locationFilter">
+                @await Html.PartialAsync("_reports", Model)
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+

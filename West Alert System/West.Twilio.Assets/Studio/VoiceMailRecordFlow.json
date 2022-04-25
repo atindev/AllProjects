@@ -1,0 +1,179 @@
+{
+  "description": "A New Flow",
+  "states": [
+    {
+      "name": "Trigger",
+      "type": "trigger",
+      "transitions": [
+        {
+          "event": "incomingMessage"
+        },
+        {
+          "next": "say_play_welcome",
+          "event": "incomingCall"
+        },
+        {
+          "event": "incomingRequest"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 0,
+          "y": 0
+        }
+      }
+    },
+    {
+      "name": "say_play_welcome",
+      "type": "say-play",
+      "transitions": [
+        {
+          "next": "record_voicemail",
+          "event": "audioComplete"
+        }
+      ],
+      "properties": {
+        "voice": "Polly.Salli",
+        "offset": {
+          "x": 30,
+          "y": 220
+        },
+        "loop": 1,
+        "say": "Hello from West Alert System. Please state your name and record your message after the beep.",
+        "language": "en-US"
+      }
+    },
+    {
+      "name": "record_voicemail",
+      "type": "record-voicemail",
+      "transitions": [
+        {
+          "next": "func_IM_token",
+          "event": "recordingComplete"
+        },
+        {
+          "event": "noAudio"
+        },
+        {
+          "event": "hangup"
+        }
+      ],
+      "properties": {
+        "transcribe": false,
+        "offset": {
+          "x": 30,
+          "y": 430
+        },
+        "trim": "trim-silence",
+        "play_beep": "true",
+        "timeout": 5,
+        "max_length": 3600
+      }
+    },
+    {
+      "name": "say_play_closure_thanks",
+      "type": "say-play",
+      "transitions": [
+        {
+          "next": "msg_send_confirmvoicemail",
+          "event": "audioComplete"
+        }
+      ],
+      "properties": {
+        "voice": "Polly.Salli",
+        "offset": {
+          "x": 30,
+          "y": 1120
+        },
+        "loop": 1,
+        "say": "Thanks for your voicemail, our security personel will review it and take necessary action.",
+        "language": "en-US"
+      }
+    },
+    {
+      "name": "msg_send_confirmvoicemail",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 40,
+          "y": 1340
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Thanks for your voicemail, our security personel will review it and take necessary action.\n\n{{widgets.record_voicemail.RecordingUrl}}"
+      }
+    },
+    {
+      "name": "func_IM_token",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "func_incomingCall",
+          "event": "success"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 30,
+          "y": 650
+        },
+        "url": "https://thistle-platypus-3016.twil.io/generatetoken"
+      }
+    },
+    {
+      "name": "func_incomingCall",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "say_play_closure_thanks",
+          "event": "success"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 30,
+          "y": 900
+        },
+        "parameters": [
+          {
+            "value": "{{widgets.func_IM_token.body}}",
+            "key": "Token"
+          },
+          {
+            "value": "{{widgets.record_voicemail.RecordingUrl}}",
+            "key": "Message"
+          },
+          {
+            "value": "{{contact.channel.address}}",
+            "key": "FromPhone"
+          },
+          {
+            "value": "true",
+            "key": "IsVoice"
+          }
+        ],
+        "url": "https://thistle-platypus-3016.twil.io/incomingMessage-dev"
+      }
+    }
+  ],
+  "initial_state": "Trigger",
+  "flags": {
+    "allow_concurrent_calls": true
+  }
+}

@@ -1,0 +1,205 @@
+﻿@using  System.Linq;
+@model WAS.Application.Features.IncomingMessage.GetAll.Response;
+@{
+    ViewData["Title"] = "IncomingMessages";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var picture = "/was/img/user2-160x160.jpg";
+}
+
+<link href="~/was/css/Notification/getAll.css" rel="stylesheet" />
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">
+                        <button type="button" title="back to dashboard" class="btn btn-reset btn-default" onclick="document.getElementById('clsBackButtonForEvents').click()">
+                            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                            <a href="/WAS/Dashboard/View" id="clsBackButtonForEvents">
+                            </a>
+                        </button>
+                        Incoming Messages
+                    </h1>
+                </div><!-- /.col -->
+            </div>
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <input type="hidden" id="IncomingCall" value="@ViewBag.source"/>
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div>
+                        <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="custom-content-below-home-tab" data-toggle="pill" href="#custom-content-below-home" role="tab" aria-controls="custom-content-below-home" aria-selected="true">Incoming Messages</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-content-below-profile-tab" data-toggle="pill" href="#custom-content-below-profile" role="tab" aria-controls="custom-content-below-profile" aria-selected="false">Incoming Calls</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="custom-content-below-tabContent">
+                            <div class="tab-pane fade active show" id="custom-content-below-home" role="tabpanel" aria-labelledby="custom-content-below-home-tab">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        @if (Model.IncomingMessages.Where(i => i.IsText || i.IsWhatsApp).Any())
+                                        {
+                                            <div class="card">
+                                                <div class="card-header border-transparent">
+
+                                                    <div class="row">
+                                                        <div class="col-lg-9">
+                                                        </div>
+                                                        <div class="col-lg-3">
+                                                            <input type="text" class="form-control float-right" id="idsearchByMessage" placeholder="Filter by Message">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body p-0">
+                                                    <div class="table-responsive">
+                                                        <ejs-grid id="GridIncomingMessages" dataSource="@Model.IncomingMessages.Where(i=> i.IsText || i.IsWhatsApp)" allowTextWrap="true" allowPaging="true" gridLines="Both" dataBound="updateUserDetails">
+                                                            <e-grid-searchSettings fields="@(new string[] {"Message", "SubscriberEmail"})" operator="contains" key="" ignoreCase="true"></e-grid-searchSettings>
+                                                            <e-grid-columns>
+                                                                <e-grid-column field="Id" headerText="Details" template="#idIncomingMessagesDetails" customAttributes=@(new { @class = "customcssDetails" }) headerTextAlign="Center" textAlign="Center" width="100"></e-grid-column>
+                                                                <e-grid-column field="Message" headerText="Message" template="#idMessage" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                                <e-grid-column field="IsText" headerText="Message Type" template="#idMessageType" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                                <e-grid-column field="SubscriberEmail" headerText="Message From" template="#idMessageFrom" customAttributes=@(new { @class = "customcssLastUpdated" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                            </e-grid-columns>
+                                                            <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+                                                        </ejs-grid>
+                                                        <script id="idIncomingMessagesDetails" type="text/x-template">
+                                                            <a value="incomingMessageDetails" href="/WAS/IncomingMessage/View?incomingMessageId=${Id}" class="icon-button preview iconPositionCorrection"><i class="fas fa-info-circle icon-preview"></i><span></span></a>
+                                                        </script>
+                                                        <script id="idMessage" type="text/x-template">
+                                                            <div class="clsNotificationName" data-toggle="tooltip" data-placement="top" title="${Message}">${Message}</div>
+                                                        </script>
+                                                        <script id="idMessageType" type="text/x-template">
+                                                            ${if(IsText)}
+                                                            <img src="/was/img/ic_text.svg" alt="" width="30" title="Text Message" />
+                                                            ${else}
+                                                            <img src="/was/img/ic_WhatsApp.svg" alt="" width="30" title="WhatsApp Message" />
+                                                            ${/if}
+                                                        </script>
+                                                        <script id="idMessageFrom" type="text/x-template">
+                                                            <div class="clsLastUpdateImageParent">
+                                                                ${if(SubscriberEmail != null)}
+                                                                <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid" onclick='bindSubscriptionDetails(this)' alt="User Image" data-useremail="${SubscriberEmail}">
+                                                                <div class="clsLastUpdatedWithImage clsImageTextPadding ad-user-grid" data-useremail="${SubscriberEmail}" data-toggle="tooltip" data-placement="top" title="${SubscriberEmail}">${SubscriberEmail}</div>
+                                                                <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage" data-toggle="tooltip" data-placement="top" title="${SubscriberLocation}">${SubscriberLocation}</div></div>
+                                                                ${else}
+                                                                <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid" alt="User Image">
+                                                                <div class="clsLastUpdatedWithImage clsImageTextPadding" data-toggle="tooltip" data-placement="top" title="Anonymous User">Anonymous User</div>
+                                                                <div class="clsLastUpdatedWithImage clsImageTextPadding" data-toggle="tooltip" data-placement="top" title="Anonymous User">${FromPhone}</div>
+                                                                ${/if}
+                                                            </div>
+                                                            <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage" data-toggle="tooltip" data-placement="top" title="${MessageDate}">${MessageDate}</div></div>
+                                                        </script>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-12 bg-white emptyTemplateWas text-center mb-5">
+                                                <img src="/was/img/No_Messages.svg" width="300" alt="" />
+                                                <h2>No Messages Available</h2>
+                                                <p>You will see messages when a subscriber/any user send a message to west alert system, to go to dashboard click on the Dashboard button</p>
+                                                <a href="/WAS/Dashboard/View" class="btn" title="Goto Dashboard" data-placement="bottom">Dashboard</a>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <br /><br />
+                            </div>
+                            <div class="tab-pane fade" id="custom-content-below-profile" role="tabpanel" aria-labelledby="custom-content-below-profile-tab">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        @if (Model.IncomingMessages.Where(i => i.IsVoice).Any())
+                                        {
+                                            <div class="card">
+                                                <!-- /.card-header -->
+                                                <div class="card-header border-transparent">
+                                                    <div class="row">
+                                                        <div class="col-lg-9">
+                                                        </div>
+                                                        <div class="col-lg-3">
+                                                            <input type="text" class="form-control float-right" id="idsearchByCall" placeholder="Filter by Message From">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body p-0">
+                                                    <div class="table-responsive">
+                                                        <ejs-grid id="GridIncomingCalls" dataSource="@Model.IncomingMessages.Where(i=> i.IsVoice)" allowTextWrap="true" allowPaging="true" gridLines="Both" dataBound="updateUserDetails">
+                                                            <e-grid-searchSettings fields="@(new string[] {"SubscriberEmail"})" operator="contains" key="" ignoreCase="true"></e-grid-searchSettings>
+                                                            <e-grid-columns>
+                                                                <e-grid-column field="Id" headerText="Details" template="#idIncomingCallDetails" customAttributes=@(new { @class = "customcssDetails" }) headerTextAlign="Center" textAlign="Center" width="100"></e-grid-column>
+                                                                <e-grid-column field="Message" headerText="Message" template="#idVoice" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                                <e-grid-column field="SubscriberEmail" headerText="Message From" template="#idAudioMessageFrom" customAttributes=@(new { @class = "customcssLastUpdated" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                            </e-grid-columns>
+                                                            <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+                                                        </ejs-grid>
+                                                        <script id="idIncomingCallDetails" type="text/x-template">
+                                                            <a value="incomingMessageDetails" href="/WAS/IncomingMessage/View?incomingMessageId=${Id}" class="icon-button preview iconPositionCorrection"><i class="fas fa-info-circle icon-preview"></i><span></span></a>
+                                                        </script>
+                                                        <script id="idVoice" type="text/x-template">
+                                                            <div class="clsNotificationName" data-toggle="tooltip" data-placement="top" title="Incoming audio message">
+                                                                <audio controls>
+                                                                    <source src="/WAS/IncomingMessage/GetAudio?path=${Message}" type="audio/wav">
+                                                                </audio>
+                                                            </div>
+                                                        </script>
+                                                        <script id="idAudioMessageFrom" type="text/x-template">
+                                                            <div class="clsLastUpdateImageParent calssID">
+                                                                ${if(SubscriberEmail != null)}
+                                                                <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid alignOnAudio" onclick='bindSubscriptionDetails(this)' alt="User Image" data-useremail="${SubscriberEmail}">
+                                                                <div class="clsLastUpdatedWithImage clsImageTextPadding ad-user-grid classID" data-useremail="${SubscriberEmail}" data-toggle="tooltip" data-placement="top" title="${SubscriberEmail}">${SubscriberEmail}</div>
+                                                                <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage" data-toggle="tooltip" data-placement="top" title="${SubscriberLocation}">${SubscriberLocation}</div></div>
+                                                                ${else}
+                                                                <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid alignOnAudio" alt="User Image">
+                                                                <div class="clsLastUpdatedWithImage clsImageTextPadding classID" data-toggle="tooltip" data-placement="top" title="Anonymous User">Anonymous User</div>
+                                                                <div class="clsLastUpdatedWithImage clsImageTextPadding classID" data-toggle="tooltip" data-placement="top" title="Anonymous User">${FromPhone}</div>
+                                                                ${/if}
+                                                            </div>
+                                                            <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage classID" data-toggle="tooltip" data-placement="top" title="${MessageDate}">${MessageDate}</div></div>
+                                                        </script>
+                                                    </div>
+                                                    <!-- /.table-responsive -->
+                                                </div>
+                                                <!-- /.card-body -->
+                                                <!-- /.card-footer -->
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                    <div class="col-12 bg-white emptyTemplateWas text-center mb-5">
+                                        <img src="/was/img/No_Incoming_call.svg" width="300" alt="" />
+                                        <h2>No Incoming Calls Available</h2>
+                                        <p>You will see calls when a subscriber/any user send a voice call to west alert system, to go to dashboard click on the Dashboard button</p>
+                                        <a href="/WAS/Dashboard/View" class="btn" title="Goto Dashboard" data-placement="bottom">Dashboard</a>
+                                    </div>
+                                        }
+                                    </div>
+                                </div>
+                                <br /><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+            @{
+                await Html.RenderPartialAsync("_AddtoGroupDataModel", Model.GroupList);
+            }
+        </div><!-- /.container-fluid -->
+    </div>
+</div>
+@{
+    await Html.RenderPartialAsync("_AddtoGroupDataModel", Model.GroupList);
+}
+
+<script src="~/was/js/IncomingMessage/incomingMessage.js"></script>

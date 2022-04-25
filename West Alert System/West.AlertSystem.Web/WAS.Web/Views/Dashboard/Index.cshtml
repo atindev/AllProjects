@@ -1,0 +1,306 @@
+﻿@model WAS.Application.Features.Dashboard.DashboardView.Response
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var picture = "/was/img/user2-160x160.jpg";
+}
+
+<link href="~/was/css/Dashboard/dashboard-main.css" rel="stylesheet" asp-append-version="true" />
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark"> Dashboard</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark float-sm-right" style="display:none;">
+                        <a href="/WAS/Notification/Create" class="btn btn-block btn-success btn-lg" id="idCreateNotification">Create Notification</a>
+                    </h1>
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <!-- /.col-md-6 -->
+                <div class="col-lg-3">
+                    <div class="small-box west-blue">
+                        <div class="inner">
+                            <h3>@Model.IncomingMessageCount</h3>
+                            <p>Incoming Messages</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                        </div>
+                        <a href="/WAS/IncomingMessage/List" class="small-box-footer">More info <i class="fas fa-arrow-circle-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <!-- /.col-md-6 -->
+                <!-- /.col-md-6 -->
+                <div class="col-lg-3">
+                    <div class="small-box west-green">
+                        <div class="inner">
+                            <h3>@Model.NotificationCount</h3>
+                            <p>Notifications</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-check-double" aria-hidden="true"></i>
+                        </div>
+                        <a href="/WAS/Notification/List" class="small-box-footer">More info <i class="fas fa-arrow-circle-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <!-- /.col-md-6 -->
+                <!-- /.col-md-6 -->
+                <div class="col-lg-3">
+                    <div class="small-box west-sky">
+                        <div class="inner">
+                            <h3>@Model.EventCount</h3>
+                            <p>Events</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                        </div>
+                        <a href="/WAS/Event/List" class="small-box-footer">More info <i class="fas fa-arrow-circle-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="small-box west-grey">
+                        <div class="inner">
+                            <h3>@Model.PeopleCount / People</h3>
+                            <p style="font-size: 26px;margin: 0;">@Model.GroupCount / Groups</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-user-friends people-db" aria-hidden="true"></i>
+                        </div>
+                        <a href="/WAS/Group/List" class="small-box-footer">More info <i class="fas fa-arrow-circle-right" aria-hidden="true"></i></a>
+                    </div>
+
+                </div>
+                <!-- /.col-md-6 -->
+                <input type="hidden" value=@ViewBag.source id="Incoming"/>
+                <div class="col-sm-12">
+                    <div class="card-body card-body-dashboard">
+                        <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="custom-content-below-home-tab" data-toggle="pill" href="#custom-content-below-home" role="tab" aria-controls="custom-content-below-home" aria-selected="true">Recent Notifications</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-content-below-profile-tab" data-toggle="pill" href="#custom-content-below-profile" role="tab" aria-controls="custom-content-below-profile" aria-selected="false">Incoming Messages</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="custom-content-below-tabContent">
+                            <div class="tab-pane fade active show" id="custom-content-below-home" role="tabpanel" aria-labelledby="custom-content-below-home-tab">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        @if (Model.RecentNotifications != null && Model.RecentNotifications.Count != 0)
+                                        {
+                                            <div class="card">
+                                                <!-- /.card-header -->
+
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <ejs-grid id="GridRecentNotifications" dataSource="@Model.RecentNotifications" allowTextWrap="true" gridLines="Both" dataBound="updateUserDetails">
+                                                            <e-grid-columns>
+                                                                <e-grid-column field="Id" headerText="Details" template="#idPagedNotificationDetails" customAttributes=@(new { @class = "customcssDetails" }) headerTextAlign="Center" textAlign="Center" width="100"></e-grid-column>
+                                                                <e-grid-column field="Topic" headerText="Message" template="#idNotificationName" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center" width="210"></e-grid-column>
+                                                                <e-grid-column field="EventName" headerText="Event Name" template="#idEventName" customAttributes=@(new { @class = "customcssEventName" }) headerTextAlign="Center" textAlign="Center" width="170"></e-grid-column>
+                                                                <e-grid-column field="Groups" headerText="Groups/People" template="#idGroups" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center" width="190"></e-grid-column>
+                                                                <e-grid-column field="Updated" headerText="Updated By" template="#lastUpdatedBy" customAttributes=@(new { @class = "customcssLastUpdated" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                                <e-grid-column field="Status" headerText="Status" template="#idStatus" customAttributes=@(new { @class = "customcssNotificationStatus" }) headerTextAlign="Center" textAlign="Center" width="210"></e-grid-column>
+                                                            </e-grid-columns>
+                                                            <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+                                                        </ejs-grid>
+                                                        <script id="idPagedNotificationDetails" type="text/x-template">
+                                                            ${if(IsPrivateNotification)}
+
+                                                            ${if(ResponseCount==0)}
+                                                            <a value="notificationDetails" title="Private Notifications will be visible only for the administrator who created them. Notification content, delivery reports, or responses from employees will not be visible to any other administrators." href="/WAS/Notification/View?NotificationId=${Id}&RequestFrom=dashboard" class="btn btn-reset position-relative icon-button spanAlignmentFix"><i class="fas fa-lock icon-preview"></i><span></span></a>
+                                                            ${else}
+                                                            <a value="notificationDetails" title="Private Notifications will be visible only for the administrator who created them. Notification content, delivery reports, or responses from employees will not be visible to any other administrators." href="/WAS/Notification/View?NotificationId=${Id}&RequestFrom=dashboard" class="btn btn-reset position-relative icon-button spanAlignmentFix"><i class="fas fa-lock icon-preview"></i><span></span><div class="info_bubble">${ResponseCount}</div></a>
+                                                            ${/if}
+
+                                                            ${else}
+                                                            ${if(ResponseCount==0)}
+                                                            <a value="notificationDetails" href="/WAS/Notification/View?NotificationId=${Id}&RequestFrom=dashboard" class="btn btn-reset position-relative icon-button spanAlignmentFix"><i class="fas fa-info-circle icon-preview"></i><span></span></a>
+                                                            ${else}
+                                                            <a value="notificationDetails" href="/WAS/Notification/View?NotificationId=${Id}&RequestFrom=dashboard" class="btn btn-reset position-relative icon-button spanAlignmentFix"><i class="fas fa-info-circle icon-preview"></i><span></span><div class="info_bubble">${ResponseCount}</div></a>
+                                                            ${/if}
+
+                                                            ${/if}
+                                                        </script>
+                                                        <script id="idNotificationName" type="text/x-template">
+                                                            <div class="clsNotificationName" data-toggle="tooltip" data-placement="top" title="${Topic}">${Topic}</div>
+                                                        </script>
+                                                        <script id="idEventName" type="text/x-template">
+                                                            <div class="clsEventName" data-toggle="tooltip" data-placement="top" title="${EventName}"><a href="/WAS/Event/View?EventId=${EventId}">${EventName}</a></div>
+                                                        </script>
+                                                        <script id="idGroups" type="text/x-template">
+                                                            ${for(item of GroupNames)}
+                                                            <span class="groupTiles clsGroups" data-toggle="tooltip" data-placement="top" title="${item}">${item}</span>
+                                                            ${/for}
+                                                            ${for(item of SubscriberNames)}
+                                                            <span class="groupTiles clsPeople" data-toggle="tooltip" data-placement="top" title="${item}">${item}</span>
+                                                            ${/for}
+                                                        </script>
+                                                        <script id="lastUpdatedBy" type="text/x-template">
+                                                            <div class="clsLastUpdateImageParent">
+                                                                <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid" onclick='bindSubscriptionDetails(this)' alt="User Image" data-useremail="${CreatedBy}">
+                                                                <div class="clsLastUpdatedWithImage clsImageTextPadding ad-user-grid" data-useremail="${CreatedBy}" data-toggle="tooltip" data-placement="top" title="${CreatedBy}">${CreatedBy}</div>
+                                                            </div>
+                                                            <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage userWithLocation" data-toggle="tooltip" data-placement="top" title="${CreaterLocation}"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${CreaterLocation}</div></div>
+                                                            <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage timeUpdated" data-toggle="tooltip" data-placement="top" title="${Updated}">${Updated}</div></div>
+                                                        </script>
+                                                        <script id="idStatus" type="text/x-template">
+                                                            ${if(IsPrivateNotification && IsApprovalRequired && Status=="2")}
+                                                            <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusPendingApprover.svg" /><span class="approved pendingWithApprover">Pending with Approver</span></span>
+                                                            <div class="clsLastUpdateImageParentStatus customDesignForIDStatus">
+                                                                <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid-status" onclick='bindSubscriptionDetails(this)' alt="User Image" data-useremail="${ApproverForPrivate}">
+                                                                <div class="clsLastUpdatedWithImage clsImageTextPadding ad-user-grid" data-useremail="${ApproverForPrivate}" data-toggle="tooltip" data-placement="top" title="${ApproverForPrivate}">${ApproverForPrivate}</div>
+                                                                <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage userWithLocation" data-toggle="tooltip" data-placement="top" title="${PrivateApproverLocation}"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${PrivateApproverLocation}</div></div>
+                                                            </div>
+                                                            ${else if(IsPrivateNotification && IsApprovalRequired && Status=="5")}
+                                                            <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusRejectedApprover.svg" /><span class="cancel FirstLevelRejected">Approver Rejected</span></span>
+                                                            <div class="clsLastUpdateImageParentStatus customDesignForIDStatus">
+                                                                <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid-status" onclick='bindSubscriptionDetails(this)' alt="User Image" data-useremail="${ApproverForPrivate}">
+                                                                <div class="clsLastUpdatedWithImage clsImageTextPadding ad-user-grid" data-useremail="${ApproverForPrivate}" data-toggle="tooltip" data-placement="top" title="${ApproverForPrivate}">${ApproverForPrivate}</div>
+                                                                <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage userWithLocation" data-toggle="tooltip" data-placement="top" title="${PrivateApproverLocation}"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${PrivateApproverLocation}</div></div>
+                                                                <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage timeUpdated" data-toggle="tooltip" data-placement="top" title="${StatusUpdated}">${StatusUpdated}</div></div>
+                                                            </div>
+                                                            ${else}
+                                                            ${if(Status=="1")}
+                                                            <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusPendingApprover.svg" /><span class="approved pendingWithApprover">Pending with Approver</span></span>
+                                                            ${else if(Status=="2")}
+                                                            <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusPendingComm.svg" /><span class="approved pendingWithCommunicationTeam">Pending with Comm. Team</span></span>
+                                                            ${else if(Status=="3")}
+                                                            <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusRejectedApprover.svg" /><span class="cancel FirstLevelRejected">Approver Rejected</span></span>
+                                                            ${else if(Status=="4")}
+                                                            <span class="NotificatonStatusWas"><img src="/was/img/NotificationStatusApproved.svg" /><span class="approved SecondLevelApproved">Approved</span></span>
+                                                            ${else if(Status=="5")}
+                                                            <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusRejectedComm.svg" /><span class="cancel secondLevelRejected">Comm. Team Rejected</span></span>
+                                                            ${else if(Status=="6")}
+                                                            <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusFailed.svg" /><span class="cancel">Failed to Send</span></span>
+                                                            ${else if(Status=="7")}
+                                                            <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusSent.svg" /><span class="approved">Sent</span></span>
+                                                            ${else}
+                                                            <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusFailed.svg" /><span class="cancel">Failed to Send</span></span>
+                                                            ${/if}
+
+                                                            ${/if}
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                                <!-- /.card-body -->
+                                                <div class="card-footer text-right">
+                                                    <a href="/WAS/Notification/List" id="idGotoNotifications">View All</a>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-12 bg-white emptyTemplateWas text-center mb-5">
+                                                <img src="/was/img/No_Notifications.svg" width="300" alt="" />
+                                                <h2>No Notifications Available</h2>
+                                                <p>You will see notifications when administrator compose and trigger a notification, to create a new notification click on the Create Notification button</p>
+                                                <a href="/WAS/Notification/Create" class="btn" title="Create new notification" data-placement="bottom">Create Notification</a>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="custom-content-below-profile" role="tabpanel" aria-labelledby="custom-content-below-profile-tab">
+                                <div class="row">
+                                    <div class="col-12">
+                                        @if (Model.IncomingMessages.Any())
+                                        {
+                                            <div class="card">
+                                                <!-- /.card-header -->
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <ejs-grid id="GridRecentIncomingMessages" dataSource="@Model.IncomingMessages" allowTextWrap="true" gridLines="Both" dataBound="updateUserDetails">
+                                                            <e-grid-columns>
+                                                                <e-grid-column field="Id" headerText="Details" template="#idIncomingMessagesDetails" customAttributes=@(new { @class = "customcssDetails" }) headerTextAlign="Center" textAlign="Center" width="100"></e-grid-column>
+                                                                <e-grid-column field="Message" headerText="Message" template="#idMessage" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                                <e-grid-column field="IsText" headerText="Message Type" template="#idMessageType" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                                <e-grid-column field="MessageDate" headerText="Message From" template="#idMessageFrom" customAttributes=@(new { @class = "customcssLastUpdated" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                            </e-grid-columns>
+                                                            <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+                                                        </ejs-grid>
+                                                        <script id="idIncomingMessagesDetails" type="text/x-template">
+                                                            <a value="incomingMessageDetails" href="/WAS/IncomingMessage/View?incomingMessageId=${Id}&requestFrom=dashboard" class="icon-button preview iconPositionCorrection"><i class="fas fa-info-circle icon-preview"></i><span></span></a>
+                                                        </script>
+                                                        <script id="idMessage" type="text/x-template">
+                                                            ${if(IsVoice)}
+                                                            <div class="clsNotificationName" data-toggle="tooltip" data-placement="top" title="Incoming audio message">
+                                                                <audio controls>
+                                                                    <source src="/WAS/IncomingMessage/GetAudio?path=${Message}" type="audio/wav">
+                                                                </audio>
+                                                            </div>
+                                                            ${else}
+                                                            <div class="clsNotificationName" data-toggle="tooltip" data-placement="top" title="${Message}">${Message}</div>
+                                                            ${/if}
+                                                        </script>
+                                                        <script id="idMessageType" type="text/x-template">
+                                                            ${if(IsText)}
+                                                            <img src="/was/img/ic_text.svg" alt="" width="30" title="Text Message" />
+                                                            ${else if(IsWhatsApp)}
+                                                            <img src="/was/img/ic_WhatsApp.svg" alt="" width="30" title="WhatsApp Message" />
+                                                            ${else}
+                                                            <img src="/was/img/ic_Voice.svg" alt="" width="30" title="Voice Message" />
+                                                            ${/if}
+                                                        </script>
+                                                        <script id="idMessageFrom" type="text/x-template">
+                                                            <div class="clsLastUpdateImageParent">
+                                                                ${if(SubscriberEmail != null)}
+                                                                <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid clsImImage" onclick='bindSubscriptionDetails(this)' alt="User Image" data-useremail="${SubscriberEmail}">
+                                                                <div class="clsLastUpdatedWithImage clsImageTextPadding ad-user-grid" data-useremail="${SubscriberEmail}" data-toggle="tooltip" data-placement="top" title="${SubscriberEmail}">${SubscriberEmail}</div>
+                                                                <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage userWithLocation" data-toggle="tooltip" data-placement="top" title="${SubscriberLocation}"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${SubscriberLocation}</div></div>
+                                                                ${else}
+                                                                <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid clsImImage" alt="User Image">
+                                                                <div class="clsLastUpdatedWithImage clsImageTextPadding" data-toggle="tooltip" data-placement="top" title="Anonymous User">Anonymous User</div>
+                                                                <div class="clsLastUpdatedWithImage clsImageTextPadding" data-toggle="tooltip" data-placement="top" title="Anonymous User">${FromPhone}</div>
+                                                                ${/if}
+                                                            </div>
+                                                            <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage timeUpdated" data-toggle="tooltip" data-placement="top" title="${MessageDate}">${MessageDate}</div></div>
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer text-right">
+                                                    <a href="/WAS/IncomingMessage/List" id="idGotoIncomingMessages">View All</a>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-12 bg-white emptyTemplateWas text-center mb-5">
+                                                <img src="/was/img/No_Messages.svg" width="300" alt="" />
+                                                <h2>No Messages Available</h2>
+                                                <p> You will see messages/calls when a subscriber/any user send a message/call to west alert system, to go to dashboard click on the Dashboard button</p>
+                                                <a href="/WAS/Dashboard/View" class="btn" title="Goto Dashboard" data-placement="bottom">Dashboard</a>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br /><br />
+                </div>
+            </div>
+            @{
+                await Html.RenderPartialAsync("_AddtoGroupDataModel", Model.GroupList);
+            }
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<script src="~/was/js/Dashboard/dashboard-main.js"></script>
+

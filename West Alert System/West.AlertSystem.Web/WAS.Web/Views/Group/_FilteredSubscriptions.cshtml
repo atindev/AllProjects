@@ -1,0 +1,59 @@
+﻿@{
+    var picture = "/was/img/user2-160x160.jpg";
+}
+<div class="table-responsive">
+    <ejs-grid id="GridFilterdSubscriptions" allowPaging="true" allowTextWrap="true" allowSelection="true" gridLines="Both" dataBound="updateFilteredUserDetails" actionComplete="navigatedToPages" rowSelected="filteredRowSelected" rowDeselected="filteredRowDeSelected">
+        <e-data-manager url="./GetPeopleByPages/" adaptor="UrlAdaptor" crossdomain="true"></e-data-manager>
+        <e-grid-selectionSettings persistSelection="true" CheckboxOnly="true"></e-grid-selectionSettings>
+        <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+        <e-grid-columns>
+            <e-grid-column type="checkbox" customAttributes=@(new { @class = "customcssSelectAll" }) width="50"></e-grid-column>
+            <e-grid-column field="Id" isPrimaryKey="true" customAttributes=@(new { @class = "customcssId" }) headerText="" width="0" visible="false"></e-grid-column>
+            <e-grid-column field="FirstName" headerText="Name" template="#idSubscriptionName" customAttributes=@(new { @class = "customcssAuthor" }) headerTextAlign="Center" textAlign="Center" width="200"></e-grid-column>
+            <e-grid-column field="OfficialEmail" headerText="Email" template="#idSubscriptionMail" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+            <e-grid-column field="Location" headerText="Location" template="#idSubscriptionLocation" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+            <e-grid-column field="Shift" headerText="Shift" template="#idSubscriptionShift" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+            <e-grid-column field="SubscribedOn" headerText="Subscribed On (UTC)" template="#idSubscriptionSubscribed" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+            <e-grid-column field="OfficialEmail" headerText="Action" template="#idSubscriptionDelete" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center" width="100"></e-grid-column>
+        </e-grid-columns>
+    </ejs-grid>
+
+    <script id="idSubscriptionName" type="text/x-template">
+        <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid" onclick='bindSubscriptionDetails(this)' value="peopleDetails" alt="User Image" data-useremail="${OfficialEmail}" data-userid="${Id}">
+        <span class="CheckWASadminBefore ad-user-role" data-useremail="${OfficialEmail}"></span>
+        <div class="clsAuthor ad-user-grid" data-useremail="${OfficialEmail}" data-toggle="tooltip" data-placement="top" title="${FirstName} ${LastName}">${FirstName} ${LastName}</div>
+    </script>
+    <script id="idSubscriptionMail" type="text/x-template">
+        ${if(OfficialEmail==null)}
+        <div class="clsSubscriptionMail" data-toggle="tooltip" data-placement="top" title="">
+        </div>
+        ${else}
+        <div class="clsSubscriptionMail" data-toggle="tooltip" data-placement="top" title="${OfficialEmail}">
+            ${OfficialEmail}
+        </div>
+        ${/if}
+    </script>
+    <script id="idSubscriptionLocation" type="text/x-template">
+        <div class="clsSubscriptionLocation userWithLocation" data-toggle="tooltip" data-placement="top" title="${Location}"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${Location}</div>
+    </script>
+    <script id="idSubscriptionShift" type="text/x-template">
+        ${if(Shift != null)}
+        <div class="clsSubscriptionShift" data-toggle="tooltip" data-placement="top" title="${Shift}">${Shift}</div>
+        ${/if}
+    </script>
+    <script id="idSubscriptionSubscribed" type="text/x-template">
+        <div class="clsSubscriptionSubscribed" data-toggle="tooltip" data-placement="top" title="${SubscribedOn}">${SubscribedOn}</span></div>
+    </script>
+    <script id="idSubscriptionDelete" type="text/x-template">
+        <div data-toggle="tooltip" @*title="${OfficialEmail}"*@><a value="subscriptionDetails" title="Delete" class="icon-button correction iconPositionCorrection" name="${OfficialEmail}" id="${Id}" onclick='getSubscriptionEmail(this)' data-toggle="modal" data-target="#modal-DeleteSubscription"><i class="fas fa-trash  icon-correction"></i><span></span></a></div>
+    </script>
+</div>
+
+<script>
+    function updateFilteredUserDetails() {
+        populateUserDetailsforGrid($(".ad-user-grid"));
+        populateUserPicturesforGrid($(".img-circle-grid"));
+        populateUserRoleforGrid($(".ad-user-role"));
+        setFilteredCount();
+    }
+</script>

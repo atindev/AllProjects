@@ -1,0 +1,21 @@
+﻿@model WAS.Application.Features.Survey.GetByBroadcastId.Response;
+
+<style>
+    .groupTiles.clsPeople, .groupTiles.clsGroups {
+        display: inline !important;
+    }
+</style>
+
+<div class="col-sm-12">
+
+    <div class="classBroadcastSurveyHeader shadow mb-3">
+        <img src="/was/img/email_start_survey.svg" alt="" width="60">
+        <h4 id="idSubject">@Model.Subject</h4>
+        <img class="ml-auto mr-3" src="/was/img/icon_refresh.svg" style="cursor:pointer" onclick="manualRefresh()" alt="" title="Refresh results" />
+    </div>
+    <div>
+        <div  id="idBasicbroadcastInfo">
+        @{await Html.RenderPartialAsync("_BasicBroadcastInfo", Model); }
+        </div>
+    </div>
+</div>

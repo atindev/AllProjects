@@ -1,0 +1,109 @@
+﻿@model WAS.Application.Features.Events.GetAtive.Response;
+
+@{
+    ViewData["Title"] = "Notifications";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/was/css/Notification/getAll.css" rel="stylesheet" />
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">
+                        <button type="button" title="back to dashboard" class="btn btn-reset btn-default" onclick="document.getElementById('clsBackButtonForEvents').click()">
+                            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                            <a href="/WAS/Dashboard/View" id="clsBackButtonForEvents">
+                            </a>
+                        </button>
+                        Notifications
+                    </h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark float-sm-right">
+                        <a href="/WAS/Notification/Create" class="btn btn-block btn-success btn-lg classCreateNotificationGlobal">Create Notification</a>
+                    </h1>
+                </div><!-- /.col -->
+
+            </div>
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <div>
+                        <div class="tab-content" id="custom-content-below-tabContent">
+
+                            <div class="tab-pane fade active show" id="custom-content-below-home" role="tabpanel" aria-labelledby="custom-content-below-home-tab">
+                                <div class="row">
+                                    <div class="col-lg-12">
+
+                                        <div class="card">
+                                            <div class="card-header border-transparent">
+
+                                                <div class="row">
+                                                    <div class="col-lg-3">
+                                                    </div>
+                                                    <div class="col-lg-3 col-sm-6 mt-2">
+                                                        <select class="form-control" id="idFilterByEvents">
+                                                            <option value="-1">Filter by Event</option>
+                                                            @{
+                                                                foreach (var item in Model.Events)
+                                                                {
+                                                                    <option value="@item.Id">@item.Name</option>
+                                                                }
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-lg-3 col-sm-6 mt-2">
+                                                        <select class="form-control" id="idFilterByStatus">
+                                                            <option value="-1">Filter by Status</option>
+                                                            <option value="1">Pending with Approver</option>
+                                                            <option value="2">Pending with Communication Team</option>
+                                                            <option value="3">Approver Rejected</option>
+                                                            <option value="4">Approved</option>
+                                                            <option value="5">Communication Team Rejected</option>
+                                                            <option value="6">Failed to Send</option>
+                                                            <option value="7">Sent</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-lg-3 mt-2">
+                                                        <input type="text" class="form-control float-right" id="idFilterByTopic" placeholder="Filter by Notification Topic">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /.card-header -->
+                                            <div class="card-body p-0" id="idLoadNotifications">
+                                                @{
+                                                    await Html.RenderPartialAsync("_PagedNotification");
+                                                }
+                                            </div>
+                                            <!-- /.card-body -->
+                                            <!-- /.card-footer -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <br /><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @{
+                await Html.RenderPartialAsync("_AddtoGroupDataModel", Model.GroupList);
+            }
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+</div>
+
+<script src="~/was/js/Notification/getAll.js"></script>
+
+

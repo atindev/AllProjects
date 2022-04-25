@@ -1,0 +1,683 @@
+﻿@model WAS.Application.Features.Subscription.CreateView.Response
+
+@{
+    ViewData["Title"] = "Subscription";
+}
+
+<style>
+    .disableField {
+        pointer-events: none !important;
+        opacity: 0.5 !important;
+    }
+</style>
+<link href="~/was/css/style_wizard.css" rel="stylesheet" />
+
+<script src="~/was/js/Subscription/Subscription.js"></script>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+
+            @if (Model != null && Model.Subscription != null)
+            {
+                <form action="/WAS/subscription/Unsubscribe" method="post">
+
+                    <input type="hidden" name="OfficialEmail" value="@Model.Subscription.OfficialEmail" />
+                    <button type="submit" class="btn btn-block west-button-green btn-lg" style="display:none">Unsubscribe</button>
+                </form>
+
+            }
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <div class="content">
+        <div class="container">
+            <div class="row Was_subscribe_top">
+                <div class="col-12">
+                    <div class="card">
+                        <!-- /.card-header -->
+                        <div class="card-body">
+
+                            @if (Model == null || Model.Subscription == null)
+                            {
+                                var preferredChannel = "";
+                                if (Model.Subscription != null)
+                                {
+                                    preferredChannel = Model.Subscription.PreferredChannel;
+                                }
+                                <form action="/WAS/Subscription/Subscribe" method="post" autocomplete="off">
+                                    <input type="hidden" name="SubscriptionMode" value="Web (with SSO)" />
+                                    <div class="invoice no_subscription">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                @if (User.Claims.Any())
+                                                {
+                                                    await Html.RenderPartialAsync("_SubscriptionProfiledetails");
+                                                }
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="head-border"><h3 class="head-bg"> Contact Information</h3></div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="validateBeforeText mt-3 mb-3">
+                                                    <i class="fas fa-exclamation" aria-hidden="true"></i>
+                                                    <div class="overflow-hidden">
+                                                        <p>Please provide at least one of <strong>Work Mobile</strong>, <strong>Personal Mobile</strong>, or <strong>Personal Email</strong>.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Work Mobile</label><input type="text" value="@Model.ADUser.MobilePhone" id="OfficeMobile" class="form-control form-control-da country-code" placeholder="Enter ..." onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" maxlength="13" autocomplete="off" list="autocompleteOff">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Personal Mobile</label><input type="text" id="PersonalMobile" class="form-control form-control-da country-code" placeholder="Enter ..." onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" maxlength="13" autocomplete="off" list="autocompleteOff">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Work Phone</label><input type="text" value="@Model.ADUser.BusinessPhones" id="OfficePhone" class="form-control form-control-da country-code" placeholder="Enter ..." onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" maxlength="13" autocomplete="off" list="autocompleteOff">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Home Phone</label><input type="text" id="HomePhone" class="form-control form-control-da country-code" placeholder="Enter ..." onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" maxlength="13" autocomplete="off" list="autocompleteOff">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Personal Email</label><input type="email" id="PersonalEmail" name="PersonalEmail" class="form-control form-control-da" onkeypress="return event.charCode!=13" pattern="^[a-zA-Z0-9._+-]+&#64;[a-zA-Z0-9.-]+\.[a-zA-Z]{2,9}$" placeholder="Enter ..." autocomplete="off" list="autocompleteOff">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="WithInfoIcon position-relative">
+                                                        Shift <i id="SlectUpdateIcon" title="Please select your shift from dropdown" class="fas fa-info-circle" aria-hidden="true"></i>
+                                                    </label>
+                                                    <select asp-for="@Model.Subscription.ShiftId"
+                                                            name="ShiftId"
+                                                            class="form-control"
+                                                            asp-items="@(new SelectList(Model.Shifts, "Id", "Name"))" required>
+                                                        <option value="">Select Shift</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="head-border"><h3 class="head-bg">Communication Preference</h3></div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h5 class="comm pl-0"><img src="~/was/img/mail2.png" alt="" width="35" />&nbsp;&nbsp;Email</h5>
+                                                <div class="form-group clearfix ck-top">
+                                                    <div class="icheck-success d-inline" id="IsOfficialEmailParent">
+                                                        <input type="checkbox" id="IsOfficialEmail" name="IsOfficialEmail" onclick="subscriptionPreferenceschanged('@String.Format("{0}", preferredChannel)')" class="subscriptionPreference">
+                                                        <label class="sub-label" for="IsOfficialEmail">
+                                                            Work Email
+                                                        </label>
+                                                    </div>
+                                                    <div class="icheck-success d-inline" id="IsPersonalEmailParent">
+                                                        <input type="checkbox" id="IsPersonalEmail" name="IsPersonalEmail" onclick="subscriptionPreferenceschanged('@String.Format("{0}", preferredChannel)')" class="subscriptionPreference">
+                                                        <label class="sub-label" for="IsPersonalEmail">
+                                                            Personal Email
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="withLanguageSelect position-relative">
+                                                    <h5 class="comm pl-0"><img src="~/was/img/voice.png" alt="" width="35" />&nbsp;&nbsp;Voice</h5>
+                                                    <div class="languageSelectForSubscription">
+                                                        <img src="~/was/img/select-languages.png" alt="" title="Preferred language to hear when you receive an alert/notification on Voice call" width="40" />
+                                                        <select id="PreferredLanguage" class="form-control" name="PreferredLanguage" required>
+                                                            <option disabled> Please Select Your Preferred Language</option>
+                                                            @foreach (var languages in Model.Languages)
+                                                            {
+                                                                if (languages.Name == "English (American)")
+                                                                {
+                                                                    <option value="@languages.Code" selected>English (American)</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@languages.Code">@languages.Name</option>
+                                                                }
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group clearfix ck-top">
+                                                    <div class="icheck-success d-inline" id="IsVoiceOfficeMobileParent">
+                                                        <input type="checkbox" id="IsVoiceOfficeMobile" name="IsVoiceOfficeMobile">
+                                                        <label class="sub-label" for="IsVoiceOfficeMobile">
+                                                            Work Mobile
+                                                        </label>
+                                                    </div>
+                                                    <div class="icheck-success d-inline" id="IsVoicePersonalMobileParent">
+                                                        <input type="checkbox" id="IsVoicePersonalMobile" name="IsVoicePersonalMobile">
+                                                        <label class="sub-label" for="IsVoicePersonalMobile">
+                                                            Personal Mobile
+                                                        </label>
+                                                    </div>
+                                                    <div class="icheck-success d-inline" id="IsVoiceOfficePhoneParent">
+                                                        <input type="checkbox" id="IsVoiceOfficePhone" name="IsVoiceOfficePhone">
+                                                        <label class="sub-label" for="IsVoiceOfficePhone">
+                                                            Work Phone
+                                                        </label>
+                                                    </div>
+                                                    <div class="icheck-success d-inline" id="IsVoiceHomePhoneParent">
+                                                        <input type="checkbox" id="IsVoiceHomePhone" name="IsVoiceHomePhone">
+                                                        <label class="sub-label" for="IsVoiceHomePhone">
+                                                            Home Phone
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h5 class="comm pl-0"><img src="~/was/img/text.png" alt="" width="35" />&nbsp;&nbsp;Text Messages</h5>
+                                                <div class="form-group clearfix ck-top">
+                                                    <div class="icheck-success d-inline" id="IsTextOfficeMobileParent">
+                                                        <input type="checkbox" id="IsTextOfficeMobile" name="IsTextOfficeMobile" onclick="subscriptionPreferenceschanged('@String.Format("{0}", preferredChannel)')" class="subscriptionPreference">
+                                                        <label class="sub-label" for="IsTextOfficeMobile">
+                                                            Work Mobile
+                                                        </label>
+                                                    </div>
+                                                    <div class="icheck-success d-inline" id="IsTextPersonalMobileParent">
+                                                        <input type="checkbox" id="IsTextPersonalMobile" name="IsTextPersonalMobile" onclick="subscriptionPreferenceschanged('@String.Format("{0}", preferredChannel)')" class="subscriptionPreference">
+                                                        <label class="sub-label" for="IsTextPersonalMobile">
+                                                            Personal Mobile
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h5 class="comm pl-0"><img src="~/was/img/whatsapp.png" alt="" width="35" />&nbsp;&nbsp;Whatsapp Messages</h5>
+                                                <div class="form-group clearfix ck-top">
+                                                    <div class="icheck-success d-inline" id="IsWhatsAppOfficeMobileParent">
+                                                        <input type="checkbox" id="IsWhatsAppOfficeMobile" name="IsWhatsAppOfficeMobile" onclick="subscriptionPreferenceschanged('@String.Format("{0}", preferredChannel)')" class="subscriptionPreference">
+                                                        <label class="sub-label" for="IsWhatsAppOfficeMobile">
+                                                            Work Mobile
+                                                        </label>
+                                                    </div>
+                                                    <div class="icheck-success d-inline" id="IsWatsAppPersonalMobileParent">
+                                                        <input type="checkbox" id="IsWatsAppPersonalMobile" name="IsWhatsAppPersonalMobile" onclick="subscriptionPreferenceschanged('@String.Format("{0}", preferredChannel)')" class="subscriptionPreference">
+                                                        <label class="sub-label" for="IsWatsAppPersonalMobile">
+                                                            Personal Mobile
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="head-border"><h3 class="head-bg">Preferred Channel For Account Updates</h3></div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <select id="PreferredChannel" class="form-control" name="PreferredChannel" required>
+                                                    <option disabled> Please Select Your Preferred Channel</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <h4>Acknowledgement & Consent</h4>
+                                        <div class="form-group clearfix">
+                                            <div class="icheck-success d-inline">
+                                                <input type="checkbox" id="consent" name="Consent" value="true" required>
+                                                <label for="consent">
+                                                </label> I authorize to use West Alert System to send company related notices to me in the event of emergencies or unplanned disruptions.
+                                            </div>
+                                        </div>
+                                        <div class="icheck-success d-inline">
+                                            <input type="checkbox" id="IsWestTermsConditions" name="IsWestTermsConditions" required>
+                                            <label class="sub-label" for="IsWestTermsConditions" style="font-size:16px;">
+                                                I accept the <a href="https://westpharmaceutical.sharepoint.com/SitePages/Legal%20Notice.aspx" target="_blank" rel="noopener">Terms of Use</a> and <a href="https://westpharmaceutical.sharepoint.com/gs/lc/Policies/Forms/AllItems.aspx?id=%2Fgs%2Flc%2FPolicies%2FCP%2D061%2Epdf&parent=%2Fgs%2Flc%2FPolicies" target="_blank" rel="noopener">Privacy Statement</a> of West Alert System.
+                                            </label>
+                                        </div>
+                                        <button type="submit" id="idSubmitOrUpdate" class="btn btn-block btn-warning btn-lg float-right submit_update_Was">SUBSCRIBE</button>
+                                        <br> <br> <br> <br> <br>
+                                    </div>
+                                </form>
+                            }
+                            else
+                            {
+                                var preferredChannel = "";
+                                @if (Model.Subscription != null)
+                                {
+                                    preferredChannel = Model.Subscription.PreferredChannel;
+                                }
+
+                                <form action="/WAS/Subscription/Subscribe" method="post" autocomplete="off" id="idEditForm">
+                                    <input type="hidden" name="SubscriptionMode" value="Web (with SSO)" />
+                                    <div class="invoice">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                @if (User.Claims.Any())
+                                                {
+                                                    await Html.RenderPartialAsync("_SubscriptionProfiledetails");
+                                                }
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="head-border"><h3 class="head-bg">Contact Information</h3></div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="validateBeforeText mt-3 mb-3">
+                                                    <i class="fas fa-exclamation" aria-hidden="true"></i>
+                                                    <div class="overflow-hidden">
+                                                        <p>Please provide at least one of <strong>Work Mobile</strong>, <strong>Personal Mobile</strong>, or <strong>Personal Email</strong>.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label> Work Mobile</label><input type="text" id="OfficeMobile" value="@Model.Subscription.OfficeMobile" class="form-control form-control-da country-code" placeholder="Enter ..." onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" maxlength="13" autocomplete="off" list="autocompleteOff">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Personal Mobile</label><input type="text" id="PersonalMobile" value="@Model.Subscription.PersonalMobile" class="form-control form-control-da country-code" placeholder="Enter ..." onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" maxlength="13" autocomplete="off" list="autocompleteOff">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Work Phone</label><input type="text" id="OfficePhone" value="@Model.Subscription.OfficePhone" class="form-control form-control-da country-code" placeholder="Enter ..." onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" maxlength="13" autocomplete="off" list="autocompleteOff">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Home Phone</label><input type="text" id="HomePhone" value="@Model.Subscription.HomePhone" class="form-control form-control-da country-code" placeholder="Enter ..." onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" maxlength="13" autocomplete="off" list="autocompleteOff">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Personal Email</label><input type="email" id="PersonalEmail" name="PersonalEmail" value="@Model.Subscription.PersonalEmail" class="form-control form-control-da" onkeypress="return event.charCode!=13" pattern="^[a-zA-Z0-9._+-]+&#64;[a-zA-Z0-9.-]+\.[a-zA-Z]{2,9}$" placeholder="Enter ..." autocomplete="off" list="autocompleteOff">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="WithInfoIcon position-relative">
+                                                        Shift <i id="SlecteIcon" title="Please select your shift from dropdown" class="fas fa-info-circle" aria-hidden="true"></i>
+                                                    </label>
+                                                    <select asp-for="@Model.Subscription.ShiftId"
+                                                            name="ShiftId"
+                                                            class="form-control"
+                                                            asp-items="@(new SelectList(Model.Shifts, "Id", "Name"))" required>
+                                                        <option value="">Select Shift</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="head-border"><h3 class="head-bg">Communication Preference</h3></div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h5 class="comm pl-0"><img src="~/was/img/mail2.png" alt="" width="35" />&nbsp;&nbsp;Email</h5>
+                                                <div class="form-group clearfix ck-top">
+                                                    <div class="icheck-success d-inline" id="IsOfficialEmailParent">
+                                                        @if (Model.Subscription.IsOfficialEmail)
+                                                        {
+                                                            <input type="checkbox" id="IsOfficialEmail" name="IsOfficialEmail" checked onclick="subscriptionPreferenceschanged('@String.Format("{0}", @Model.Subscription.PreferredChannel)')" class="subscriptionPreference">
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" id="IsOfficialEmail" name="IsOfficialEmail" onclick="subscriptionPreferenceschanged('@String.Format("{0}", @Model.Subscription.PreferredChannel)')" class="subscriptionPreference">
+                                                        }
+                                                        <label class="sub-label" for="IsOfficialEmail">
+                                                            Work Email
+                                                        </label>
+                                                    </div>
+                                                    <div class="icheck-success d-inline" id="IsPersonalEmailParent">
+                                                        @if (Model.Subscription.IsPersonalEmail)
+                                                        {
+                                                            <input type="checkbox" id="IsPersonalEmail" name="IsPersonalEmail" checked onclick="subscriptionPreferenceschanged('@String.Format("{0}", @Model.Subscription.PreferredChannel)')" class="subscriptionPreference">
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" id="IsPersonalEmail" name="IsPersonalEmail" onclick="subscriptionPreferenceschanged('@String.Format("{0}", @Model.Subscription.PreferredChannel)')" class="subscriptionPreference">
+                                                        }
+                                                        <label class="sub-label" for="IsPersonalEmail">
+                                                            Personal Email
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="withLanguageSelect position-relative">
+                                                    <h5 class="comm pl-0"><img src="~/was/img/voice.png" alt="" width="35" />&nbsp;&nbsp;Voice</h5>
+                                                    <div class="languageSelectForSubscription">
+                                                        <img src="~/was/img/select-languages.png" alt="" title="Preferred language to hear when you receive an alert/notification on Voice call" width="40" />
+                                                        <select id="PreferredLanguage" class="form-control" name="PreferredLanguage" required>
+                                                            <option disabled> Please Select Your Preferred Language</option>
+                                                            @if (Model.Subscription.PreferredLanguage == null)
+                                                            {
+                                                                @foreach (var languages in Model.Languages)
+                                                                {
+                                                                    if (languages.Name == "English (American)")
+                                                                    {
+                                                                        <option value="@languages.Code" selected>English (American)</option>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@languages.Code">@languages.Name</option>
+                                                                    }
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                @foreach (var languages in Model.Languages)
+                                                                {
+                                                                    if (languages.Code == Model.Subscription.PreferredLanguage)
+                                                                    {
+                                                                        <option value="@languages.Code" selected>@languages.Name</option>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <option value="@languages.Code">@languages.Name</option>
+                                                                    }
+                                                                }
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group clearfix ck-top">
+                                                    <div class="icheck-success d-inline" id="IsVoiceOfficeMobileParent">
+                                                        @if (Model.Subscription.IsVoiceOfficeMobile)
+                                                        {
+                                                            <input type="checkbox" id="IsVoiceOfficeMobile" name="IsVoiceOfficeMobile" checked>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" id="IsVoiceOfficeMobile" name="IsVoiceOfficeMobile">
+                                                        }
+                                                        <label class="sub-label" for="IsVoiceOfficeMobile">
+                                                            Work Mobile
+                                                        </label>
+                                                    </div>
+                                                    <div class="icheck-success d-inline" id="IsVoicePersonalMobileParent">
+                                                        @if (Model.Subscription.IsVoicePersonalMobile)
+                                                        {
+                                                            <input type="checkbox" id="IsVoicePersonalMobile" name="IsVoicePersonalMobile" checked>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" id="IsVoicePersonalMobile" name="IsVoicePersonalMobile">
+                                                        }
+                                                        <label class="sub-label" for="IsVoicePersonalMobile">
+                                                            Personal Mobile
+                                                        </label>
+                                                    </div>
+                                                    <div class="icheck-success d-inline" id="IsVoiceOfficePhoneParent">
+                                                        @if (Model.Subscription.IsVoiceOfficePhone)
+                                                        {
+                                                            <input type="checkbox" id="IsVoiceOfficePhone" name="IsVoiceOfficePhone" checked>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" id="IsVoiceOfficePhone" name="IsVoiceOfficePhone">
+                                                        }
+                                                        <label class="sub-label" for="IsVoiceOfficePhone">
+                                                            Work Phone
+                                                        </label>
+                                                    </div>
+                                                    <div class="icheck-success d-inline" id="IsVoiceHomePhoneParent">
+                                                        @if (Model.Subscription.IsVoiceHomePhone)
+                                                        {
+                                                            <input type="checkbox" id="IsVoiceHomePhone" name="IsVoiceHomePhone" checked>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" id="IsVoiceHomePhone" name="IsVoiceHomePhone">
+                                                        }
+                                                        <label class="sub-label" for="IsVoiceHomePhone">
+                                                            Home Phone
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6">
+                                                <br>
+                                                <h5 class="comm pl-0"><img src="~/was/img/text.png" alt="" width="35" />&nbsp;&nbsp;Text Messages</h5>
+                                                <div class="form-group clearfix ck-top">
+                                                    <div class="icheck-success d-inline" id="IsTextOfficeMobileParent">
+                                                        @if (Model.Subscription.IsTextOfficeMobile)
+                                                        {
+                                                            <input type="checkbox" id="IsTextOfficeMobile" name="IsTextOfficeMobile" checked onclick="subscriptionPreferenceschanged('@String.Format("{0}", @Model.Subscription.PreferredChannel)')" class="subscriptionPreference">
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" id="IsTextOfficeMobile" name="IsTextOfficeMobile" onclick="subscriptionPreferenceschanged('@String.Format("{0}", @Model.Subscription.PreferredChannel)')" class="subscriptionPreference">
+                                                        }
+                                                        <label class="sub-label" for="IsTextOfficeMobile">
+                                                            Work Mobile
+                                                        </label>
+                                                    </div>
+                                                    <div class="icheck-success d-inline" id="IsTextPersonalMobileParent">
+                                                        @if (Model.Subscription.IsTextPersonalMobile)
+                                                        {
+                                                            <input type="checkbox" id="IsTextPersonalMobile" name="IsTextPersonalMobile" checked onclick="subscriptionPreferenceschanged('@String.Format("{0}", @Model.Subscription.PreferredChannel)')" class="subscriptionPreference">
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" id="IsTextPersonalMobile" name="IsTextPersonalMobile" onclick="subscriptionPreferenceschanged('@String.Format("{0}", @Model.Subscription.PreferredChannel)')" class="subscriptionPreference">
+                                                        }
+                                                        <label class="sub-label" for="IsTextPersonalMobile">
+                                                            Personal Mobile
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <br>
+                                                <h5 class="comm pl-0"><img src="~/was/img/whatsapp.png" alt="" width="35" />&nbsp;&nbsp;Whatsapp Messages</h5>
+                                                <div class="form-group clearfix ck-top">
+                                                    <div class="icheck-success d-inline" id="IsWhatsAppOfficeMobileParent">
+                                                        @if (Model.Subscription.IsWhatsAppOfficeMobile)
+                                                        {
+                                                            <input type="checkbox" id="IsWhatsAppOfficeMobile" name="IsWhatsAppOfficeMobile" checked onclick="subscriptionPreferenceschanged('@String.Format("{0}", @Model.Subscription.PreferredChannel)')" class="subscriptionPreference">
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" id="IsWhatsAppOfficeMobile" name="IsWhatsAppOfficeMobile" onclick="subscriptionPreferenceschanged('@String.Format("{0}", @Model.Subscription.PreferredChannel)')" class="subscriptionPreference">
+                                                        }
+                                                        <label class="sub-label" for="IsWhatsAppOfficeMobile">
+                                                            Work Mobile
+                                                        </label>
+                                                    </div>
+                                                    <div class="icheck-success d-inline" id="IsWatsAppPersonalMobileParent">
+                                                        @if (Model.Subscription.IsWhatsAppPersonalMobile)
+                                                        {
+                                                            <input type="checkbox" id="IsWatsAppPersonalMobile" name="IsWhatsAppPersonalMobile" checked onclick="subscriptionPreferenceschanged('@String.Format("{0}", @Model.Subscription.PreferredChannel)')" class="subscriptionPreference">
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" id="IsWatsAppPersonalMobile" name="IsWhatsAppPersonalMobile" onclick="subscriptionPreferenceschanged('@String.Format("{0}", @Model.Subscription.PreferredChannel)')" class="subscriptionPreference">
+                                                        }
+                                                        <label class="sub-label" for="IsWatsAppPersonalMobile">
+                                                            Personal Mobile
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <br>
+                                        <div class="head-border"><h3 class="head-bg">Preferred Channel For Account Updates</h3></div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <select id="PreferredChannel" class="form-control" name="PreferredChannel" required>
+                                                    <option disabled> Please Select Your Preferred Channel</option>
+                                                    @if (Model.Subscription.PreferredChannel != null)
+                                                    {
+                                                        var optionvalue = "";
+                                                        if (Model.Subscription.PreferredChannel == "OfficialEmail")
+                                                        {
+                                                            optionvalue = "Work Email";
+                                                        }
+                                                        else if (Model.Subscription.PreferredChannel == "PersonalEmail")
+                                                        {
+                                                            optionvalue = "Personal Email";
+                                                        }
+                                                        else if (Model.Subscription.PreferredChannel == "TextOfficeMobile")
+                                                        {
+                                                            optionvalue = "SMS on Work Mobile";
+                                                        }
+                                                        else if (Model.Subscription.PreferredChannel == "TextPersonalMobile")
+                                                        {
+                                                            optionvalue = "SMS on Personal Mobile";
+                                                        }
+                                                        else if (Model.Subscription.PreferredChannel == "WhatsAppOfficeMobile")
+                                                        {
+                                                            optionvalue = "Message on WhatsApp on Work Mobile";
+                                                        }
+                                                        else if (Model.Subscription.PreferredChannel == "WhatsAppPersonalMobile")
+                                                        {
+                                                            optionvalue = "Message on WhatsApp on Personal Mobile";
+                                                        }
+                                                        <option id="channeloption" value=@Model.Subscription.PreferredChannel selected>@optionvalue</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <h4>Acknowledgement & Consent</h4>
+                                        <div class="form-group clearfix">
+                                            <div class="icheck-success d-inline">
+                                                <input type="checkbox" id="consent" name="Consent" value="true" required>
+                                                <label for="consent"></label>
+                                                I authorize West to use West Alert System to send company/work-related communications to me on personal devices and personal communication identifiers until I revoke the authorization.
+                                            </div>
+                                        </div>
+
+                                        <div class="icheck-success d-inline">
+
+                                            <input type="checkbox" id="IsWestTermsConditions" name="IsWestTermsConditions" required>
+                                            <label class="sub-label" for="IsWestTermsConditions" style="font-size:16px;">
+                                                I accept the <a href="https://westpharmaceutical.sharepoint.com/SitePages/Legal%20Notice.aspx" rel="noopener" target="_blank">Terms of Use</a> of West Alert System.
+                                            </label>
+                                        </div>
+
+                                        <input type="hidden" value="@Model.Subscription.Id" id="SubscriptionId" name="Id" />
+                                        <button type="submit" id="idSubmitOrUpdate" class="btn btn-block btn-warning btn-lg float-right submit_update_Was">UPDATE</button>
+
+                                        <br> <br>
+                                    </div>
+                                </form>
+                            }
+
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
+                    <br /><br />
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    @if (Model != null && Model.Success)
+    {
+        <div class="modal fade" id="modal-confirmation" value="" operatnType="">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/was/Subscription/subscriptionFeedback" method="post">
+                        <div class="modal-body text-center pt-0">
+                            <i class="fas fa-check alertButtonModal color_green" aria-hidden="true"></i>
+                            <h4 class="modal-title">Subscription Successful</h4>
+                            <p class="font_14">Thank you for subscribing to West Alert System(WAS). You will receive Alerts/Notifications and Survey Requests from WAS Administrators when you're part of the target audience. Please keep your profile and contact information up to date on this link <a href="https://was.westpharma.com/WAS/Subscription/Subscribe">https://was.westpharma.com/WAS/Subscription/Subscribe</a> to not miss any important notifications</p>
+                            <div class="col-12 p-0">
+                                <div class="feedbackSmileyInput ForKnownUsers">
+                                    <p>Was this a simple and engaging subscription Process?</p>
+                                    <div class="input-group smiley_Satisfied">
+                                        <div class="col-sm-3 col-6 pl-0 smiley_VSatisfied">
+                                            <label>
+                                                <input type="radio" name="Feedback" value="VerySatisfied" checked>
+                                                <img src="~/was/img/feedback_very_satisfied.png" alt="feedback Icon" width="35">
+                                                <span class="smiley_title">Very Satisfied</span>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-3 col-6 pl-0 smiley_Satisfied">
+                                            <label>
+                                                <input type="radio" name="Feedback" value="Satisfied">
+                                                <img src="~/was/img/feedback_satisfied.png" alt="feedback Icon" width="35">
+                                                <span class="smiley_title">Satisfied</span>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-3 col-6 pl-0 smiley_DisSatisfied">
+                                            <label>
+                                                <input type="radio" name="Feedback" value="Dissatisfied">
+                                                <img src="~/was/img/feedback_dissatisfied.png" alt="feedback Icon" width="35">
+                                                <span class="smiley_title">Dissatisfied</span>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-3 col-6 pl-0 smiley_VDisSatisfied">
+                                            <label>
+                                                <input type="radio" name="Feedback" value="VeryDissatisfied">
+                                                <img src="~/was/img/feedback_very_dissatisfied.png" alt="feedback Icon" width="35">
+                                                <span class="smiley_title">Very Dissatisfied</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center mb-3">
+                            <input type="hidden" id="FeedbackChannel" value="Web (with SSO)" />
+                            <input type="hidden" id="SubscriptionId" value="@Model.SubscriptionId" />
+                            <button type="submit" class="btn btn-success" data-dismiss="modal" onclick="SubscriptionFeedback()">Ok</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    }
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+        <div class="p-3">
+            <h5>Title</h5>
+            <p>Sidebar content</p>
+        </div>
+    </aside>
+    <!-- /.control-sidebar -->
+    <!-- Main Footer -->
+    <footer class="main-footer">
+        <div class="float-left d-none d-sm-inline">
+            <span class="brand-text font-weight-light"><img src="../../images/logo.png" alt="" width="200" /></span>
+        </div>
+        <!-- To the right -->
+        <div class="float-right d-none d-sm-inline">
+            <strong>Copyright &copy; 2020 <a href="#">WEST</a>.</strong> All rights reserved.
+        </div>
+        <!-- Default to the left -->
+
+    </footer>
+</div>
+<script type="text/javascript">
+    if (@Model.LocationId != null)
+        $('#LocationId').val(@Model.LocationId);
+    else
+        $('#LocationId').val(0);
+
+    $(window).on('load', function () {
+        populateDialCodeWithFlag($(".country-code"));
+    });
+
+</script>
+
+

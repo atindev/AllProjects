@@ -1,0 +1,41 @@
+﻿@model WAS.Application.Features.Notification.View.Response
+@{
+    ViewData["Title"] = "View Notifications";
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">
+                        <button type="button" class="btn btn-reset btn-default" onclick="document.getElementById('clsBackButtonForNotificationView').click()">
+                            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                            @if (ViewBag.value=="dashboard")
+                            {
+                                <a href="/WAS/Dashboard/View" id="clsBackButtonForNotificationView"> </a>
+                            }
+                            else
+                            {
+                                <a href="/WAS/Notification/List" id="clsBackButtonForNotificationView"> </a>
+
+                            }
+
+                        </button>  Notification
+                    </h1>
+                </div>
+                <div class="col-sm-6">
+
+                </div><!-- /.col -->
+
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    @await Html.PartialAsync("_ViewNotification", Model);
+    <!-- /.content-wrapper -->
+</div>
+<script src="~/was/js/Notification/refreshNotificationStatus.js"></script>

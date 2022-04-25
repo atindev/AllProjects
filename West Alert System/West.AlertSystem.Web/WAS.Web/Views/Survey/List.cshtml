@@ -1,0 +1,330 @@
+﻿@{
+    ViewData["Title"] = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var picture = "/was/img/user2-160x160.jpg";
+    var currentUser = User.Identity.Name;
+    if (currentUser != null && currentUser != "")
+        currentUser = currentUser.ToLower().Replace("@", "");
+    else
+        currentUser = "";
+}
+
+<link href="~/was/css/Survey/getAll.css" rel="stylesheet" />
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <h1 class="m-0 text-dark">Surveys</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark float-sm-right">
+                        <a href="/WAS/Survey/Create" class="btn btn-block btn-success btn-lg">Create Survey</a>
+                    </h1>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <div class="content SelectDesignFix">
+        <div class="container">
+            <div class="row">
+                <input type="hidden" value=@ViewBag.value id="idTabOption" />
+                <div class="col-sm-12">
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="custom-content-below-home-tab-Surveys" data-toggle="pill" href="#custom-content-below-home-Surveys" role="tab" aria-controls="custom-content-below-home-Surveys" aria-selected="true">Survey Templates</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-content-below-profile-tab" data-toggle="pill" href="#custom-content-below-profile" role="tab" aria-controls="custom-content-below-profile" aria-selected="false">Broadcasted Surveys</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="custom-content-below-tabContent">
+                            <div class="tab-pane fade active show" id="custom-content-below-home-Surveys" role="tabpanel" aria-labelledby="custom-content-below-home-tab-Surveys">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="card">
+                                            <div class="card-header border-transparent">
+                                                <div class="row">
+                                                    <div class="col-lg-3 mt-2">
+                                                        <label for="createdby">CreatedBy</label>
+                                                        <div class="form-control">
+                                                            <ejs-autocomplete id="emails" dataSource="@ViewBag.CreatedByList" placeholder="Filter on CreatedBy" change="getPagedData">
+                                                            </ejs-autocomplete>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                    </div>
+                                                    <div class="col-lg-3 mt-2">
+                                                        <label for="createdby">Subject or Description</label>
+                                                        <input type="text" class="form-control float-right" id="idFilterBySubject" placeholder="Filter by Subject or Description">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <div class="table-responsive tableIconsAlignmentFix">
+                                                    <ejs-grid id="GridSurveys" allowPaging="true" allowTextWrap="true" gridLines="Both" dataBound="updateUserDetails">
+                                                        <e-data-manager url="./GetAllSurvey/" adaptor="UrlAdaptor" crossdomain="true"></e-data-manager>
+                                                        <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+                                                        <e-grid-columns>
+                                                            <e-grid-column field="Id" headerText="Action" template="#idSurveyDetails" customAttributes=@(new { @class = "customcssDetails" }) headerTextAlign="Center" textAlign="Center" width="120"></e-grid-column>
+                                                            <e-grid-column field="Subject" headerText="Subject" template="#idSurveyName" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                            <e-grid-column field="CreatedBy" headerText="Created By" template="#idSurveyAuthor" customAttributes=@(new { @class = "customcssAuthor" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                            <e-grid-column field="NumberofQuestions" headerText="Number of Questions" template="#idNumberOfQuestions" customAttributes=@(new { @class = "customcssCount" }) headerTextAlign="Center" textAlign="Center" width="200"></e-grid-column>
+                                                            <e-grid-column field="BroadcastCount" headerText="Broadcasted Count" template="#idBroadCastCount" customAttributes=@(new { @class = "customcssCount" }) headerTextAlign="Center" textAlign="Center" width="200"></e-grid-column>
+                                                            <e-grid-column field="Description" headerText="Description" template="#idSurveyDescription" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                        </e-grid-columns>
+                                                    </ejs-grid>
+                                                    <script id="idSurveyDetails" type="text/x-template">
+
+                                                        ${if(OwnerWithoutSpecialCharacter== "@currentUser")}
+                                                        <a value="surveyDetails" href="/WAS/Survey/View?id=${Id}" class="icon-button details"><i title="Edit" class="fas fa-file-signature icon-details" value="surveyDetails"></i><span></span></a>
+                                                        <a value="surveyDetails" class="icon-button correction" surveytype="Survey" surveyname="${Subject}" id="${Id}" onclick='deleteSurveys(this)' data-toggle="modal" data-target="#modal-DeleteSurvey"><i title="Delete" class="fas fa-trash  icon-correction" value="surveyDetails"></i><span></span></a>
+                                                        ${else}
+                                                        <a value="surveyDetails" href="/WAS/Survey/View?id=${Id}" class="icon-button preview classSurveyDetails"><i title="Info" class="fas fa-info-circle icon-preview" value="surveyDetails"></i><span></span></a>
+                                                        ${/if}
+                                                        <a href="/WAS/Survey/Broadcast?id=${Id}" class="icon-button forBroadcastSurvey"><i class="WasFeedBackIcon" title="" data-original-title="Broadcast Survey"></i><span></span></a>
+                                                        <a class="icon-button forBroadcastSurvey" id="${Id}" onclick='cloneCurrentSurvey(this)' data-toggle="modal" data-target="#modal-clone-survey"><i class="fas fa-clone clone-survey text-primary" title="" data-original-title="Clone the Survey"></i><span></span></a>
+
+                                                    </script>
+                                                    <script id="idSurveyName" type="text/x-template">
+                                                        <div class="clsSurveyName" data-toggle="tooltip" data-placement="top" title="${Subject}">${Subject}</div>
+                                                    </script>
+                                                    <script id="idSurveyAuthor" type="text/x-template">
+                                                        <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid" onclick='bindSubscriptionDetails(this)' value="peopleDetails" alt="User Image" data-useremail="${CreatedBy}">
+                                                        <div class="clsAuthor ad-user-grid" data-useremail="${CreatedBy}" data-toggle="tooltip" data-placement="top" title="${CreatedBy}">${CreatedBy}</div>
+                                                        <div class="clsLastUpdated userWithLocation" data-toggle="tooltip" data-placement="top" title="${CreaterLocation}"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${CreaterLocation}</div>
+                                                        <div class="clsLastUpdated timeUpdated" data-toggle="tooltip" data-placement="top" title="${Updated}">${Updated}</div>
+                                                    </script>
+                                                    <script id="idNumberOfQuestions" type="text/x-template">
+                                                        <div class="clsSurveyName" data-toggle="tooltip" data-placement="top" title="${NumberofQuestions}">${NumberofQuestions}</div>
+                                                    </script>
+                                                    <script id="idBroadCastCount" type="text/x-template">
+                                                        <div class="clsSurveyName" data-toggle="tooltip" data-placement="top" title="${BroadcastCount}">${BroadcastCount}</div>
+                                                    </script>
+                                                    <script id="idSurveyDescription" type="text/x-template">
+                                                        ${if(Description==null)}
+                                                        <div class="clsSurveyDescription" data-toggle="tooltip" data-placement="top" title=""></div>
+                                                        ${else}
+                                                        <div class="clsSurveyDescription" data-toggle="tooltip" data-placement="top" title="${Description}">${Description}</div>
+                                                        ${/if}
+                                                    </script>
+                                                </div>
+                                                <!-- /.table-responsive -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="custom-content-below-profile" role="tabpanel" aria-labelledby="custom-content-below-profile-tab">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="card">
+                                            <div class="card-header border-transparent">
+                                                <div class="row">
+                                                    <div class="col-lg-2">
+                                                        <div class="form-group">
+                                                            <label for="id_end_date">Status</label>
+                                                            <select class="form-control" id="idFilterByStatus">
+                                                                <option value="-1">Filter by Status</option>
+                                                                <option value="1">Scheduled</option>
+                                                                <option value="2">Broadcasted</option>
+                                                                <option value="3">Failed to Send</option>
+                                                                <option value="4">Sent</option>
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-2">
+                                                        <div class="form-group">
+                                                            <label for="id_end_date">Subject</label>
+                                                            <input type="text" class="form-control float-right" id="idFilterByBroadcastName" placeholder="Filter by Subject">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <div class="form-group">
+                                                            <label for="createdby">CreatedBy</label>
+                                                            <div class="form-control">
+                                                                <ejs-autocomplete id="createdemail" dataSource="@ViewBag.CreatedByList" placeholder="Filter on CreatedBy" change="getPagedDataForBroadcast">
+                                                                </ejs-autocomplete>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            <div class="form-group">
+                                                                <label for="id_end_date">Starts on</label>
+                                                                <input type="date" class="form-control" id="idStartDate">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            <div class="form-group">
+                                                                <label for="id_end_date">Ends on</label>
+                                                                <input type="date" class="form-control" id="idEndDate">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-1 align-items-center">
+                                                            <div class="serchRefreshFix d-flex align-items-center justify-content-center h-100">
+                                                                <div class="form-group" id="idSearchParent">
+                                                                    <i class="fa fa-refresh" aria-hidden="true" id="idResetSearch" title="Reset Search"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <div class="table-responsive tableIconsAlignmentFix">
+                                                    <ejs-grid id="GridBroadcastedSurveys" allowPaging="true" allowTextWrap="true" gridLines="Both" actionBegin="broadcastGridactionBegin" dataBound="updateBroadcastUserDetails">
+                                                        <e-data-manager url="./GetAllBroadcast/" adaptor="UrlAdaptor" crossdomain="true"></e-data-manager>
+                                                        <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+                                                        <e-grid-columns>
+                                                            <e-grid-column field="Id" headerText="Action" template="#idSurveyDetailsBroadcast" customAttributes=@(new { @class = "customcssDetails" }) headerTextAlign="Center" textAlign="Center" width="130"></e-grid-column>
+                                                            <e-grid-column field="Subject" headerText="Subject" template="#idSurveyNameBroadcast" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                            <e-grid-column field="CreatedBy" headerText="Created By" template="#idSurveyAuthorBroadcast" customAttributes=@(new { @class = "customcssAuthor" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                            <e-grid-column field="StartTime" headerText="Starts on (UTC)" template="#idStartTimeBroadcast" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                            <e-grid-column field="EndTime" headerText="Ends on (UTC)" template="#idEndTimeBroadcast" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                            <e-grid-column field="GroupNames" headerText="Groups/People" template="#idPagedGroups" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                            <e-grid-column field="Status" headerText="Status" template="#idPagedStatus" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center" width="140"></e-grid-column>
+                                                        </e-grid-columns>
+                                                    </ejs-grid>
+                                                    <script id="idSurveyDetailsBroadcast" type="text/x-template">
+
+                                                        ${if(OwnerWithoutSpecialCharacter== "@currentUser" && IsActive && Status=="1")}
+                                                       
+                                                        <a value="surveyDetails" href="/WAS/Survey/Broadcast?id=${Id}&isUpdate=true" class="icon-button details"><i title="Edit" class="fas fa-file-signature icon-details" value="surveyDetails"></i><span></span></a>
+                                                        <a value="surveyDetails" class="icon-button correction" surveytype="BroadcastedSurvey" surveyname="${Subject}" id="${Id}" onclick='deleteSurveys(this)' data-toggle="modal" data-target="#modal-DeleteSurvey"><i title="Delete" class="fas fa-trash  icon-correction" value="surveyDetails"></i><span></span></a>
+                                                        ${else}
+                                                        ${if(Status=="4")}
+                                                        <a value="surveyDetails" href="/WAS/Survey/GetAnswerwiseReport?id=${Id}" class="icon-button preview classSurveyDetails previewRed" title="Survey Insights" ><img src="/was/img/insights_icons.svg" width="22" value="surveyDetails" /> </a>
+                                                        <a value="surveyDetails" class="icon-button " surveytype="ShareBroadcastedSurvey" shareSurveyName="${Subject}" shareSurveyid="${Id}" onclick='shareSurveys(this)' data-toggle="modal" data-target="#modal-shareSurvey"><i title="Share" class="fa fa-share text-secondary" value="surveyDetails"></i><span></span></a>
+                                                        ${/if}
+
+                                                        ${/if}
+                                                    </script>
+                                                    <script id="idSurveyNameBroadcast" type="text/x-template">
+                                                        <div class="clsSurveyNameBroadcast" data-toggle="tooltip" data-placement="top" title="${Subject}">${Subject}</div>
+                                                    </script>
+                                                    <script id="idStartTimeBroadcast" type="text/x-template">
+                                                        <div class="clsSurveyNameBroadcast timeSpanConvert" utcTime="${StartTime}" timeZone="${TimeZone}" data-toggle="tooltip" data-placement="top"></div>
+                                                    </script>
+                                                    <script id="idEndTimeBroadcast" type="text/x-template">
+                                                        <div class="clsSurveyNameBroadcast timeSpanConvert" utcTime="${EndTime}" timeZone="${TimeZone}" data-toggle="tooltip" data-placement="top"></div>
+                                                    </script>
+                                                    <script id="idSurveyAuthorBroadcast" type="text/x-template">
+                                                        <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid" onclick='bindSubscriptionDetails(this)' value="peopleDetails" alt="User Image" data-useremail="${CreatedBy}">
+                                                        <div class="clsAuthor ad-user-grid" data-useremail="${CreatedBy}" data-toggle="tooltip" data-placement="top" title="${CreatedBy}">${CreatedBy}</div>
+                                                        <div class="clsLastUpdated userWithLocation" data-toggle="tooltip" data-placement="top" title="${CreaterLocation}"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${CreaterLocation}</div>
+                                                        <div class="clsLastUpdated timeUpdated" data-toggle="tooltip" data-placement="top" title="${Updated}">${Updated}</div>
+                                                    </script>
+                                                    <script id="idPagedGroups" type="text/x-template">
+                                                        ${for(item of GroupNames)}
+                                                        <span class="groupTiles clsGroups" data-toggle="tooltip" data-placement="top" title="${item}">${item}</span>
+                                                        ${/for}
+                                                        ${for(item of SubscriberNames)}
+                                                        <span class="groupTiles clsPeople" data-toggle="tooltip" data-placement="top" title="${item}">${item}</span>
+                                                        ${/for}
+                                                        ${for(item of DistributionGroupNames)}
+                                                        <span class="groupTiles clsPeople" data-toggle="tooltip" data-placement="top" title="${item}">${item}</span>
+                                                        ${/for}
+                                                        ${for(item of ADPeopleNames)}
+                                                        <span class="groupTiles clsPeople" data-toggle="tooltip" data-placement="top" title="${item}">${item}</span>
+                                                        ${/for}
+                                                    </script>
+                                                    <script id="idPagedStatus" type="text/x-template">
+                                                        ${if(Status=="1")}
+                                                        <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusPendingApprover.svg" /><span class="approved pendingWithApprover">Scheduled</span></span>
+                                                        ${else if(Status=="2")}
+                                                        <span class="NotificatonStatusWas"><img src="/was/img/NotificationStatusApproved.svg" /><span class="approved SecondLevelApproved">Broadcasted</span></span>
+                                                        ${else if(Status=="3")}
+                                                        <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusFailed.svg" /><span class="cancel">Failed to Send</span></span>
+                                                        ${else if(Status=="4")}
+                                                        <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusSent.svg" /><span class="approved">Sent</span></span>
+                                                        ${else}
+                                                        <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusFailed.svg" /><span class="cancel">Failed to Send</span></span>
+                                                        ${/if}
+                                                    </script>
+                                                </div>
+                                                <!-- /.table-responsive -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br /><br />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-DeleteSurvey">
+    <form action="/WAS/Survey/DeleteSurvey" method="post" autocomplete="off">
+        <div class="modal-dialog text-center modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pt-0">
+                    <i class="fas fa-times alertButtonModal color_danger" aria-hidden="true"></i>
+                    <p class="h5 mb-4 pr-2 pl-2" id="idDeleteSurveyText"></p>
+                </div>
+                <input type="hidden" value="" id="idSurveyIdForDelete" name="Id" />
+                <input type="hidden" value="" id="idSurveyType" name="SurveyType" />
+
+                <div class="modal-footer justify-content-center border-top-0 pt-0 mb-2">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger" id="idSurveyDeleteConfirm">Confirm</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </form>
+</div>
+
+
+@{await Html.RenderPartialAsync("_shareSurveyPopUp"); }
+
+
+
+<div class="modal fade" id="modal-clone-survey">
+    <form action="/WAS/Survey/CloneSurvey" method="post" autocomplete="off">
+        <div class="modal-dialog text-center modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pt-0">
+                    <i class="fas fa-clone alertButtonModal color_green_fill" aria-hidden="true"></i>
+                    <p class="h5 mb-4 pr-2 pl-2" id="idSurveyCloneText">Do you want to clone this survey?</p>
+                </div>
+                <input type="hidden" value="" id="idSurveyIdForClone" name="SurveyId" />
+
+                <div class="modal-footer justify-content-center border-top-0 pt-0 mb-2">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success" id="idCloneSurveyConfirm">Confirm</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </form>
+</div>
+<script src="~/was/js/Survey/getAll.js"></script>
+<ejs-scripts></ejs-scripts>
+
+

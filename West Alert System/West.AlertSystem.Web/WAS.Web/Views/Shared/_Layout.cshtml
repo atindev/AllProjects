@@ -1,0 +1,590 @@
+﻿@using  System.Security.Claims;
+@using System.Text.RegularExpressions;
+@{
+    var picture = "/was/img/user2-160x160.jpg";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-169285107-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-169285107-1');
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>@ViewData["Title"] - West Alert System</title>
+    <link rel="stylesheet" href="~/was/css/ionicons.min.css">
+    <link rel="stylesheet" href="~/was/css/style-rebrand.css" asp-append-version="true">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="~/was/css/fontawesome-free/css/all.min.css">
+
+    <!-- Theme style -->
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="~/was/css/sweetalert2.min.css">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="~/was/css/toastr.min.css">
+    <link rel="stylesheet" href="~/was/css/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="~/was/lib/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/was/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <link rel="stylesheet" href="~/was/lib/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+    <link rel="stylesheet" href="~/was/css/adminlte.min.css">
+    <link rel="stylesheet" href="~/was/css/material.css">
+    <link href="~/was/css/intlTelInput.css" rel="stylesheet" />
+    <link href="~/was/css/site.css" rel="stylesheet" asp-append-version="true" />
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link rel="stylesheet" href="~/was/css/daterangepicker.css">
+    <link rel="icon" href="~/was/favicon.ico" type="image/favicon.ico" sizes="16x16">
+
+    <!-- Teams Content Page Script -->
+    <script src='https://statics.teams.cdn.office.net/sdk/v1.6.0/js/MicrosoftTeams.min.js'></script>
+    <script src="~/was/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/was/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/was/js/sweetalert2.min.js"></script>
+    <script src="~/was/js/toastr.min.js"></script>
+    <script src="~/was/js/adminlte.min.js"></script>
+    <script src="~/was/js/demo.js"></script>
+    <script src="~/was/js/moment.min.js"></script>
+    <script src="~/was/js/daterangepicker.js"></script>
+    <script src="~/was/lib/select2/js/select2.full.min.js"></script>
+    <script src="~/was/lib/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+    <script src="~/was/js/intlTelInput.js"></script>
+    <script src="~/was/js/site.js" asp-append-version="true"></script>
+    @*scripts for syncfusion*@
+    <script src="~/was/js/ej2.min.js"></script>
+
+    @*for moment js*@
+    <script src="~/was/js/moment-timezone-with-data.js"></script>
+
+    <style>
+        .dropdown-toggle::after {
+            margin-left: .255em !important;
+        }
+
+        .menubar .active {
+            background: #f5f6f7;
+        }
+
+        .menubar li:hover {
+            background: #f5f6f7;
+        }
+
+        .classFeedbackButton {
+            position: fixed;
+            right: 5px;
+            bottom: 80px;
+            transition: all 0.2s ease-in 0s;
+            z-index: 99;
+        }
+
+        #previewScreenShot {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            z-index: 99999;
+        }
+
+            #previewScreenShot img {
+                width: 35px;
+            }
+
+        .classFeedbackButton a {
+            display: block;
+            position: relative;
+        }
+
+        .classFeedbackButton img {
+            width: 80px;
+            display: block;
+            margin-top: 15px;
+        }
+
+        #previewScreenShot {
+            position: fixed;
+            top: 19px;
+            right: 36px;
+            z-index: 99999;
+        }
+
+            #previewScreenShot img {
+                width: 35px;
+            }
+
+        .navbar > .container {
+            position: relative;
+        }
+
+        #idLayerForFeedbackPopup {
+            background: #4c4a4a;
+            opacity: 0.9;
+        }
+
+        #profileMenu {
+            margin-right: 10px;
+        }
+
+            #profileMenu .nav-link.btn-tool {
+                padding: 0;
+            }
+
+        @@media only screen and ( max-width: 1300px ) {
+            .classFeedbackButton img {
+                width: 55px;
+            }
+        }
+
+        @@media only screen and ( max-width: 992px ) {
+            .tooltiptext {
+                display: none;
+            }
+        }
+
+        @@media only screen and ( max-width: 768px ) {
+            .main-footer {
+                text-align: center;
+                font-size: 12px;
+            }
+
+                .main-footer img {
+                    width: 150px;
+                }
+
+            .classFeedbackButton img {
+                width: 40px;
+            }
+        }
+
+        @@media only screen and ( max-width: 720px ) {
+            #profileMenu {
+                padding-right: 45px;
+            }
+        }
+
+        .modal.show .modal-dialog {
+            margin-top: 60px !important;
+        }
+
+        .modal-open {
+            padding-right: 0 !important
+        }
+    </style>
+
+    <script>
+        microsoftTeams.initialize();
+    </script>
+    @RenderSection("Scripts", required: false)
+    <script>
+        $(document).ready(function () {
+
+            //enabling selected module active
+            let currentModule = sessionStorage.getItem("currentModule");
+            $('.classMenuItem').removeClass('active');
+            if (currentModule != undefined && currentModule != null && currentModule != "") {
+                $('.classMenuItem[value="' + currentModule + '"]').addClass("active");
+            }
+            else if (currentModule == null) {
+                $('.classMenuItem[value="Dashboard"]').addClass("active");
+            }
+
+            dt = new Date();
+            $("#yearSpan").text(dt.getFullYear());
+
+            $("#canvasSave").click(function () {
+                var imageData = document.getElementById("canvas-drawing").toDataURL("image/png");
+                $("#imgscreenshot").attr("src", imageData);
+                $('.canvas-container').remove();
+                $("#divCanvas").append('<canvas id="canvas-drawing" width="1900" height="2100"></canvas>');
+            });
+
+            $('.classMenuItem').click(function (event) {
+
+                $('.classMenuItem').removeClass('active');
+                $($(event.currentTarget)[0]).addClass('active');
+                sessionStorage.setItem("currentModule", $($(event.currentTarget)[0]).attr("value"));
+
+            });
+
+            $('#feedback-modal').click(function (event) {
+                if (event.target.id == "feedback-modal") {
+                    $("#idLayerForFeedbackPopup").modal('hide');
+                    if ($(".modal-content:visible").length > 0) {
+                        $(".modal:visible").modal('hide');
+                    }
+                }
+            });
+
+            //code for screen responsiveness start
+            $(".was-mob-menu").click(function () {
+                $(".was_main_menu").slideToggle();
+                $(".was-mob-menu").toggleClass("open");
+            });
+            //code for screen responsiveness ends
+
+            $("#idCreateNotificationGlobal,.classCreateNotificationGlobal").click(function () {
+                sessionStorage.setItem("currentModule", "");
+            });
+
+        });
+    </script>
+
+    <script>
+        var sheet = document.createElement('style'),
+            $rangeInput = $('.range input'),
+            prefs = ['webkit-slider-runnable-track', 'moz-range-track', 'ms-track'];
+
+        if (document.body != undefined && document.body != null)
+            document.body.appendChild(sheet);
+
+        var getTrackStyle = function (el) {
+            var curVal = el.value,
+                val = (curVal - 1) * 16.666666667,
+                style = '';
+
+            // Set active label
+            $('.range-labels li').removeClass('active selected');
+
+            var curLabel = $('.range-labels').find('li:nth-child(' + curVal + ')');
+
+            curLabel.addClass('active selected');
+            curLabel.prevAll().addClass('selected');
+
+            // Change background gradient
+            for (var i = 0; i < prefs.length; i++) {
+                style += '.range {background: linear-gradient(to right, #28a745 0%, #28a745 ' + val + '%, #fff ' + val + '%, #fff 100%)}';
+                style += '.range input::-' + prefs[i] + '{background: linear-gradient(to right, #28a745 0%, #28a745 ' + val + '%, #b2b2b2 ' + val + '%, #b2b2b2 100%)}';
+            }
+
+            return style;
+        }
+
+        $rangeInput.on('input', function () {
+            sheet.textContent = getTrackStyle(this);
+        });
+
+        // Change input value on label click
+        $('.range-labels li').on('click', function () {
+            var index = $(this).index();
+
+            $rangeInput.val(index + 1).trigger('input');
+
+        });
+
+        function ShowFeedback() {
+            $('.classFeedbackContent').val("");
+            $("#isScreenshotRequired").prop("checked", "true");
+            if ($('#feedback-modal:visible').length > 0) {
+                $(".modal:visible").modal('hide');
+                $("#idLayerForFeedbackPopup").modal('hide');
+                return false;
+            }
+            $("#idLayerForFeedbackPopup").modal('toggle');
+            $('#feedback-modal').modal('toggle');
+
+        }
+        function hideFeedbackLayer() {
+            $("#idLayerForFeedbackPopup").modal('hide');
+            if ($(".modal-content:visible").length > 0) {
+                $(".modal:visible").modal('hide');
+            }
+        }
+    </script>
+
+    <script type="text/javascript">
+        function myFunction() {
+            $('#loading').show();
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#loading').hide();
+        });
+    </script>
+</head>
+<body class="hold-transition layout-top-nav" onbeforeunload="return myFunction()">
+    <div id="loading" class="modal modal-backdrop divLoader">
+        <div class="LoaderOuter">
+            <div class="WASLoader">
+                <div><svg aria-hidden="true" focusable="false" data-icon="bell" width="25" height="25" class="svg-inline" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M224 512c35.32 0 63.97-28.65 63.97-64H160.03c0 35.35 28.65 64 63.97 64zm215.39-149.71c-19.32-20.76-55.47-51.99-55.47-154.29 0-77.7-54.48-139.9-127.94-155.16V32c0-17.67-14.32-32-31.98-32s-31.98 14.33-31.98 32v20.84C118.56 68.1 64.08 130.3 64.08 208c0 102.3-36.15 133.53-55.47 154.29-6 6.45-8.66 14.16-8.61 21.71.11 16.4 12.98 32 32.1 32h383.8c19.12 0 32-15.6 32.1-32 .05-7.55-2.61-15.27-8.61-21.71z"></path></svg></div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper">
+        <!-- Header Start-->
+        <nav class="main-header navbar navbar-expand-md navbar-light navbar-white top-bar sticky-top">
+            <div class="container">
+                <a href="/WAS/Dashboard/View" class="navbar-brand classMenuItem" title="West Alert System" value="Dashboard">
+                    <img src="~/was/img/was-logo-04.png" width="100" alt="unable to load image" />
+                </a>
+                <div class="row menu_container">
+                    @if (User.Claims.Any())
+                    {
+                        <div class="was-mob-menu" href="javascript:void(0)">
+                            <div class="bar1"></div>
+                            <div class="bar2"></div>
+                            <div class="bar3"></div>
+                        </div>
+                    }
+
+                    <ul class="navbar-nav menubar was_main_menu">
+                        @if (User.HasClaim(ClaimTypes.Role, "WASAdmin") || User.HasClaim(ClaimTypes.Role, "GlobalAdministrator"))
+                        {
+                            <li class="nav-item d-sm-inline-block classMenuItem" value="Dashboard">
+                                <a href="/WAS/Dashboard/View?source=Dashboard" class="nav-link">Dashboard</a>
+                            </li>
+                            <li class="nav-item d-sm-inline-block classMenuItem dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Notifications
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <ul class="p-0">
+                                        <li class="nav-item d-block classMenuItem" value="Notifications">
+                                            <a href="/WAS/Notification/List" class="nav-link">Notifications</a>
+                                        </li>
+                                        <li class="nav-item d-block classMenuItem" value="Events">
+                                            <a href="/WAS/Event/List" class="nav-link">Events</a>
+                                        </li>
+                                        <li class="nav-item d-block classMenuItem" value="Surveyes">
+                                            <a href="/WAS/Survey/List" class="nav-link">Surveys</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item d-sm-inline-block classMenuItem" value="Groups">
+                                <a href="/WAS/Group/List" class="nav-link">Groups/People</a>
+                            </li>
+                            <li class="nav-item d-sm-inline-block classMenuItem dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Review
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <ul class="p-0">
+                                        <li class="nav-item d-block classMenuItem" value="Review Notifications">
+                                            <a href="/WAS/Notification/ListSubmitted" class="nav-link">Notifications</a>
+                                        </li>
+                                        <li class="nav-item d-block classMenuItem" value="Events">
+                                            <a href="/WAS/Subscription/SubscriptionReviewList" class="nav-link">Subscriptions</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="nav-item d-sm-inline-block classMenuItem" value="Reports">
+                                <a href="/WAS/Reports" class="nav-link">Reports</a>
+                            </li>
+                        }
+                        else if ((User.HasClaim(ClaimTypes.Role, "Approver")) || (User.HasClaim(ClaimTypes.Role, "CommunicationTeam")))
+                        {
+                            <li class="nav-item d-block classMenuItem" value="Review Notifications">
+                                <a href="/WAS/Notification/ListSubmitted" class="nav-link">Review Notifications</a>
+                            </li>
+                        }
+                        else if ((User.HasClaim(ClaimTypes.Role, "SurveyAdmin")))
+                        {
+                            <li class="nav-item d-block classMenuItem" value="Survey">
+                                <a href="/WAS/Survey/List" class="nav-link">Survey</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <!-- Right navbar links -->
+                @if (User.Claims.Any())
+                {
+                    <ul id="profileMenu" class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+                        <!-- Messages Dropdown Menu -->
+                        <li class="nav-item dropdown user-menu">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                <img src="@picture" class="user-image img-circle elevation-2" style="margin-top:0px !important" alt="User Image" data-useremail="@User.Identity.Name">
+                                <span class="d-md-inline was-user-name" style="position: relative; top: -7px;">
+                                    @((User.Identity as System.Security.Claims.ClaimsIdentity)?.FindFirst("name")?.Value)
+                                </span>
+                                <span class="float-right btn-tool nav-link dropdown-toggle" style="margin: 0px 0px 0px 0px" data-toggle="dropdown"></span>
+                                <div class="description ad-user-designation" data-useremail="@User.Identity.Name"></div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right float-left">
+                                <li class="dropdown-menu-arrow"></li>
+                                @if (Regex.IsMatch(User.Identity.Name, @"^[a-zA-Z0-9._%+-]+@westpharma\.com$", RegexOptions.IgnoreCase))
+                                {
+                                    <li class="user-footer classMenuItem" value="My Profile">
+                                        <a href="/WAS/Subscription/Subscribe" class="btn top-btn fl-cd"><i class="fas fa-user" aria-hidden="true"></i> &nbsp; My Profile</a>
+                                    </li>
+                                }
+                                <li class="user-footer">
+                                    <a href="/was/Account/SignOut" class="btn top-btn fl-cd"><i class="fas fa-sign-out-alt black" aria-hidden="true"></i> &nbsp; Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                }
+
+            </div>
+        </nav>
+        <!-- Header End-->
+        <!-- Body Start-->
+        <div class="content-wrapper" id="content-pages">
+            @RenderBody()
+
+            <br />
+
+        </div>
+
+        <!-- Body End-->
+        <!-- Footer Start-->
+        <footer class="main-footer">
+            <div class="float-md-left d-md-inline">
+                <span class="brand-text font-weight-light"><img src="~/was/img/logo.png" width="200" /></span>
+            </div>
+            <div class="float-md-right d-md-inline">
+                <strong>Copyright &copy; <span id="yearSpan"></span> <a href="https://www.westpharma.com/" target="_blank">West Pharmaceutical Services, Inc.&reg;</a>.</strong> All rights reserved.
+            </div>
+        </footer>
+        <!-- Footer End-->
+    </div>
+
+    <!--subscription detail popup -->
+    <input type="hidden" id="idShowSubscriptionDetails" data-toggle="modal" data-target="#modal-SubscriptionDetails" />
+    <div class="modal fade" id="modal-SubscriptionDetails">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="idSubscriptionDetailView">
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    @*common alert popup With Yes no*@
+    <div class="modal fade" id="modal-alertPopup">
+        <div class="modal-dialog text-center modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body  pt-0">
+                    <i class="fas fa-times alertButtonModal color_danger" aria-hidden="true"></i>
+                    <p class="h5 mb-4 pr-2 pl-2" id="idAlertPopupContent"></p>
+                </div>
+                <div class="modal-footer justify-content-center border-top-0 pt-0 mb-2">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="idAlertDismiss">Cancel</button>
+                    <button type="button" class="btn btn-primary btn-danger" value="" id="idAlertConfirm">Confirm</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <!--alert popup with only Ok button-->
+    <input type="hidden" id="idAlertToggle" data-toggle="modal" data-target="#modalSubAlert" />
+    <div class="modal fade" id="modalSubAlert" value="" operatnType="">
+        <div class="modal-dialog text-center modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pt-0">
+                    <i class="fas fa-exclamation alertButtonModal" aria-hidden="true"></i>
+                    <p id="idmodalsmText" class="h5 mb-4">Select atleast one publishing Type</p>
+                    <button type="button" class="btn btn-warning mb-2" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="classFeedbackButton">
+
+        @if (User.HasClaim(ClaimTypes.Role, "WASAdmin") || User.HasClaim(ClaimTypes.Role, "GlobalAdministrator"))
+        {
+            <a href="/WAS/Notification/Create" id="idCreateNotificationGlobal"><img class="WasFeedBackIcon" title="Create Notification" src="~/was/img/Notifications_icon_Was.svg" alt="Unable to load the image" /></a>
+        }
+
+    </div>
+    <a href="Javascript.void(0)" onclick="ShowFeedback()" id="previewScreenShot" data-toggle="modal" data-target="#feedback-modal" class="top-btn order-4"><img title="Feedback" src="/was/img/feedback_icon_new_01.svg" alt="Unable to load the image" /></a>
+
+    <div class="modal" id="idLayerForFeedbackPopup" onclick="hideFeedbackLayer()"></div>
+    <div class="modal fade" style="top:0px!important;" id="feedback-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    @await Html.PartialAsync("~/Views/Shared/_Feedback.cshtml")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" style="top:0px!important" id="feedbackedit-modal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div id="divCanvas">
+                        <canvas id="canvas-drawing" width="1900" height="2100"></canvas>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="canvasCancel" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button id="canvasSave" class="btn btn-primary" data-dismiss="modal" type="button">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-alertPopupdesign">
+        <div class="modal-dialog text-center">
+            <div class="modal-content">
+                <div class="modal-header pb-0">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pt-0 mb-2">
+                    <i class="fas fa-question alertButtonModal color_danger" aria-hidden="true"></i>
+                    <p class="h5 mb-4">Notification data added will be discarded if you leave this page</p>
+                    <button type="button" class="btn btn-secondary mt-2" data-dismiss="modal" id="idAlertDismissmodal">Cancel</button>
+                    <button type="button" class="btn btn-danger mt-2" data-id="true" id="idAlertConfirmleave">Confirm</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('body').tooltip({
+                selector: '[title]'
+            });
+            //fix - tooltip visible even after removing item from select2
+            $('body').on('select2:unselecting', function (e) {
+                $(".tooltip").remove();
+            });
+        });
+        $('body').on('hidden.bs.modal', function () {
+            if ($('.modal.show').length > 0) {
+                $('body').addClass('modal-open');
+            }
+        });
+        $('#canvasCancel').on('click', function () {
+            $('.canvas-container').remove();
+            $("#divCanvas").append('<canvas id="canvas-drawing" width="1900" height="2100"></canvas>');
+        });
+
+    </script>
+
+    <!-- Syncfusion Essential JS 2 ScriptManager -->
+    <ejs-scripts></ejs-scripts>
+    <ejs-querybuilder></ejs-querybuilder>
+    @await Component.InvokeAsync("Notyf")
+</body>
+</html>
+

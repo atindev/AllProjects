@@ -1,0 +1,287 @@
+/** footer visibility fix **/
+/*.wizard_card {
+    margin-bottom: 100px !important;
+}*/
+/** footer visibility fix end**/
+.wizard {
+    padding: 0 50px;
+}
+
+.steps {
+    margin: 30px 0;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.steps ul {
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+    text-align: center !important;
+}
+
+    .steps ul li {
+        position: relative;
+        /*width: 20%;*/
+        width:16%;
+        pointer-events: none;
+    }
+
+        .steps ul li.done {
+            pointer-events: auto;
+        }
+
+        .steps ul li:before, .steps ul li:after {
+            content: "";
+            height: 2px;
+            position: absolute;
+            top: 37%;
+            left: 0;
+        }
+
+        .steps ul li:before {
+            width: 100%;
+            background-color: #D8DCEA;
+            z-index: 1;
+        }
+
+        .steps ul li:after {
+            width: 0%;
+            background-color: #005596;
+            z-index: 2;
+            -webkit-transition: width .6s ease;
+            -moz-transition: width .6s ease;
+            -o-transition: width .6s ease;
+            transition: width .6s ease;
+        }
+
+        .steps ul li.done:after, .steps ul li.first:after, .steps ul li.current:after {
+            width: 100%;
+        }
+
+.wizard > .steps .current-info {
+    display: none;
+}
+
+.steps ul li span.number {
+    background-color: #D8DCEA;
+    color: #005596;
+    width: 45px;
+    display: block;
+    text-align: center;
+    height: 45px;
+    font-size: 26px;
+    border-radius: 50%;
+    line-height: 47px;
+    position: relative;
+    z-index: 3;
+    clear: both;
+    margin: 0 auto;
+}
+
+.steps ul li.first span.number, .steps ul li.done span.number, .steps ul li.current span.number {
+    background-color: #005596;
+    color: #fff;
+}
+
+.steps ul li span.w_title {
+    display: inline-block;
+    font-size: 16px;
+    color: #D8DCEA;
+    ;
+}
+
+.steps ul li.first span.w_title, .steps ul li.done span.w_title, .steps ul li.current span.w_title {
+    color: #005596;
+}
+
+.btn_or {
+    position: absolute;
+    right: -7px;
+    top: 38px;
+    font-weight: 700;
+}
+
+.actions li[aria-disabled="true"] a {
+    display: none;
+}
+
+.wizard h4.title {
+    display: none;
+}
+
+.wizard h4 {
+    font-weight: 400;
+    margin-bottom: 20px;
+}
+
+.actions {
+    margin: 20px 0;
+}
+
+    .actions ul li {
+        float: right;
+    }
+
+        .actions ul li:first-child {
+            float: left;
+        }
+
+        .actions ul li a {
+            font-style: normal;
+            font-stretch: normal;
+            line-height: normal;
+            letter-spacing: normal;
+            color: #fff;
+            border-radius: 4px;
+            background-color: #05B252;
+            padding: 10px 20px;
+            margin: 10px 10px 10px 0;
+            min-width: 150px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .actions ul li:first-child a {
+            background-color: #D8DCEA;
+            color: #000;
+        }
+
+        .actions ul li:last-child a {
+            display: none;
+        }
+
+        .actions ul li:last-child .btn {
+            padding: 10px 20px;
+            max-width: 150px;
+            margin: 10px 0 10px 0;
+            line-height: normal;
+        }
+
+.profile_details img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit:contain;
+}
+
+.managerprofile_details img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: contain;
+}
+.wizard .card {
+    border-bottom: 5px solid #005596;
+    height: 100%;
+}
+
+.wizard .card-body h6 {
+    font-size: 20px;
+    margin: 10px 0 0;
+    font-weight: 400;
+}
+
+.wizard .card-footer span {
+    display: block;
+}
+
+span.pr_title {
+    font-size: 14px;
+    display: block;
+}
+
+span.pr_content {
+    line-height: 20px;
+}
+
+.line_custom {
+    width: calc(100% - 40px);
+    margin-left: 20px;
+    background-color: #f1f1f1;
+    height: 1px;
+}
+
+.was_pref img {
+    margin-right: 10px;
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+}
+.was_pref .languageSelectForSubscription img {
+    width: 33px;
+    height: 33px;
+    margin-right:0;
+}
+.was_pref .languageSelectForSubscription {
+    top: 4px;
+}
+.was_pref .languageSelectForSubscription select{
+    padding: .275rem .75rem;
+    height: 2rem;
+    width: calc(100% - 40px);
+}
+.ck-top .icheck-success {
+    margin-bottom: 10px !important;
+    display: inline-block !important;
+}
+.ck-top .col-md-4:last-child .icheck-success {
+    margin-right: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.was_pref h5 {
+    font-size: 16px;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    border-bottom: 2px dotted #ccc;
+    padding-bottom: 5px;
+    padding-left: 0;
+}
+
+.was_pref label.sub-label {
+    font-weight: 400;
+}
+
+@media only screen and (max-width: 767px) {
+    .wizard {
+        padding: 0;
+    }
+
+    .steps ul li {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .ck-top .icheck-success {
+        margin-right: 0;
+        display: block !important;
+    }
+}
+
+@media only screen and (max-width: 520px) {
+    .actions ul li:first-child, .actions ul li {
+        float: none;
+    }
+}
+
+.disableField {
+    pointer-events: none !important;
+    opacity: 0.5 !important;
+}
+
+.noRecord {
+    margin-top: 5%;
+    margin-left: 0%;
+}

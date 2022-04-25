@@ -1,0 +1,13 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model string
+@{
+    ViewData["Title"] = "_NoDeliveryReport";
+    var parentClass = (Model != null && Model != "") ? Model : "";
+}
+<div class="col-12 bg-white emptyTemplateWas text-center mb-5 @parentClass">
+    <img src="/was/img/No_delivery_reports.svg" width="300" alt="" />
+    <h2>Report Not Available</h2>
+    <p>You will see this report when there is data</p>
+</div>

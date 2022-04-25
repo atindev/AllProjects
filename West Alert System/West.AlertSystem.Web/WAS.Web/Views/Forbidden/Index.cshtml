@@ -1,0 +1,34 @@
+﻿@{
+    Layout = null;
+}
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Status Code @Model.ErrorStatusCode";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@Model.ErrorStatusCode @Model.ErrorType</title>
+    <link rel="stylesheet" href="~/was/css/style-errorpages.css">
+</head>
+<body class="error_pages">
+    <div class="wrapper">
+        <div class="container">
+            <div class="F403_content">
+                <div class="row">
+                    <div class="text-center">
+                        <span class="header_403">@Model.ErrorStatusCode</span>
+                    </div>
+                    <h2>@Model.ErrorType!</h2>
+                    <div class="WarningMSGDetails">
+                        <span>@Model.ErrorMessage</span>
+                    </div>
+                    <a href="/Home"><button type="button" class="btn tooltip">Home<span class="tooltiptext">Go to Home page</span></button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

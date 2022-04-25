@@ -1,0 +1,131 @@
+﻿@model Guid;
+@{
+    Layout = null;
+    var broadcastId = Model;
+}
+
+<title>West Alert System</title>
+<link href="~/was/css/landing.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/was/css/adminlte.min.css">
+<link href="~/was/css/site.css" rel="stylesheet" asp-append-version="true" />
+<link rel="icon" href="~/was/favicon.ico" type="image/favicon.ico" sizes="16x16">
+<script src="~/was/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/was/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        if (checkBrowser()) {
+            window.location.href = '/was/Account/UnsupportedBrowser';
+        }
+    });
+
+    function checkBrowser() {
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))  // If Internet Explorer
+        {
+            return true;
+        }
+        else  // If another browser, return 0
+        {
+            return false;
+        }
+    }
+
+</script>
+
+@if (Model != Guid.Empty)
+{
+    <div class="header">
+        <div class="inner-header flex pt-4">
+            <div class="row2">
+                <div class="plain-logo">
+                    <img class="logo-pos ml-0" src="~/was/img/was-logo-02.png" width="130" title="West Alert System" alt="WAS Logo">
+                </div>
+                <h1>Welcome To <br />WEST ALERT SYSTEM</h1>
+                <a href="/was/Account/SignIn?id=@Model" class="button">Get Started</a>
+                <p class="alt_login">Do not have a west account for single sign-on? <br /><a class="button secondary" href="./UserVerification?id=@Model">Click here</a></p>
+            </div>
+        </div>
+
+
+        <div>
+            <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                 viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+                <defs>
+                    <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                </defs>
+                <g class="parallax">
+                    <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(50,181,66,0.7" />
+                    <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(0,85,150,0.5)" />
+                    <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(0,85,150,0.3)" />
+                    <use xlink:href="#gentle-wave" x="48" y="7" fill="#005596" />
+                </g>
+            </svg>
+        </div>
+        <!--Waves end-->
+
+    </div>
+    <!--Header ends-->
+
+    <!--Content starts-->
+    <div class="content flex">
+        <p><img src="~/was/img/west-white.png" width="300" alt="" /> </p>
+    </div>
+    <!--Content ends-->
+
+}
+
+else
+{
+    <style>
+        body, html {
+            height: 100%;
+            width: 100%;
+            background-image: url(/was/img/survey_bg.jpg) !important;
+        }
+
+        .logoForSurvey {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .LogoforSurveyInner {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: justify;
+            -webkit-justify-content: space-between;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+        }
+    </style>
+    <div class="logoForSurvey mt-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2">
+
+                </div>
+                <div class="col-md-8">
+                    <div class="LogoforSurveyInner">
+                        <img src="/was/img/was-logo-04.png" width="100" alt="WAS Logo">
+                        <img src="/was/img/west-logo.png" width="100" alt="West Pharma Logo">
+                    </div>
+                </div>
+                <div class="col-md-2">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    @await Html.PartialAsync("~/Views/Survey/_SurveyExpired.cshtml", "We are sorry but this survey has Expired")
+
+}

@@ -1,0 +1,96 @@
+﻿@using  System.Security.Claims;
+@{
+    var picture = "/was/img/user2-160x160.jpg";
+}
+
+<div class="table-responsive">
+    <ejs-grid id="GridNotifications" allowPaging="true" allowTextWrap="true" gridLines="Both" dataBound="updateUserDetails">
+        <e-data-manager url="./GetPages/" adaptor="UrlAdaptor" crossdomain="true"></e-data-manager>
+        <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+        <e-grid-columns>
+            <e-grid-column field="Id" headerText="Details" template="#idPagedNotificationDetails" customAttributes=@(new { @class = "customcssDetails" }) headerTextAlign="Center" textAlign="Center" width="100"></e-grid-column>
+            <e-grid-column field="Topic" headerText="Message" template="#idPagedNotificationName" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center" width="230"></e-grid-column>
+            <e-grid-column field="EventName" headerText="Event Name" template="#idPagedEventName" customAttributes=@(new { @class = "customcssEventName" }) headerTextAlign="Center" textAlign="Center" width="190"></e-grid-column>
+            <e-grid-column field="Groups" headerText="Groups/People" template="#idPagedGroups" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+            <e-grid-column field="Updated" headerText="Updated By" template="#PagedLastUpdatedBy" customAttributes=@(new { @class = "customcssLastUpdated" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+            <e-grid-column field="Status" headerText="Status" template="#idPagedStatus" customAttributes=@(new { @class = "customcssNotificationStatus" }) headerTextAlign="Center" textAlign="Center" width="200"></e-grid-column>
+        </e-grid-columns>
+    </ejs-grid>
+    <script id="idPagedNotificationDetails" type="text/x-template">
+        ${if(IsPrivateNotification)}
+
+        ${if(ResponseCount==0)}
+        <a value="notificationDetails" href="/WAS/Notification/View?NotificationId=${Id}" title="Private Notifications will be visible only for the administrator who created them. Notification content, delivery reports, or responses from employees will not be visible to any other administrators." class="btn btn-reset position-relative icon-button spanAlignmentFix" data-placement="right"><i class="fas fa-lock icon-preview" aria-hidden="true"></i><span></span></a>
+        ${else}
+        <a value="notificationDetails" href="/WAS/Notification/View?NotificationId=${Id}" title="Private Notifications will be visible only for the administrator who created them. Notification content, delivery reports, or responses from employees will not be visible to any other administrators." class="btn btn-reset position-relative icon-button spanAlignmentFix" data-placement="right"><i class="fas fa-lock icon-preview" aria-hidden="true"></i><span></span><div class="info_bubble">${ResponseCount}</div></a>
+        ${/if}
+
+        ${else}
+        ${if(ResponseCount==0)}
+        <a value="notificationDetails" href="/WAS/Notification/View?NotificationId=${Id}" class="btn btn-reset position-relative icon-button spanAlignmentFix"><i class="fas fa-info-circle icon-preview" aria-hidden="true"></i><span></span></a>
+        ${else}
+        <a value="notificationDetails" href="/WAS/Notification/View?NotificationId=${Id}" class="btn btn-reset position-relative icon-button spanAlignmentFix"><i class="fas fa-info-circle icon-preview" aria-hidden="true"></i><span></span><div class="info_bubble">${ResponseCount}</div></a>
+        ${/if}
+
+        ${/if}
+    </script>
+    <script id="idPagedNotificationName" type="text/x-template">
+        <div class="clsNotificationName" data-toggle="tooltip" data-placement="top" title="${Topic}">${Topic}</div>
+    </script>
+    <script id="idPagedEventName" type="text/x-template">
+        <div class="clsEventName" data-toggle="tooltip" data-placement="top" title="${EventName}"><a href="/WAS/Event/View?EventId=${EventId}">${EventName}</a></div>
+    </script>
+    <script id="idPagedGroups" type="text/x-template">
+        ${for(item of GroupNames)}
+        <span class="groupTiles clsGroups" data-toggle="tooltip" data-placement="top" title="${item}">${item}</span>
+        ${/for}
+        ${for(item of SubscriberNames)}
+        <span class="groupTiles clsPeople" data-toggle="tooltip" data-placement="top" title="${item}">${item}</span>
+        ${/for}
+    </script>
+    <script id="PagedLastUpdatedBy" type="text/x-template">
+        <div class="clsLastUpdateImageParent">
+            <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid" onclick='bindSubscriptionDetails(this)' alt="User Image" data-useremail="${CreatedBy}">
+            <div class="clsLastUpdatedWithImage clsImageTextPadding ad-user-grid" data-useremail="${CreatedBy}" data-toggle="tooltip" data-placement="top" title="${CreatedBy}">${CreatedBy}</div>
+        </div>
+        <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage userWithLocation" data-toggle="tooltip" data-placement="top" title="${CreaterLocation}"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${CreaterLocation}</div></div>
+        <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage timeUpdated" data-toggle="tooltip" data-placement="top" title="${Updated}">${Updated}</div></div>
+    </script>
+    <script id="idPagedStatus" type="text/x-template">
+        ${if(IsPrivateNotification && IsApprovalRequired && Status=="2")}
+        <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusPendingApprover.svg" /><span class="approved pendingWithApprover">Pending with Approver</span></span>
+        <div class="clsLastUpdateImageParentStatus customDesignForIDStatus">
+            <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid-status" onclick='bindSubscriptionDetails(this)' alt="User Image" data-useremail="${ApproverForPrivate}">
+            <div class="clsLastUpdatedWithImage clsImageTextPadding ad-user-grid" data-useremail="${ApproverForPrivate}" data-toggle="tooltip" data-placement="top" title="${ApproverForPrivate}">${ApproverForPrivate}</div>
+            <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage userWithLocation" data-toggle="tooltip" data-placement="top" title="${PrivateApproverLocation}"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${PrivateApproverLocation}</div></div>
+        </div>
+        ${else if(IsPrivateNotification && IsApprovalRequired && Status=="5")}
+        <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusRejectedApprover.svg" /><span class="cancel FirstLevelRejected">Approver Rejected</span></span>
+        <div class="clsLastUpdateImageParentStatus customDesignForIDStatus">
+            <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid-status" onclick='bindSubscriptionDetails(this)' alt="User Image" data-useremail="${ApproverForPrivate}">
+            <div class="clsLastUpdatedWithImage clsImageTextPadding ad-user-grid" data-useremail="${ApproverForPrivate}" data-toggle="tooltip" data-placement="top" title="${ApproverForPrivate}">${ApproverForPrivate}</div>
+            <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage userWithLocation" data-toggle="tooltip" data-placement="top" title="${PrivateApproverLocation}"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${PrivateApproverLocation}</div></div>
+            <div class="clsLastUpdateParent"><div class="clsLastUpdatedWithImage timeUpdated" data-toggle="tooltip" data-placement="top" title="${StatusUpdated}">${StatusUpdated}</div></div>
+        </div>
+        ${else}
+        ${if(Status=="1")}
+        <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusPendingApprover.svg" /><span class="approved pendingWithApprover">Pending with Approver</span></span>
+        ${else if(Status=="2")}
+        <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusPendingComm.svg" /><span class="approved pendingWithCommunicationTeam">Pending with Comm. Team</span></span>
+        ${else if(Status=="3")}
+        <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusRejectedApprover.svg" /><span class="cancel FirstLevelRejected">Approver Rejected</span></span>
+        ${else if(Status=="4")}
+        <span class="NotificatonStatusWas"><img src="/was/img/NotificationStatusApproved.svg" /><span class="approved SecondLevelApproved">Approved</span></span>
+        ${else if(Status=="5")}
+        <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusRejectedComm.svg" /><span class="cancel secondLevelRejected">Comm. Team Rejected</span></span>
+        ${else if(Status=="6")}
+        <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusFailed.svg" /><span class="cancel">Failed to Send</span></span>
+        ${else if(Status=="7")}
+        <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusSent.svg" /><span class="approved">Sent</span></span>
+        ${else}
+        <span class="NotificatonStatusWas"><img src="/was/img/NotificatonStatusFailed.svg" /><span class="cancel">Failed to Send</span></span>
+        ${/if}
+
+        ${/if}
+    </script>
+</div>

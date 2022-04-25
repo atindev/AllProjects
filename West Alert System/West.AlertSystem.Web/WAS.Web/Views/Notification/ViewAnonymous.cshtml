@@ -1,0 +1,103 @@
+﻿@model WAS.Application.Features.Notification.View.Response
+
+<style>
+    .fa-clock {
+        padding: 12px 12px;
+    }
+
+    .fa-times {
+        padding: 11px 15px;
+    }
+</style>
+<div class="content">
+    <div class="container">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-dark">
+                    Notification
+                </h1>
+            </div>
+            <div class="col-sm-6">
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+        <div class="row">
+            @if (Model != null && Model.Notification != null)
+            {
+                <!-- /.col-md-6 -->
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header card-outline card-success">
+                            <h3 class="card-title">
+                                @Model.Notification.EventName
+                            </h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="post">
+                                            <div class="card-body re-not">
+                                                <dl id="dllist" class="row">
+                                                    <div class="col-sm-4">
+                                                        <h6><strong>  Latest Status </strong></h6>
+                                                        <h6>@Model.Notification.EventStatus</h6>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <h6><strong> Type </strong></h6>
+                                                        <h6>@Model.Notification.EventType </h6>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <h6><strong> Urgency </strong></h6>
+                                                        <h6>@Model.Notification.EventUrgency </h6>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <h6><strong> Description </strong></h6>
+                                                        <h6> @Model.Notification.EventDescription</h6>
+                                                    </div>
+                                                </dl>
+                                            </div>
+                                            <div id="accordion">
+                                                <!-- we are adding the .class so bootstrap.js collapse plugin detects it -->
+
+                                                @{ int i = 0;
+                                                    string typeClass = "active";
+                                                    string contentClass = "active show";
+                                                    string areaSelected = "true";
+                                                    bool hideDetailsforOthers = true;
+
+
+                                                    ViewData.Add(new KeyValuePair<string, object>
+                                                                                        ("i", i));
+                                                    ViewData.Add(new KeyValuePair<string, object>
+                                                        ("typeClass", typeClass));
+                                                    ViewData.Add(new KeyValuePair<string, object>
+                                                        ("areaSelected", areaSelected));
+                                                    ViewData.Add(new KeyValuePair<string, object>
+                                                        ("contentClass", contentClass));
+                                                    ViewData.Add(new KeyValuePair<string, object>
+                                                        ("hideDetailsforOthers", hideDetailsforOthers));
+
+                                                    await Html.RenderPartialAsync("~/Views/Event/_Notification.cshtml", @Model, ViewData);
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div>Record not found</div>
+            }
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+

@@ -1,0 +1,307 @@
+﻿@model WAS.Application.Features.Survey.GetBroadcastView.Response
+
+@{
+    ViewData["Title"] = "Broadcast Survey";
+}
+
+<link href="~/was/css/Survey/broadcast.css" rel="stylesheet" />
+<link href="~/was/css/Survey/SurveyAll.css" rel="stylesheet" />
+<div class="content-wrapper">
+
+    @if (Model != null && Model.SurveyId != Guid.Empty && Model.SurveyName != null)
+    {
+        <input type="hidden" id="idSurveyId" value=@Model.SurveyId />
+        <input type="hidden" id="idIsUpdate" value=@Model.IsUpdate.ToString() />
+
+        @if (Model.BroadcastId == Guid.Empty)
+        {
+            <input type="hidden" id="idBroadcastId" value="" />
+        }
+        else
+        {
+            <input type="hidden" id="idBroadcastId" value="@Model.BroadcastId" />
+        }
+
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container">
+                <div class="row mb-2">
+                    <div class="col-md-2"></div>
+                    <div class="col-sm-8">
+                        <h1 class="m-0 text-dark">
+                            <a href="/WAS/Survey/List" title="Back to survey templates list">
+                                <button type="button" class="btn btn-reset btn-default">
+                                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                                </button>
+                            </a>Broadcast Survey
+                        </h1>
+                    </div><!-- /.col -->
+                    <div class="col-md-2"></div>
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <div class="content was_notification_create">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <div class="survey_card shadow">
+                            <div class="surveyBroadcastTitle">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h3 class="card-title" id="idSurveyName">
+                                            @Model.SurveyName
+                                        </h3>
+                                    </div>
+                                    <div class="col-sm-6 text-right">
+                                        <img class="" title="Reset Form" id="idRefreshNotification" src="/was/img/form_reset.svg" width="23" alt="reset Icon" />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                                <!-- /.card-header -->
+                            <div class="container p-0">
+                                <div class="QuesforSurvey"><span class="classQuestionNumber">1</span><span class="ques-list-new">What type of publishing is this ?</span></div>
+                                <div class="row">
+                                    <div class="col-12 tile-text">
+                                        <div class="check-toolbar">
+                                            <input type="checkbox" id="TextCheckbox" name="IsText" class="classNotificationType">
+                                            <label class="shadow mr-3" for="TextCheckbox"><i class="fas fa-sms" aria-hidden="true"></i><p> SMS </p></label>
+
+                                            <input type="checkbox" id="EmailCheckbox" name="IsEmail" class="classNotificationType">
+                                            <label class="shadow mr-3" for="EmailCheckbox"><i class="fas fa-envelope-open-text" aria-hidden="true"></i><p> Email </p></label>
+
+                                            <input type="checkbox" id="WhatsappCheckbox" name="IsWhatsapp" class="classNotificationType">
+                                            <label class="shadow mr-3" for="WhatsappCheckbox"><i class="fab fa-whatsapp-square" aria-hidden="true"></i><p> Whatsapp </p></label>
+
+                                            @*<input type="checkbox" id="TeamsCheckbox" name="IsTeams" class="classNotificationType">
+                    <label for="TeamsCheckbox"><i class="fas fa-microphone-alt" aria-hidden="true"></i><p> Teams </p></label>*@
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="QuesforSurvey mt-4">
+                                    <span class="classQuestionNumber">2</span>
+                                    <span class="ques-list-new">Who do you want to send this to?</span>
+                                    @{
+                                        await Html.RenderPartialAsync("~/Views/Notification/_peopleCount.cshtml", true);
+                                    }
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group" id="idselectForGroups">
+                                            <select id="idSelectGroups"
+                                                    class="select2" multiple="multiple" data-placeholder="Select one or multiple groups" style="width: 100%;">
+                                                @{
+                                                    foreach (var item in Model.Groups)
+                                                    {
+                                                        <option value="@item.Id" totalsubscribers="@item.SubscriptionCount" emailsubscribers="@item.EmailSubscriptionCount"
+                                                                smssubscribers="@item.TextSubscriptionCount" voicesubscribers="@item.VoiceSubscriptionCount" whatsappsubscribers="@item.WhatsAppSubscriptionCount">
+                                                            @item.Name
+                                                        </option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                        <p>
+                                            <i class="groupDetailNavigation" aria-hidden="true">Click</i>
+                                            <a class="groupDetailNavigation" id="idAlertForGroupnavigation" href="" data-toggle="modal" data-target="#modal-alertPopup">here</a>
+                                            <i class="groupDetailNavigation" aria-hidden="true">to add a new group.</i>
+                                        </p>
+                                        <div class="form-group" id="idselectForPeople">
+                                            <select id="idSelectPeople"
+                                                    class="select2" multiple="multiple" data-placeholder="Select one or multiple people" style="width: 100%;">
+                                                @{
+                                                    foreach (var item in Model.Subscriptions)
+                                                    {
+                                                        <option value="@item.Id">
+                                                            @item.LastName, @item.FirstName
+                                                        </option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="form-group" id="idSelectForDGroups" style="display:none">
+                                            <select id="idSelectDGroups"
+                                                    class="select2" multiple="multiple" data-placeholder="Select one or multiple distribution groups" style="width: 100%;">
+                                            </select>
+                                        </div>
+                                        <div class="form-group" id="idSelectForADPeople" style="display:none">
+                                            <select id="idSelectADPeople"
+                                                    class="select2" multiple="multiple" data-placeholder="Select one or multiple people from company directory" style="width: 100%;">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="QuesforSurvey mt-4">
+                                    <span class="classQuestionNumber">3</span>
+                                    <span class="ques-list-new">Select Execution Type</span>
+                                </div>
+
+                                <div class="row classExecutionType">
+                                    <div class="col-12">
+                                        <div class="form-group classExecutionParent">
+
+                                            <div class="radio">
+                                                <label class="custom_radio" for="idSinglePage">
+                                                    All questions at once
+                                                    <input type="radio" id="idSinglePage" name="executionType" value="singlePage" checked>
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
+                                            <div class="radio executionWizard">
+                                                <label class="custom_radio" for="idForWizard">
+                                                    One question at a time
+                                                    <input type="radio" id="idForWizard" name="executionType" value="wizard">
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="QuesforSurvey mt-4">
+                                    <span class="classQuestionNumber">4</span>
+                                    <span class="ques-list-new">Select time zone</span>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <select class="form-control selectpicker" data-live-search="true" id="SelectTimeZone"></select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="QuesforSurvey mt-4">
+                                    <span class="classQuestionNumber">5</span>
+                                    <span class="ques-list-new">Select Start Date</span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <input type="datetime-local" class="form-control" name="StartTime" id="idStartDate">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="QuesforSurvey mt-4">
+                                    <span class="classQuestionNumber">6</span>
+                                    <span class="ques-list-new">Select End Date</span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <input type="datetime-local" class="form-control" name="EndTime" id="idEndDate">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="QuesforSurvey mt-4">
+                                    <span class="classQuestionNumber">7</span>
+                                    <span class="ques-list-new">Select Follow Up Date</span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <input type="datetime-local" class="form-control" name="FollowUpTime" id="idFollowUpDate">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text"><img class="" title="Reset Date" id="idResetFollowupTime" src="/was/img/form_reset.svg" width="23" alt="reset Icon" /></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="container p-0 mt-3">
+                                    <div class="row">
+                                        <div class="col-md-12 text-right classNotificationButtonParent">
+                                            @if (Model.IsUpdate)
+                                            {
+                                                <button type="submit" class="btn--a  submitSurvey classPublishselectCheck classforApproval">Update</button>
+
+                                            }
+                                            else
+                                            {
+                                                <button type="submit" class="btn--a  submitSurvey classPublishselectCheck classforApproval">Broadcast</button>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                                <!-- /.card-body -->
+                            </div>
+                        <br /><br />
+                    </div>
+
+                    <div class="col-md-2"></div>
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    }
+
+</div>
+
+<div class="modal fade ModalSendConfirmation" id="modal-send">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="card-body pt-0 pb-0">
+                <div class="row GroupPeopleConfirmation">
+                    <div class="col-sm-12 mb-4">
+                        <em class="fas fa-exclamation FAWarning"></em> <p class="m-0 overflow-hidden h5">Please confirm to send Survey to these audience</p>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="mb-4">
+                            <span id="Modal-GroupName"></span>
+                        </div>
+                        <div class="clearfix mb-3"></div>
+                        <div class="mb-2">
+                            <span id="Modal-PeopleName"></span>
+                        </div>
+                        <div class="mb-4">
+                            <span id="Modal-DGroupName" style="display:none"></span>
+                        </div>
+                        <div class="clearfix mb-3"></div>
+                        <div class="mb-2">
+                            <span id="Modal-ADPeopleName" style="display:none"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-sm-12">
+                        @{
+                            await Html.RenderPartialAsync("~/Views/Notification/_peopleCount.cshtml", true);
+                        }
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="classButtonForConfirmation">
+                <input type="hidden" id="isModal" />
+                <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success" id="SendResponse">Send Now</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script src="~/was/js/GetPeopleAndGroupCount.js"></script>
+<script src="~/was/js/Survey/broadcast.js"></script>

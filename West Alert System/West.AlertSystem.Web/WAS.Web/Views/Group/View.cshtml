@@ -1,0 +1,173 @@
+﻿@model WAS.Application.Features.Groups.GetByIds.Response;
+
+@{
+    ViewData["Title"] = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var picture = "/was/img/user2-160x160.jpg";
+}
+
+<link href="~/was/css/Groups/viewSubscriptions.css" rel="stylesheet" />
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-4">
+                    <h1 class="m-0 text-dark">
+                        <button type="button" class="btn btn-reset btn-default" onclick="document.getElementById('clsBackButtonForGroups').click()">
+                            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                            <a href="/WAS/Group/List" id="clsBackButtonForGroups">
+                            </a>
+                        </button>  People
+                    </h1>
+                </div><!-- /.col -->
+                <div class="col-sm-8">
+                    @if (ViewBag.isGroupActive)
+                    {
+                    <div class="input-group" id="idselectForPeople">
+                        <select asp-for="SubscriptionId" id="idSelectPeople"
+                                class="select2" multiple="multiple" data-placeholder="Select one or multiple people" required>
+                            @{
+                                foreach (var item in Model.Subscriptions)
+                                {
+                                    <option value="@item.Id">
+                                        @item.LastName, @item.FirstName
+                                    </option>
+                                }
+                            }
+                        </select>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary" id="idButtonAddSubscriptionToGroup"><i class="fas fa-plus" aria-hidden="true"></i></button>
+                            <input type="hidden" value="@Model.GroupId" id="idGroup" />
+                        </div>
+                    </div>
+                    }
+                </div><!-- /.col -->
+            </div>
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div>
+                        <div class="tab-content" id="idcustom-content-below-tabContent">
+                            <div class="tab-pane fade active show" id="idcustom-content-below-home" role="tabpanel" aria-labelledby="custom-content-below-home-tab">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="card">
+                                            @if (Model.Group.Any())
+                                            {
+                                                <div class="card-header border-transparent">
+                                                    <div class="row">
+                                                        <div class="col-lg-9" style="display: flex; align-items: center;">
+                                                            @if (Model.Group != null && Model.Group.Count > 0)
+                                                            {
+                                                                <h5 class="m-0 text-dark">@Model.Group[0].Name</h5>
+                                                                <input type="hidden" value="@Model.Group[0].Id" id="idGroupIdForDelete" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <input type="hidden" value="" id="idGroupIdForDelete" />
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-3">
+                                                            <input type="text" class="form-control float-right" id="idsearchGroupList" placeholder="Search">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <!-- /.card-header -->
+                                            <div class="card-body p-0" id="idLoadSubscriptionView">
+                                                <div class="table-responsive">
+                                                    @if (ViewBag.isGroupActive)
+                                                    {
+                                                        <ejs-grid id="GridSubscriptionList" dataSource="@Model.Group" allowPaging="true" allowTextWrap="true" gridLines="Both" dataBound="updateUserDetails" rowSelected="filteredRowSelected" rowDeselected="filteredRowDeSelected">
+                                                            <e-grid-searchSettings fields="@(new string[] {"SubscriberName","SubscriberOfficialEmail","LocationName","ShiftName"})" operator="contains" key="" ignoreCase="true"></e-grid-searchSettings>
+                                                            <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+                                                            <e-grid-columns>
+                                                                <e-grid-column type="checkbox" customAttributes=@(new { @class = "customcssAuthor" }) width="50"></e-grid-column>
+                                                                <e-grid-column field="SubscriptionGroupId" isPrimaryKey="true" customAttributes=@(new { @class = "customcssId" }) headerText="" width="0" visible="false"></e-grid-column>
+                                                                <e-grid-column field="SubscriberName" headerText="Name" template="#idListSubscriptionName" customAttributes=@(new { @class = "customcssAuthor" }) headerTextAlign="Center" textAlign="Center" width="240"></e-grid-column>
+                                                                <e-grid-column field="SubscriberOfficialEmail" headerText="Email" template="#idListSubscriptionMail" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                                <e-grid-column field="LocationName" headerText="Location" template="#idListSubscriptionLocation" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                                <e-grid-column field="ShiftName" headerText="Shift" template="#idListSubscriptionShift" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                                <e-grid-column field="SubcriptionAddedDate" headerText="Added Date" template="#idListSubscriptionAddedDate" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                            </e-grid-columns>
+                                                        </ejs-grid>
+                                                    }
+                                                    else
+                                                    {
+                                                    <ejs-grid id="GridSubscriptionList" dataSource="@Model.Group" allowPaging="true" allowTextWrap="true" gridLines="Both" dataBound="updateUserDetails" rowSelected="filteredRowSelected" rowDeselected="filteredRowDeSelected">
+                                                    <e-grid-searchSettings fields="@(new string[] {"SubscriberName","SubscriberOfficialEmail","LocationName","ShiftName"})" operator="contains" key="" ignoreCase="true"></e-grid-searchSettings>
+                                                    <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+                                                    <e-grid-columns>
+                                                        <e-grid-column field="SubscriptionGroupId" isPrimaryKey="true" customAttributes=@(new { @class = "customcssId" }) headerText="" width="0" visible="false"></e-grid-column>
+                                                        <e-grid-column field="SubscriberName" headerText="Name" template="#idListSubscriptionName" customAttributes=@(new { @class = "customcssAuthor" }) headerTextAlign="Center" textAlign="Center" width="240"></e-grid-column>
+                                                        <e-grid-column field="SubscriberOfficialEmail" headerText="Email" template="#idListSubscriptionMail" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                        <e-grid-column field="LocationName" headerText="Location" template="#idListSubscriptionLocation" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                        <e-grid-column field="ShiftName" headerText="Shift" template="#idListSubscriptionShift" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                        <e-grid-column field="SubcriptionAddedDate" headerText="Added Date" template="#idListSubscriptionAddedDate" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                    </e-grid-columns>
+                                                    </ejs-grid>
+                                                    } 
+                                                <script id="idListSubscriptionName" type="text/x-template">
+                                                        <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid" onclick='bindSubscriptionDetails(this)' alt="User Image" data-useremail="${SubscriberOfficialEmail}" data-userid="${SubscriberId}">
+                                                        <span class="CheckWASadminBefore ad-user-role" data-useremail="${SubscriberOfficialEmail}"></span>
+                                                        <div class="clsAuthor ad-user-grid" data-useremail="${SubscriberOfficialEmail}" data-toggle="tooltip" data-placement="top" title="${SubscriberName}">${SubscriberName}</div>
+                                                        <input type="hidden" id="hdnviewSubscriptionId" />
+                                                </script>
+                                                        <script id="idListSubscriptionMail" type="text/x-template">
+                                                            <div class="clsSubscriptionMail" data-toggle="tooltip" data-placement="top" title="${SubscriberOfficialEmail}">${SubscriberOfficialEmail}<div>
+                                                        </script>
+                                                        <script id="idListSubscriptionLocation" type="text/x-template">
+                                                            <div class="clsSubscriptionLocation userWithLocation" data-toggle="tooltip" data-placement="top" title="${LocationName}"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${LocationName}<div>
+                                                        </script>
+                                                        <script id="idListSubscriptionShift" type="text/x-template">
+                                                            ${if(ShiftName != null)}
+                                                               <div class="clsSubscriptionShift" data-toggle="tooltip" data-placement="top" title="${ShiftName}">${ShiftName}<div>
+                                                            ${/if}
+                                                        </script>
+                                                        <script id="idListSubscriptionAddedDate" type="text/x-template">
+                                                            <div class="clsSubscriptionShift" data-toggle="tooltip" data-placement="top" title="${SubcriptionAddedDate}">${SubcriptionAddedDate}<div>
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                                <!-- /.card-body -->
+                                                <!-- /.card-footer -->
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="float-right deleteSubscription">
+                                                            <button type="button" class="btn bg-gradient-primary" id="idRemovePeopleFromGroup" data-toggle="modal" data-target="#modal-alertPopup">Remove from group</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-12 bg-white emptyTemplateWas text-center mb-5">
+                                                    <img src="/was/img/No_Groups_or_People.svg" width="300" alt="" />
+                                                    <h2>No Subscriber(s) Available</h2>
+                                                    <p>You will see subscriber(s) when admin/group owner add members to this group, to add members to the group select and add from the above dropdown</p>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <br /><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+@{
+    await Html.RenderPartialAsync("_AddtoGroupDataModel", Model.groupList);
+}
+</div>
+
+<script src="~/was/js/Groups/viewSubscriptions.js"></script>

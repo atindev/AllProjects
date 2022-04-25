@@ -1,0 +1,104 @@
+﻿@model WAS.Application.Features.Survey.GetByBroadcastId.Response;
+<input type="hidden" id="idSubjectHid" value="@Model.Subject">
+<div class="row">
+    <div class="col-md-6">
+        <div class="survey_card shadow">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group mb-0" id="idSurveyDescriptionParent">
+                        <label class="d-block"><strong>Description</strong></label>
+                        <span> @Model.Description</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="survey_card shadow">
+            <label class="d-block"><strong>Target Audience</strong></label>
+            @foreach (var groups in Model.GroupNames)
+            {
+                <span class="groupTiles clsGroups" data-toggle="tooltip" data-placement="top" title="@groups">@groups</span>
+
+            }
+            @foreach (var peoples in Model.SubscriberNames)
+            {
+                <span class="groupTiles clsPeople" data-toggle="tooltip" data-placement="top" title="@peoples">@peoples</span>
+
+            }
+            @foreach (var dGroup in Model.DistributionGroups.Select(s => s.Name))
+            {
+                <span class="groupTiles clsGroups" data-toggle="tooltip" data-placement="top" title="@dGroup">@dGroup</span>
+
+            }
+            @foreach (var adPeople in Model.ADPeople.Select(s => s.LastName + ", " + s.FirstName))
+            {
+                <span class="groupTiles clsPeople" data-toggle="tooltip" data-placement="top" title="@adPeople">@adPeople</span>
+
+            }
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="row justify-content-between m-0">
+            <div class="surveyCountCard">
+                <img src="~/was/img/Total_Audience.svg" alt="" />
+                <h6>Total Audience </h6>
+                <div id="audience-count">
+
+                    <div class="steps-img classAlignCenter AlignSpinnerFlex totalaudience-continuous-refresh" style="display:none">
+                        <img src="~/was/img/ajax_loader_was.svg" alt="loading image" />
+                    </div>
+                    @if (Model.AudienceCount > 0)
+                    {
+                        <span class="CountTitle">@Model.AudienceCount</span>
+                    }
+                </div>
+            </div>
+            <div class="surveyCountCard">
+                <img src="~/was/img/Response_Count.svg" alt="" />
+                <h6>No. of Responses</h6>
+                <span class="CountTitle">@Model.SubmittedCount</span>
+            </div>
+            <div class="surveyCountCard">
+                <img src="~/was/img/No_of_questions.svg" alt="" />
+                <h6>No. of Questions </h6>
+                <span class="CountTitle">@Model.NumberofQuestions</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="survey_card timeShowSurvey shadow">
+            <div class="row m-0">
+                <div class="col-sm-6">
+                    Minimum Time
+                </div>
+                <div class="col-sm-6 countInnerShow">
+                    @Model.MinTime
+                </div>
+            </div>
+            <div class="row m-0">
+                <div class="col-sm-6">
+                    Maximum Time
+                </div>
+                <div class="col-sm-6 countInnerShow">
+                    @Model.MaxTime
+                </div>
+            </div>
+            <div class="row m-0">
+                <div class="col-sm-6">
+                    Average Time
+                </div>
+                <div class="col-sm-6 countInnerShow">
+                    @Model.AvgTime
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="survey_card shadow">
+    <div class="broadcast-timeline-div">
+        @{await Html.RenderPartialAsync("_BroadcastDetailsTimeline", Model); }
+    </div>
+</div>

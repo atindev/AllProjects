@@ -1,0 +1,142 @@
+﻿@model WAS.Application.Features.Groups.GetAll.Response;
+
+@{
+    var activeGroups = new List<WAS.Application.Common.Models.Group>();
+}
+
+@if (Model.Groups != null && Model.Groups.Any())
+{
+
+    activeGroups = Model.Groups.Where(x => x.IsActive).ToList();
+
+}
+
+<input type="hidden" id="idShowmodellg" data-toggle="modal" data-target="#modal-sg" />
+<div class="modal fade" id="modal-sg" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Create Group
+                </h4>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closemodel()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form action="/WAS/Group/AddSubscription" method="post" id="test">
+
+                <div class="modal-body">
+
+                    <div class="row" style="display:none;">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="form-group clearfix">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="radio" id="idNewGrouSelection" class="classGroupType" name="GroupType" value="New">
+                                        <label class="radio-last" for="idNewGrouSelection">
+                                            Create New Group
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="display:none;">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="form-group clearfix">
+                                    <div class="icheck-primary d-inline">
+                                        <input type="radio" id="idexistingGroupSelection" class="classGroupType" name="GroupType" value="Existing">
+                                        <label class="radio-last" for="idexistingGroupSelection">
+                                            Select an existing Group
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row newGroupPopup" id="idExistingGroupPopup">
+                        <div class="col-12">
+                            <div class="form-group">
+                                @*<label>Group</label>*@
+
+                                <select class="form-control select2" id="idExistingGroups" multiple="multiple" data-placeholder="Select one or multiple groups"
+                                        name="GroupId" required>
+                                    @{
+                                        foreach (var item in activeGroups)
+                                        {
+                                            <option value="@item.Id" count="@item.SubscriptionCount">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                                <p id="demo" style="color:red"></p>
+                            </div>
+
+                            <small class="badge badge-warning float-left" id="idSelectedSubscriptions"><i class="fas fa-user-friends" aria-hidden="true"></i> </small>
+
+                            <div class="classExistingCountParent float-right" id="idExistingPeopleCount">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row newGroupPopup" id="idNewGroupPopup">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="idNewSubscriptionGroupName">Group Name*</label>
+                                <input type="text" class="form-control" name="Name" id="idNewSubscriptionGroupName" placeholder="Enter Group Name" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="idNewSubscriptionGroupDescription">Description</label>
+                                <input type="text" class="form-control" name="Description" id="idNewSubscriptionGroupDescription" placeholder="Enter Description">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="icheck-success d-inline">
+                                <input type="checkbox" id="idAccessOnlyToOwner">
+                                <label class="sub-label" for="idAccessOnlyToOwner">
+                                    Private Group
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12" id="idPrivacyCheckbox">
+                            <div class="icheck-success d-inline">
+                                <input type="checkbox" id="idAccessToMembers">
+                                <label class="sub-label" for="idAccessToMembers">
+                                    Allow admins in this group to manage
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <input type="hidden" value=@User.Identity.Name id="idSubscriptionGroupCreatedBy" name="CreatedBy" />
+                <input type="hidden" value=@User.Identity.Name name="ModifiedBy" />
+                <input type="hidden" value="" id="idSubscriptionGroupID" name="Id" />
+                <input type="hidden" value="" id="idOperationType" />
+
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closemodel()">Close</button>
+                    <button type="button" class="btn btn-primary" id="idbuttonSubscriptionCreateGroup" name="GroupId">Submit</button>
+                </div>
+
+            </form>
+
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script src="~/was/js/AddToGroupPopup.js"></script>

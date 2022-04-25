@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <UserSecretsId>9031ce97-0807-469b-b94e-e7749d578b7d</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Extension\AzureAdOptions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\was\js\site.js" />
+    <None Include="wwwroot\was\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
+    <None Include="wwwroot\was\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\was\lib\bootstrap\dist\css\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\was\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\was\lib\bootstrap\dist\css\bootstrap.css.map" />
+    <None Include="wwwroot\was\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\was\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\was\lib\bootstrap\dist\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\was\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\was\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\was\lib\bootstrap\dist\js\bootstrap.js" />
+    <None Include="wwwroot\was\lib\bootstrap\dist\js\bootstrap.js.map" />
+    <None Include="wwwroot\was\lib\bootstrap\dist\js\bootstrap.min.js" />
+    <None Include="wwwroot\was\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\was\lib\bootstrap\LICENSE" />
+    <None Include="wwwroot\was\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+    <None Include="wwwroot\was\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+    <None Include="wwwroot\was\lib\jquery-validation\dist\additional-methods.js" />
+    <None Include="wwwroot\was\lib\jquery-validation\dist\additional-methods.min.js" />
+    <None Include="wwwroot\was\lib\jquery-validation\dist\jquery.validate.js" />
+    <None Include="wwwroot\was\lib\jquery-validation\dist\jquery.validate.min.js" />
+    <None Include="wwwroot\was\lib\jquery-validation\LICENSE.md" />
+    <None Include="wwwroot\was\lib\jquery\dist\jquery.js" />
+    <None Include="wwwroot\was\lib\jquery\dist\jquery.min.js" />
+    <None Include="wwwroot\was\lib\jquery\dist\jquery.min.map" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
+    <PackageReference Include="Hellang.Middleware.ProblemDetails" Version="5.1.1" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.16.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+	<PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.11" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.AzureKeyVault" Version="3.1.11" />
+	<PackageReference Include="Syncfusion.EJ.AspNet.Core" Version="18.4.0.44" />
+    <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="18.4.0.44" />
+    <PackageReference Include="Vereyon.Web.FlashMessage" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WAS.Application\WAS.Application.csproj" />
+    <ProjectReference Include="..\WAS.Infrastructure\WAS.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\was\js\Recaptcha\api.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\was\css\Subscription\" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,69 @@
+﻿.e-grid .e-headercell.customcss .e-headertext, .e-grid .e-headercell.customcssAuthor .e-headertext, .e-grid .e-headercell.customcssErrortext .e-headertext {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: bold;
+    color: black !important;
+}
+.e-grid .e-headercell.customcssStatus .e-headertext {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: bold;
+    color: black !important;
+}
+
+.e-rowcell.customcss, .e-rowcell.customcssErrortext {
+    font-size: 0.95rem;
+    white-space: normal !important;
+}
+.e-rowcell.customcssStatus {
+    font-size: 0.95rem;
+    white-space: normal !important;
+    text-transform:capitalize;
+}
+ 
+.e-grid.e-gridhover tr[role='row']:not(.e-editedrow):hover .e-rowcell:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-gridhover tr[role='row']:hover .e-detailrowcollapse:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-gridhover tr[role='row']:hover .e-rowdragdrop:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-rtl .e-gridhover tr[role='row']:hover .e-rowdragdrop:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-gridhover tr[role='row']:hover .e-detailrowexpand:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell) {
+    background-color: white !important;
+    color: #000 !important;
+}
+.e-grid .e-rowcell {
+    height: 64px !important;
+}
+.DN{
+    display:none !important;
+}
+.e-grid .e-headercell.customcssDetails .e-headertext {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: bold;
+    color: black !important;
+}
+.e-rowcell.customcssAuthor {
+    font-size: 0.95rem;
+    white-space: normal !important;
+    position: relative;
+    padding: 8px 2px !important;
+}
+
+.clsAuthor {
+    line-height: 1.5 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    width: 90% !important;
+    font-size: 0.9em;
+    margin:0 auto;
+}
+.iconFiledMessageLink {
+    position: absolute;
+    left: 83%;
+    top: 8%;
+}
+.customcssErrortext{
+    position:relative;
+}
+

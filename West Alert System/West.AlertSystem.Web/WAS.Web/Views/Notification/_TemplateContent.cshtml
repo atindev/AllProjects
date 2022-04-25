@@ -1,0 +1,44 @@
+﻿
+@model WAS.Application.Features.Template.GetAll.Response
+
+@{
+    var uniqueCategories = new List<int>();
+}
+
+@if (Model.Templates!=null && Model.TemplateCategories!=null && Model.Templates.Any() && Model.TemplateCategories.Any())
+{
+
+    uniqueCategories = Model.Templates.Select(x => x.CategoryId).Distinct().ToList();
+
+}
+else
+{
+
+    uniqueCategories = new List<int>();
+
+}
+
+<ul id="template_select" class="template_select">
+
+    @foreach (var categories in uniqueCategories)
+    {
+        var currentCategory = Model.TemplateCategories.Single(x => x.Id == categories);
+
+        if (currentCategory != null)
+        {
+            var currentCategoryElement = Model.Templates.Where(x => x.CategoryId == categories);
+
+            <li class="has-children contentParent" value="@categories">
+                <a value="@currentCategory.Id" class="categoryMainparent">@currentCategory.Name</a>
+                <ul class="sub-menu level-0">
+                    @foreach (var currentElement in currentCategoryElement)
+                    {
+                        <li class=""><a class="templateListItem" categoryid="@currentCategory.Id" value="@currentElement.Id">@currentElement.Name</a></li>
+                    }
+                </ul>
+            </li>
+
+        }
+    }
+
+</ul>

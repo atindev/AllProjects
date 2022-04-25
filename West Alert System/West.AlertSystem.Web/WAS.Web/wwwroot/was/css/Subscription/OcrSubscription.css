@@ -1,0 +1,153 @@
+.OCRSubscriptionList {
+    margin-bottom: 60px;
+    padding: 30px;
+    overflow: hidden;
+}
+.IconForOCRedit{
+	display:inline-block;
+	position:relative;
+}
+.IconForOCRedit i{
+	position: relative;
+    color: #4099ff;
+    z-index: 9;
+}
+.IconForOCRedit:hover i{
+	color: #fff;
+}
+.IconForOCRedit span{
+	width: 1px;
+    height: 1px;
+    border-radius: 50%;
+    background-color: #4099ff;
+    position: absolute;
+    left: 9px;
+    top: 11px;
+    transition: transform 0.3s;
+    -webkit-transition: -webkit-transform 0.3s;
+}
+.IconForOCRedit:hover span{
+	transform: scale(35); 
+	-webkit-transform: scale(35);
+	left: 8px;
+}
+.userWithLocation{
+	color: #5895CC;
+}
+.SubmitOCRsubscription .btn{
+	width:100px!important;
+}
+.OCRSubscriptionList object{
+	width:100%;
+	height:100%;
+	border-bottom:1px solid #ccc;
+    max-height:1000px;
+}
+.EditOCRSubscriptionDetails .form-group:last-child{
+	margin-bottom:0;
+}
+.OCRSubscriptionSection{
+	    padding: 20px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}
+.SectionOCRHeader{
+	background-color: #00b14f;
+    color: #fff;
+    font-size: 18px;
+    padding: 6px 20px;
+}
+.OCRsubHeader{
+	margin-bottom: 1rem;
+    font-weight: 700;
+    border-bottom: 2px dotted #ccc;
+    padding-bottom: 5px;
+    padding-left: 0;
+    font-size: 16px;
+}
+.OCRsubHeader img {
+    margin-right: 10px;
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+}
+.LabelFontChange label{
+	font-weight:400!important;
+}
+.ConfidenceLevel{
+	background-color: #ffc107;
+    display: inline-block;
+    padding: 0 8px;
+    border-radius: 4px;
+    float: right;
+    font-weight: 700;
+    font-size: 14px;
+}
+.OCRSubscriptionSection label{
+	width:100%;
+}
+.EditOCRSubscriptionDetails {
+    overflow: auto;
+    padding-bottom: 20px;
+}
+.getHeightPDF {
+    padding-bottom: 130%
+}
+
+.e-grid .e-headercell.customcss .e-headertext, .e-grid .e-headercell.customcssEventName .e-headertext {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: bold;
+    color: black !important;
+}
+.e-grid .e-headercell.customcssDetails .e-headertext {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: bold;
+    color: black !important;
+}
+.e-grid .e-headercell.customcssNotificationStatus .e-headertext {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: bold;
+    color: black !important;
+}
+.e-grid .e-headercell.customcssLastUpdated .e-headertext {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: bold;
+    color: black !important;
+}
+.e-rowcell.customcss {
+    font-size: 0.95rem;
+    white-space: normal !important;
+}
+.e-grid.e-gridhover tr[role='row']:not(.e-editedrow):hover .e-rowcell:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-gridhover tr[role='row']:hover .e-detailrowcollapse:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-gridhover tr[role='row']:hover .e-rowdragdrop:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-rtl .e-gridhover tr[role='row']:hover .e-rowdragdrop:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-gridhover tr[role='row']:hover .e-detailrowexpand:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell) {
+    background-color: white !important;
+    color: #000 !important;
+}
+.e-grid.e-bothlines .e-rowcell {
+    height: 50px!important;
+}
+.IconOCRedit:hover i{
+    color:#fff;
+}
+.IconOCRedit i{
+    color:#0056b3;
+    left: 0;
+    right: 0;
+}
+.IconOCRedit span{
+    background-color:#0056b3;
+}
+label.LabelforConsent{
+    width:auto;
+}
+.disableField {
+    pointer-events: none !important;
+    opacity: 0.5 !important;
+}

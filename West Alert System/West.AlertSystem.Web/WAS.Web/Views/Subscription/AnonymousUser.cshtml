@@ -1,0 +1,452 @@
+﻿@model WAS.Application.Features.Subscription.CreateView.Response
+@{
+    ViewData["Title"] = "Subscription";
+}
+
+<link href="~/was/css/style_wizard.css" rel="stylesheet" />
+<script src="~/was/js/Subscription/Subscription.js"></script>
+<!--Remoing Jquery UI because of the conflict with bootstrap -->
+@*<script src="~/was/js/jquery-ui.min.js"></script>*@
+<script src="~/was/js/Subscription/jquery.steps.js"></script>
+<script src="~/was/js/Subscription/main.js"></script>
+<script src="~/was/js/Recaptcha/api.js"></script>
+
+<div class="content-wrapper">
+    <!-- /.content-header -->
+    <div class="content-header">
+        <div class="container">
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- Main content -->
+    <div class="content">
+        <div class="container">
+            <div class="row Was_subscribe_top">
+                <div class="col-12">
+                    <div class="card">
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <form action="/WAS/Subscription/Subscribe" method="post" autocomplete="off">
+                                <input type="hidden" name="SubscriptionMode" value="Web (without SSO)" />
+                                <input type="hidden" id="idUserBlockedTime" value=@Model.UserBlockedInterval />
+                                <input type="hidden" id="idEmployeeId" name="OfficialEmail" value="" />
+                                <div class="content">
+                                    <div class="container">
+                                        <div class="row">
+                                            <!-- /.col-md-6 -->
+                                            <div class="col-sm-12">
+                                                <div class="card wizard_card">
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body">
+                                                        <div class="container">
+                                                            <!-- Wizard -->
+                                                            <div class="outer-container">
+                                                                <div id="wizard">
+                                                                    <!-- SECTION 1 -->
+                                                                    <h4>Basic Information</h4>
+                                                                    <section>
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="form-group">
+                                                                                    <label>Please add your Employee Id or User Id or Work Email </label>
+                                                                                    <input type="text" class="form-control form-control-da" id="OfficialEmail" placeholder="Enter Employee Id or User Id or Email ..." autocomplete="off" list="autocompleteOff">
+                                                                                    <span id="spanEmailError" style="color:red"></span>
+                                                                                </div>
+                                                                                <input type="hidden" value="@Model.Recaptcha.EnableCaptcha" id="idEnableCaptcha" name="EnableCapctcha" />
+                                                                                @if (Model.Recaptcha.EnableCaptcha == "true")
+                                                                                {
+                                                                                    <div class="g-recaptcha" id="rcaptcha" data-sitekey="@Model.Recaptcha.RecaptchaSiteKey"></div>
+                                                                                    <span id="captcha" style="color:red" />
+                                                                                }
+                                                                            </div>
+                                                                        </div>
+                                                                    </section>
+
+
+                                                                    <!-- SECTION 2 -->
+                                                                    <h4>Verification</h4>
+                                                                    <section>
+                                                                        <div class="validateBeforeText">
+                                                                            <i class="fas fa-question" aria-hidden="true"></i>
+                                                                            <div class="overflow-hidden">
+                                                                                <p>Please answer the below security questions to confirm your identity</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div id="idValidationSection">
+
+                                                                        </div>
+                                                                        <div class="validateAfterWarning">
+                                                                            <i class="fas fa-exclamation" aria-hidden="true"></i>
+                                                                            <div class="ValidateAfterText overflow-hidden">
+                                                                                <h4>Warning!</h4>
+                                                                                <p>You will be asked 3 security questions in sequence. You need to answer all 3 correctly in order to proceed. If you answer incorrectly to any of the questions, your email will be blocked for @Model.UserBlockedInterval minutes</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </section>
+
+                                                                    <!-- SECTION 2 -->
+                                                                    <h4>Employee Details</h4>
+                                                                    <section>
+                                                                        <div class="profile_section_Was row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="row profile_details" id="foundRecord">
+                                                                                    <div class="col-md-4">
+                                                                                        <div class="card h-100 text-center">
+                                                                                            <div class="card-body">
+                                                                                                <img alt="" id="imgUser" />
+                                                                                                <h6><span id="spanUsername"></span></h6>
+                                                                                                <p class="text-muted m-0" id="spandesignation"></p>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-8">
+                                                                                        <div class="card h-100">
+                                                                                            <div class="card-body row pb-0">
+                                                                                                <div class="col-md-8">
+                                                                                                    <p>
+                                                                                                        <span class="pr_title text-muted">Email</span>
+                                                                                                        <span class="pr_content" id="WorkEmail"></span>
+                                                                                                    </p>
+                                                                                                </div>
+                                                                                                <div class="col-md-4">
+                                                                                                    <p>
+                                                                                                        <span class="pr_title text-muted">Employee ID</span>
+                                                                                                        <span class="pr_content" id="EmployeeId"></span>
+                                                                                                    </p>
+                                                                                                </div>
+                                                                                                <div class="col-md-8">
+                                                                                                    <p>
+                                                                                                        <span class="pr_title text-muted">Office Location</span>
+                                                                                                        <span class="pr_content" id="LocationName"></span>
+                                                                                                    </p>
+                                                                                                </div>
+                                                                                                <div class="col-md-4 managerprofile_details">
+                                                                                                    <p>
+                                                                                                        <span class="pr_title text-muted">Reports to</span>
+                                                                                                        <img id="imgManager" style="margin-top:0px !important" alt="" />
+                                                                                                        <span class="pr_content" id="manager" name="ReportManager"></span>
+                                                                                                    </p>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row" id="noRecord" style="display:none">
+                                                                                    <div class="col-12 bg-white emptyTemplateWas text-center p-0">
+                                                                                        <img src="/was/img/No employee_records_found.svg" width="300" alt="" />
+                                                                                        <h2>No Employee Records Available</h2>
+                                                                                        <p>We could not find any employee records with provided details, please try again with a valid Employee Id or Work Email</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </section>
+
+                                                                    <!-- SECTION 3 -->
+                                                                    <h4>Contact Info</h4>
+                                                                    <section>
+                                                                        <div class="row Was_adt_info">
+                                                                            <div class="validateBeforeText mb-3 col-12">
+                                                                                <i class="fas fa-exclamation" aria-hidden="true"></i>
+                                                                                <div class="overflow-hidden">
+                                                                                    <p>Please provide at least one of <strong>Work Mobile</strong>, <strong>Personal Mobile</strong>, or <strong>Personal Email</strong>.</p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <div class="form-group">
+                                                                                    <label> Work Mobile</label><input type="text" id="OfficeMobile" class="form-control form-control-da country-code" placeholder="Enter work mobile ..." onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" maxlength="13" autocomplete="off" list="autocompleteOff">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <div class="form-group">
+                                                                                    <label>Personal Mobile</label>
+                                                                                    <input type="tel" class="form-control form-control-da country-code" id="PersonalMobile" onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" maxlength="13" autocomplete="off" list="autocompleteOff" placeholder="Enter personal mobile ...">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <div class="form-group">
+                                                                                    <label>Work Phone</label><input type="text" class="form-control form-control-da country-code" id="OfficePhone" placeholder="Enter work phone ..." onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" maxlength="13">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <div class="form-group">
+                                                                                    <label>Home Phone</label><input type="text" id="HomePhone" class="form-control form-control-da country-code" placeholder="Enter home phone ..." onkeypress="return event.charCode >= 48 && event.charCode <= 57" onpaste="return false" maxlength="13" autocomplete="off" list="autocompleteOff">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <div class="form-group">
+                                                                                    <label>Personal Email</label>
+                                                                                    <input type="email" class="form-control form-control-da" id="PersonalEmail" name="PersonalEmail" placeholder="Enter personal email id ...">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <div class="form-group">
+                                                                                    <label class="WithInfoIcon position-relative">Shift <i title="Please select your shift from dropdown" class="fas fa-info-circle" aria-hidden="true"></i></label>
+                                                                                    <select asp-for="@Model.Subscription.ShiftId"
+                                                                                            name="ShiftId"
+                                                                                            id="ShiftId"
+                                                                                            class="form-control"
+                                                                                            asp-items="@(new SelectList(Model.Shifts, "Id", "Name"))" onchange="subscriptionPreferenceschanged('@String.Format("{0}", "")')" required>
+                                                                                        <option value="">Select Shift</option>
+                                                                                    </select>
+                                                                                    <span id="SpanShiftmessage" style="color:red;"></span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </section>
+                                                                    <h4>Preferences</h4>
+                                                                    <section>
+                                                                        @{
+                                                                            var preferredChannel = "";
+                                                                            <div class="row was_pref">
+                                                                                <div class="col-md-6 mb-2">
+                                                                                    <h5 class="comm"><img src="~/was/img/ic_Mail.svg" alt="" width="25" />Email</h5>
+                                                                                    <div class="form-group clearfix ck-top row">
+                                                                                        <div class="col-md-5">
+                                                                                            <div class="icheck-success d-inline" id="IsOfficialEmailParent">
+                                                                                                <input type="checkbox" id="IsOfficialEmail" name="IsOfficialEmail" onclick="subscriptionPreferenceschanged('@String.Format("{0}", preferredChannel)')" class="subscriptionPreference">
+                                                                                                <label class="sub-label" for="IsOfficialEmail">Work Email</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-5">
+                                                                                            <div class="icheck-success d-inline" id="IsPersonalEmailParent">
+                                                                                                <input type="checkbox" id="IsPersonalEmail" name="IsPersonalEmail" onclick="subscriptionPreferenceschanged('@String.Format("{0}", preferredChannel)')" class="subscriptionPreference">
+                                                                                                <label class="sub-label" for="IsPersonalEmail">Personal Email</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6 mb-2">
+                                                                                    <h5 class="comm"><img src="~/was/img/ic_text.svg" alt="" width="25" />Text Messages</h5>
+                                                                                    <div class="form-group clearfix ck-top row">
+                                                                                        <div class="col-md-5">
+                                                                                            <div class="icheck-success d-inline" id="IsTextOfficeMobileParent">
+                                                                                                <input type="checkbox" id="IsTextOfficeMobile" name="IsTextOfficeMobile" onclick="subscriptionPreferenceschanged('@String.Format("{0}", preferredChannel)')" class="subscriptionPreference">
+                                                                                                <label class="sub-label" for="IsTextOfficeMobile">Work Mobile</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-5">
+                                                                                            <div class="icheck-success d-inline" id="IsTextPersonalMobileParent">
+                                                                                                <input type="checkbox" id="IsTextPersonalMobile" name="IsTextPersonalMobile" onclick="subscriptionPreferenceschanged('@String.Format("{0}", preferredChannel)')" class="subscriptionPreference">
+                                                                                                <label class="sub-label" for="IsTextPersonalMobile">Personal Mobile</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <h5 class="comm"><img src="~/was/img/whatsapp.png" alt="" width="25" />Whatsapp Messages</h5>
+                                                                                    <div class="form-group clearfix ck-top row">
+                                                                                        <div class="col-md-5">
+                                                                                            <div class="icheck-success d-inline" id="IsWhatsAppOfficeMobileParent">
+                                                                                                <input type="checkbox" id="IsWhatsAppOfficeMobile" name="IsWhatsAppOfficeMobile" onclick="subscriptionPreferenceschanged('@String.Format("{0}", preferredChannel)')" class="subscriptionPreference">
+                                                                                                <label class="sub-label" for="IsWhatsAppOfficeMobile">Work Mobile</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-5">
+                                                                                            <div class="icheck-success d-inline" id="IsWatsAppPersonalMobileParent">
+                                                                                                <input type="checkbox" id="IsWatsAppPersonalMobile" name="IsWhatsAppPersonalMobile" onclick="subscriptionPreferenceschanged('@String.Format("{0}", preferredChannel)')" class="subscriptionPreference">
+                                                                                                <label class="sub-label" for="IsWatsAppPersonalMobile">Personal Mobile</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <div class="withLanguageSelect position-relative">
+                                                                                        <h5 class="comm"><img src="~/was/img/ic_Voice.svg" alt="" width="25" />Voice</h5>
+                                                                                        <div class="languageSelectForSubscription">
+                                                                                            <img src="~/was/img/select-languages.png" alt="" title="Preferred language to hear when you receive an alert/notification on Voice call" width="40" />
+                                                                                            <select id="PreferredLanguage" class="form-control" name="PreferredLanguage" required>
+                                                                                                <option disabled> Please Select Your Preferred Language</option>
+                                                                                                @foreach (var languages in Model.Languages)
+                                                                                                {
+                                                                                                    if (languages.Name == "English (American)")
+                                                                                                    {
+                                                                                                        <option value="@languages.Code" selected>English (American)</option>
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <option value="@languages.Code">@languages.Name</option>
+                                                                                                    }
+                                                                                                }
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-group clearfix ck-top row">
+                                                                                        <div class="col-md-5">
+                                                                                            <div class="icheck-success d-inline" id="IsVoiceOfficeMobileParent">
+                                                                                                <input type="checkbox" id="IsVoiceOfficeMobile" name="IsVoiceOfficeMobile">
+                                                                                                <label class="sub-label" for="IsVoiceOfficeMobile">Work Mobile</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-5">
+                                                                                            <div class="icheck-success d-inline" id="IsVoicePersonalMobileParent">
+                                                                                                <input type="checkbox" id="IsVoicePersonalMobile" name="IsVoicePersonalMobile">
+                                                                                                <label class="sub-label" for="IsVoicePersonalMobile">Personal Mobile</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-5">
+                                                                                            <div class="icheck-success d-inline" id="IsVoiceOfficePhoneParent">
+                                                                                                <input type="checkbox" id="IsVoiceOfficePhone" name="IsVoiceOfficePhone">
+                                                                                                <label class="sub-label" for="IsVoiceOfficePhone">Work Phone</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-md-5">
+                                                                                            <div class="icheck-success d-inline" id="IsVoiceHomePhoneParent">
+                                                                                                <input type="checkbox" id="IsVoiceHomePhone" name="IsVoiceHomePhone">
+                                                                                                <label class="sub-label" for="IsVoiceHomePhone">Home Phone</label>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <div class="col-md-6">
+                                                                                    <h5 class="comm"><img src="~/was/img/preffered_channel.png" alt="" width="25" />Preferred Channel For Account Updates</h5>
+                                                                                    <div class="form-group clearfix ck-top">
+                                                                                        <select id="PreferredChannel" class="form-control" name="PreferredChannel" required>
+                                                                                            <option disabled> Please Select Your Preferred Channel</option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+                                                                    </section>
+                                                                    <!-- SECTION 5 -->
+                                                                    <h4>Consent</h4>
+                                                                    <section>
+                                                                        <div class="row">
+                                                                            <div class="form-group clearfix icheck-success d-inline">
+                                                                                <div class="icheck-primary d-inline">
+                                                                                    <input type="checkbox" id="consent" name="Consent" value="true" required>
+                                                                                    <label for="consent">
+                                                                                    </label> I authorize West to use West Alert System to send company/work-related communications to me on personal devices and personal communication identifiers until I revoke the authorization.
+
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group clearfix icheck-success d-inline">
+                                                                                <div class="icheck-primary d-inline">
+                                                                                    <input type="checkbox" id="IsWestTermsConditions" name="IsWestTermsConditions" required>
+                                                                                    <label class="sub-label" for="IsWestTermsConditions" style="font-size:16px;">
+                                                                                        I accept the <a href="https://westpharmaceutical.sharepoint.com/SitePages/Legal%20Notice.aspx" rel="noopener" target="_blank">Terms of Use</a> of West Alert System.
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </section>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Wizard -->
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.row -->
+                                    </div><!-- /.container-fluid -->
+                                </div>
+                            </form>
+
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
+                    <br /><br />
+                </div>
+
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    @if (Model != null && Model.Success)
+    {
+        <div class="modal fade" id="modal-confirmation" value="" operatnType="">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center pt-0">
+                        <i class="fas fa-check alertButtonModal color_green" aria-hidden="true"></i>
+                        <h4 class="modal-title">Subscription Successful</h4>
+                        @if (Model.SubscriptionId == Guid.Empty)
+                        {
+                            <p class="font_14">Thank you for subscribing to West Alert System(WAS). You will receive Alerts/Notifications and Survey Requests from WAS Administrators when you're part of the target audience. Please keep your profile and contact information up to date on this link <a href="https://was.westpharma.com/WAS/Subscription/Subscribe">https://was.westpharma.com/WAS/Subscription/Subscribe</a> to not miss any important notifications</p>
+                        }
+                        else
+                        {
+                            <p class="font_14">We found an existing subscription for your profile and updated the preferences as per your inputs</p>
+                        }
+                        <div class="col-12 p-0">
+                            <div class="feedbackSmileyInput">
+                                <p>Was this a simple and engaging subscription Process?</p>
+                                <div class="input-group">
+                                    <div class="col-sm-3 col-6 pl-0">
+                                        <label>
+                                            <input type="radio" name="Feedback" value="VerySatisfied" checked>
+                                            <img src="~/was/img/feedback_very_satisfied.png" alt="feedback Icon" width="35">
+                                            <span class="smiley_title">Very Satisfied</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-3 col-6 pl-0">
+                                        <label>
+                                            <input type="radio" name="Feedback" value="Satisfied">
+                                            <img src="~/was/img/feedback_satisfied.png" alt="feedback Icon" width="35">
+                                            <span class="smiley_title">Satisfied</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-3 col-6 pl-0">
+                                        <label>
+                                            <input type="radio" name="Feedback" value="Dissatisfied">
+                                            <img src="~/was/img/feedback_dissatisfied.png" alt="feedback Icon" width="35">
+                                            <span class="smiley_title">Dissatisfied</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-3 col-6 pl-0">
+                                        <label>
+                                            <input type="radio" name="Feedback" value="VeryDissatisfied">
+                                            <img src="~/was/img/feedback_very_dissatisfied.png" alt="feedback Icon" width="35">
+                                            <span class="smiley_title">Very Dissatisfied</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center mb-3 form-group">
+                        <input type="hidden" id="FeedbackChannel" value="Web (without SSO)" />
+                        <input type="hidden" id="SubscriptionId" value="@Model.SubscriptionId" />
+                        <button type="button" class="btn btn-success" id="idSubscriptionFeedback" data-dismiss="modal" onclick="SubscriptionFeedback()">Ok</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    }
+
+    <!--alert popup with only Ok button-->
+    <input type="hidden" id="idAlertpopup" data-toggle="modal" data-target="#modalSubAlertpopup" />
+    <div class="modal fade" id="modalSubAlertpopup" value="" operatnType="">
+        <div class="modal-dialog text-center modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close classAlertClose" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pt-0">
+                    <i class="fas fa-exclamation alertButtonModal" aria-hidden="true"></i>
+                    <p id="idmodalpopupText" class="h5 mb-4"></p>
+                    <button type="button" value="" class="btn btn-warning mb-2 classAlertClose" data-dismiss="modal" id="idAlertPopupSubmit">Ok</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+</div>
+

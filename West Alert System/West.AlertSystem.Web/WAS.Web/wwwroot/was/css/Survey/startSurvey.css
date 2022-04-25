@@ -1,0 +1,133 @@
+body {
+    background-color: #f1f1f1;
+}
+.logoForSurvey {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.LogoforSurveyInner {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+.classStartSurveyHeader {
+    padding: 10px;
+    text-align: center;
+    background: #D9F0F9;
+}
+.classStartSurveyHeader h4 {
+        font-size: 20px;
+}
+.classStartSurveyContent {
+    padding: 20px 30px;
+}
+.classStartSurveyContent span{
+    display:block;
+}
+.classStartSurvey {
+    width: 100%;
+    height: 100vh;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin: 0 20px;
+}
+.SurveyEmailLanding {
+    width: 100%;
+    max-width: 400px;
+    background-color: #fff;
+}
+.surveyButton {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+.survey_card {
+    padding: 20px;
+    border: 1px solid #C2C6C9;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    background: #f4f6f9;
+}
+.SurveyWASCreate label {
+    font-weight: 600 !important;
+    color: #33414e;
+    font-size: 17px;
+    display: block;
+}
+.SurveyWASCreate .select2-container {
+  width: 100% !important;
+}
+.btn--a {
+  display: inline-block;
+  border: none;
+  text-decoration: none;
+  background: #ffffff;
+  cursor: pointer;
+  text-align: center;
+  -webkit-transition: background 250ms ease-in-out, -webkit-transform 150ms ease;
+  transition: background 250ms ease-in-out, -webkit-transform 150ms ease;
+  -o-transition: background 250ms ease-in-out, transform 150ms ease;
+  transition: background 250ms ease-in-out, transform 150ms ease;
+  transition: background 250ms ease-in-out, transform 150ms ease, -webkit-transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-decoration: underline;
+}
+*:focus {
+    outline: none !important;
+}
+.surveyButton svg {
+    width: 14px;
+    margin-left: 10px;
+}
+body{
+    background-image: url(/was/img/survey_bg.jpg) !important;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+.WelcomeUserSurvey {
+    background-color: #004e97;
+    color: #ffffff;
+    text-align: center;
+    padding: 20px 20px 10px 20px;
+}
+.WelcomeUserSurvey p {
+        margin-bottom: 0;
+        font-size: 22px;
+        font-weight: 300;
+}
+.WelcomeUserSurvey h3 {
+        font-weight: 300;
+        font-size: 18px;
+}
+.classStartSurveyHeader {
+    justify-content: center;
+}

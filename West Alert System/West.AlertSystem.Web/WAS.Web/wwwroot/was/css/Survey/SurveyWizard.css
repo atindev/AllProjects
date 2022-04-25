@@ -1,0 +1,237 @@
+.forSurveymarginFix {
+    margin-left: 0 !important;
+    min-height: 100vh;
+}
+#SurveyForm {
+    text-align: center;
+    position: relative;
+    margin-top: 20px
+}
+    #SurveyForm .step_field {
+        border: 0 none;
+        border-radius: 0.5rem;
+        box-sizing: border-box;
+        width: 100%;
+        margin: 0;
+        padding-bottom: 20px;
+        position: relative
+    }
+.logoForSurvey {
+    position: absolute;
+    width: 100%;
+    top: 80px;
+    left: 0;
+}
+
+.LogoforSurveyInner {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+.survey_card {
+    text-align: left
+}
+
+#SurveyForm .step_field:not(:first-of-type) {
+    display: none
+}
+.SurveyWizardTop {
+    z-index: 0;
+    border: none;
+    position: relative;
+}
+#progressbar {
+    overflow: hidden;
+    color: lightgrey;
+    margin: 0;
+    padding: 0;
+    counter-reset: listStyle;
+}
+
+    #progressbar .active {
+        color: #fff;
+    }
+
+    #progressbar li {
+        list-style-type: none;
+        font-size: 15px;
+        width: 100%;
+        float: left;
+        position: relative;
+        font-weight: 400;
+        counter-increment: listStyle;
+    }
+        #progressbar li:before {
+            content: counter(listStyle, decimal);
+            width: 40px;
+            height: 40px;
+            line-height: 35px;
+            display: block;
+            font-size: 20px;
+            color: #ffffff;
+            background: #deffed;
+            color: #2db268;
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+            padding: 2px;
+            text-align: center;
+            position: relative;
+            z-index: 9;
+        }
+
+        #progressbar li:after {
+            content: '';
+            width: 100%;
+            height: 2px;
+            background: #deffed;
+            position: absolute;
+            left: 0;
+            top: 20px;
+            z-index: 1
+        }
+
+        #progressbar li.active:before,
+        #progressbar li.active:after {
+            background: #2db268;
+            color: #fff;
+        }
+
+.progress {
+    height: 20px
+}
+
+.progress-bar {
+    background-color: #673AB7;
+}
+
+.fit-image {
+    width: 100%;
+    object-fit: cover
+}
+.classStartSurveyUser.green {
+    background-color: #2db268;
+    padding: 10px 20px;
+}
+.next.btn--a {
+    background: #2db268;
+    color: #fff;
+    padding: 10px 30px;
+    text-decoration: unset;
+    font-weight: 500;
+    font-size: 18px;
+}
+.previous.btn--a {
+    background: #616161;
+    color: #fff;
+    padding: 10px 30px;
+    text-decoration: unset;
+    font-weight: 500;
+    font-size: 18px;
+}
+.submit.btn--a {
+    background: #f6921e;
+    color: #fff;
+    padding: 10px 30px;
+    text-decoration: unset;
+    font-weight: 500;
+    font-size: 18px;
+}
+.checkboxTop {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    margin: 20px auto;
+}
+.checkmark__circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+    stroke: #2db268;
+    fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark_animation {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 2;
+    stroke: #fff;
+    stroke-miterlimit: 10;
+    margin: 10% auto;
+    box-shadow: inset 0px 0px 0px #2db268;
+    animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+}
+
+.checkmark__check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes scale {
+    0%, 100% {
+        transform: none;
+    }
+
+    50% {
+        transform: scale3d(1.1, 1.1, 1);
+    }
+}
+
+@keyframes fill {
+    100% {
+        box-shadow: inset 0px 0px 0px 30px #2db268;
+    }
+}
+.display-4.textAdjust{
+    font-size:25px;
+}
+.SurveySuccessmsg{
+    display:none;
+}
+.topPositionWizard {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 0 0 0;
+    margin: 0;
+}
+.topHeightAdjustforSurvey {
+    padding-top: 170px;
+}
+@media screen and (max-width: 992px) {
+    #progressbar{
+        display:none!important;
+    }
+    .topPositionWizard{
+        padding:0;
+    }
+    .logoForSurvey{
+        top:30px;
+    }
+    .topHeightAdjustforSurvey {
+        padding-top: 120px;
+    }
+}
+
+    

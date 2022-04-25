@@ -1,0 +1,237 @@
+﻿@model WAS.Application.Features.Events.View.Response
+@{
+    ViewData["Title"] = "View Event";
+}
+
+<style>
+    .fa-clock {
+        padding: 12px 12px;
+    }
+
+    .fa-times {
+        padding: 11px 15px;
+    }
+
+    #idUpdateEventDetails {
+        cursor: pointer;
+    }
+</style>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">
+                        <button type="button" title="@(TempData["BackButtonTitle"] is null ? "Back to event list":TempData["BackButtonTitle"])" class="btn btn-reset btn-default" onclick="document.getElementById('clsBackButtonForEvents').click()">
+                            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                            <a href="@(TempData["EventNavigatedFrom"]  is null ? "/WAS/Event/List":TempData["EventNavigatedFrom"])" id="clsBackButtonForEvents">
+                            </a>
+                        </button>  Event
+                    </h1>
+                </div>
+
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                @if (Model != null && Model.Event != null)
+                {
+                    <!-- /.col-md-6 -->
+                    <div class="col-sm-12">
+
+                        <div class="card">
+                            <div class="card-header card-outline card-success">
+                                <h3 class="card-title">
+                                    <strong> Event Name: @Model.Event.Name</strong>
+                                </h3>
+
+                                @if (Model.Event.IsActive)
+                                {
+                                    <span class="float-right badge pro-status" id="idUpdateEventDetails" data-toggle="modal" data-target="#modal-fg"><i class="far fa-edit" aria-hidden="true"></i> </span>
+                                }
+
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="post">
+                                                <div class="card-body re-not">
+                                                    <dl class="row">
+                                                        <div class="col-sm-4">
+                                                            <h6><strong>  Latest Status </strong></h6>
+                                                            <h6>@Model.Event.Status</h6>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <h6><strong> Type </strong></h6>
+                                                            <h6 id="idEventTypeValue" value=@Model.Event.TypeId>@Model.Event.TypeName </h6>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <h6><strong> Urgency </strong></h6>
+                                                            <h6 id="idEventUrgencyValue" value=@Model.Event.UrgencyId>@Model.Event.UrgencyName </h6>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <h6><strong> Created On </strong></h6>
+                                                            <h6> @Model.Event.CreatedDate.ToString("MMM dd, yyyy")</h6>
+                                                        </div>
+                                                        <div class="col-sm-8">
+                                                            <h6><strong> Description </strong></h6>
+                                                            <h6> @Model.Event.Description</h6>
+                                                        </div>
+                                                    </dl>
+                                                </div>
+                                                <div id="accordion">
+                                                    @{
+                                                        int i = 0;
+                                                        string typeClass = "active";
+                                                        string contentClass = "active show";
+                                                        string areaSelected = "true";
+
+                                                        ViewData.Add(new KeyValuePair<string, object>("i", i));
+                                                        ViewData.Add(new KeyValuePair<string, object>("typeClass", typeClass));
+                                                        ViewData.Add(new KeyValuePair<string, object>("areaSelected", areaSelected));
+                                                        ViewData.Add(new KeyValuePair<string, object>("contentClass", contentClass));
+                                                        foreach (var item in Model.Event.Notifications)
+                                                        {
+                                                            i++;
+
+                                                            ViewData["i"] = i;
+
+                                                            await Html.RenderPartialAsync("_Notification", new WAS.Application.Features.Notification.View.Response { Notification = item }, ViewData);
+                                                        }
+                                                    }
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                        </div>
+
+                        <br /><br />
+
+                    </div>
+                }
+                else
+                {
+                    <div>Record not found</div>
+                }
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+</div>
+
+<!--update event popup -->
+<div class="modal fade" id="modal-fg">
+    <form action="/WAS/Event/CreateUpdate" method="post" autocomplete="off">
+
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Update Event</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="idNewEventName">Event Name</label>
+                                <input type="text" class="form-control" name="Name" value="@Model.Event.Name" id="idNewEventName" placeholder="Enter Event Name" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="idNewEventStatus">Latest Status</label>
+                                <input type="text" class="form-control" name="Status" value="@Model.Event.Status" id="idNewEventStatus" placeholder="Enter Status">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Type</label>
+                                <select class="form-control" id="idNewEventType"
+                                        name="TypeId"
+                                        asp-items="@(new SelectList(Model.EventTypes, "Id", "Name"))" required>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Urgency</label>
+                                <select class="form-control" id="idNewEventUrgency"
+                                        name="UrgencyId"
+                                        asp-items="@(new SelectList(Model.EventUrgencies, "Id", "Name"))" required>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="idNewEventDescription">Event Description</label>
+                                <input type="text" name="Description" value="@Model.Event.Description" class="form-control" id="idNewEventDescription" placeholder="Event Description">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" value=@User.Identity.Name name="ModifiedBy" />
+                <input type="hidden" value=@Model.Event.Id id="idEventID" name="Id" />
+                <input type="hidden" value="EventDetails" name="PageType" />
+
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="idbutnCreateEvent">Submit</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </form>
+</div>
+
+<!--failer report popup -->
+@{
+    await Html.RenderPartialAsync("~/Views/Notification/_FailedNotifications.cshtml", new WAS.Application.Features.Notification.GetFailedDetails.Response());
+}
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#idUpdateEventDetails').click(function () {
+
+            let eventType = $('#idEventTypeValue').attr('value');
+            let eventUrgency = $('#idEventUrgencyValue').attr('value');
+
+            if (eventType == undefined || eventType == null || eventType == "")
+                $("#idNewEventType").val($("#idNewEventType option:first").val());
+            else
+                $('#idNewEventType').val(eventType);
+
+            if (eventUrgency == undefined || eventUrgency == null || eventUrgency == "")
+                $("#idNewEventUrgency").val($("#idNewEventUrgency option:first").val());
+            else
+                $('#idNewEventUrgency').val(eventUrgency);
+        });
+
+    });
+
+    $(window).on('load', function () {
+        updateTimezone($('.timeSpanConvert'));
+    });
+
+</script>

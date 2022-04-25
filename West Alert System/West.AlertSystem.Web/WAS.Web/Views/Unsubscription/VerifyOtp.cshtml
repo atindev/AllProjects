@@ -1,0 +1,112 @@
+﻿@model WAS.Application.Features.Subscription.UnsubscribeMail.Request
+
+@{
+    ViewData["Title"] = "Verification";
+}
+
+<div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+        <div class="content-header">
+            <div class="container">
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                        @*<h1 class="m-0 text-dark"> Unsubscribe </h1>*@
+                    </div><!-- /.col -->
+                    <div class="col-sm-12">
+
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container contain-box">
+                <div class="row">
+                    <!-- /.col-md-6 -->
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-outline card-success">
+                                <div class="row">
+                                    <!-- /.card-header -->
+                                    <div class="card-body text-center">
+                                        <div class="container container-box">
+                                            <div class="card-body login-card-body">
+                                                <p class="login-box-msg">Please enter the PIN sent to <strong> @Model.Email </strong></p>
+                                                <form action="/WAS/Unsubscription/EmailVerifyOtp" method="post" autocomplete="off">
+                                                    <input type="hidden" name="Email" id="Email" placeholder="0" value="@Model.Email">
+                                                    <input type="hidden" name="RemovePersonalEmail" value="@Model.RemovePersonalEmail">
+                                                    <div class="row">
+                                                        <div class="col-sm-2">
+                                                            <div class="form-group">
+                                                                <input type="text" name="OtpFirstDigit" class="form-control otp-ctrl" id="emailInputPin1" maxlength="1" placeholder="0" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <div class="form-group">
+                                                                <input type="text" name="OtpSecondDigit" class="form-control otp-ctrl" id="emailInputPin2" maxlength="1" placeholder="0" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <div class="form-group">
+                                                                <input type="text" name="OtpThirdDigit" class="form-control otp-ctrl" id="emailInputPin3" maxlength="1" placeholder="0" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <div class="form-group">
+                                                                <input type="text" name="OtpFourthDigit" class="form-control otp-ctrl" id="emailInputPin4" maxlength="1" placeholder="0" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <div class="form-group">
+                                                                <input type="text" name="OtpFifthDigit" class="form-control otp-ctrl" id="emailInputPin5" maxlength="1" placeholder="0" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <div class="form-group">
+                                                                <input type="text" name="OtpSixthDigit" class="form-control otp-ctrl" id="emailInputPin6" maxlength="1" placeholder="0" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <p class="mb-1">
+                                                        Didn't receive PIN?<a href="/WAS/Unsubscription/VerifyOtp?email=@Model.Email"> Tap here to send it</a>
+                                                    </p>
+                                                    <div class="social-auth-links text-center mb-6">
+                                                        <p> &nbsp;  </p>
+                                                        <button type="submit" class="btn btn-success bt-full">Confirm</button>
+
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content -->
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#emailInputPin1").focus();
+    });
+
+    $(".otp-ctrl").keyup(function (e) {
+        if (e.keyCode == 8) {
+            $(this).parent().parent().prev().children().children().focus();
+        }
+        if (this.value.length == this.maxLength) {
+            $(this).parent().parent().next().children().children().focus();
+        }
+    });
+</script>

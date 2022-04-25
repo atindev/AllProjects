@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="9e25b918-09b0-4d4a-85cb-e722d2def4b8" ChangeDateTime="05/24/2021 06:01:43">
+    <Property Name="ElementName" Value="[dbo].[IncomingMessage].[SubscriptionId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[IncomingMessage]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SubscriberEmail" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fec884aa-0a54-47d3-b759-6173112cebcd" ChangeDateTime="06/03/2021 13:43:45">
+    <Property Name="ElementName" Value="[dbo].[Subscription].[Department]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Subscription]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DepartmentId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d01c0009-b356-4d1c-8b8f-14ca666cbbb0" ChangeDateTime="06/29/2021 08:56:23">
+    <Property Name="ElementName" Value="[dbo].[VideoCategory].[Duration]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[VideoCategory]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Description" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="ad2e969a-a475-4e98-b3e9-887a5cb05755" ChangeDateTime="06/29/2021 08:57:46">
+    <Property Name="ElementName" Value="[dbo].[TrainingVideos].[Thumbnail]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[TrainingVideos]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="VideoThumbnail" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9c7de582-c167-4aac-8d40-57c4aa2531ea" ChangeDateTime="06/29/2021 08:57:51">
+    <Property Name="ElementName" Value="[dbo].[TrainingVideos].[Description]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[TrainingVideos]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="VideoDescription" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d8e123e2-c811-430c-9e9c-f463a64b6a2e" ChangeDateTime="06/29/2021 08:57:54">
+    <Property Name="ElementName" Value="[dbo].[TrainingVideos].[Duration]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[TrainingVideos]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="VideoDuration" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="64be9fc0-6489-4daf-bbcc-af567c1c6e0b" ChangeDateTime="06/29/2021 08:58:11">
+    <Property Name="ElementName" Value="[dbo].[VideoCategory].[Description]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[VideoCategory]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CategoryDescription" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3a552213-0825-428b-a71e-dcf1ca23f3f5" ChangeDateTime="06/29/2021 08:58:17">
+    <Property Name="ElementName" Value="[dbo].[VideoCategory].[Thumbnail]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[VideoCategory]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="CategoryThumbnail" />
+  </Operation>
+</Operations>

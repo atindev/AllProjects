@@ -1,0 +1,45 @@
+﻿.container {
+    width: 100%;
+    max-width: 1160px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.iefix_icon {
+    width: 90px;
+}
+
+.error_icon {
+    color: red;
+}
+
+.download_browsers img {
+    width: 60px;
+}
+
+.BNS_content {
+    padding: 80px 20px 20px 20px;
+}
+
+    .BNS_content ul li {
+        display: inline-block;
+        list-style-type: none;
+        margin-right: 30px;
+        margin-bottom: 20px;
+    }
+
+        .BNS_content ul li:last-child {
+            margin-right: 0;
+        }
+
+.br_title {
+    font-weight: bold;
+    margin: 10px 0 5px 0;
+}
+
+@media only screen and (max-width: 520px) {
+    .BNS_content ul li {
+        display: block;
+        margin-right: 0;
+    }
+}

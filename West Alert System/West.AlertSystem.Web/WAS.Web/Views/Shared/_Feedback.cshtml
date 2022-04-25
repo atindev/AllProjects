@@ -1,0 +1,78 @@
+﻿@{
+    var userName = ((User.Identity as System.Security.Claims.ClaimsIdentity)?.FindFirst("name")?.Value);
+    var userEmailID = User.Identity.Name;
+}
+
+<script src="~/was/js/html2canvas.js"></script>
+<script src="~/was/js/fabric.js"></script>
+<script src="~/was/js/Userfeedback/Feedback.js"></script>
+
+<style>
+
+    .classBtnWidth {
+        width: 41% !important;
+    }
+</style>
+
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="error-page">
+                <div class="">
+                    <!-- general form elements -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Feedback</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form method="post" id="formFeedback" asp-action="SubmitFeedback" asp-controller="Feedback" enctype="multipart/form-data">
+                            <div class="card-body">
+                                <h5> <strong>Hello,</strong>   <span class="description-percentage text-success"> @userName </span> How would you rate your experience?</h5>
+                                <br>
+                                <input type="text" id="Username" name="Username" hidden value="@userName" />
+                                <input type="text" id="UserEmailID" name="UserEmailID" hidden value="@userEmailID" />
+                                <div class="form-group">
+                                    <label for="Title">Whats your Feedback about?</label>
+                                    <input type="text" class="form-control classFeedbackContent" id="Title" name="Title" placeholder="Feedback Title" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Tell us a little more, The more detail the better</label>
+                                    <textarea class="form-control classFeedbackContent" id="Description" name="Description" rows="3" placeholder="Description" required></textarea>
+                                </div>
+                                <div class="form-group">
+
+                                    <div class="icheck-success d-inline">
+                                        <input type="checkbox" id="isScreenshotRequired" name="IsScreenshotRequired" checked>
+                                        <label class="sub-label" for="isScreenshotRequired">
+                                            include screenshot with feedback
+                                        </label>
+                                    </div>
+                                    <br />
+                                    <br />
+                                    <div>
+                                        <a id="btn-edit-image" href="#" data-toggle="modal" data-target="#feedbackedit-modal"><i class="fas fa-pencil-alt" aria-hidden="true"></i></a>
+                                        <input type="hidden" id="Base64String" name="Base64String" />
+                                        <img id="imgscreenshot" alt="" width="200" height="100" />
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <br />
+                                    <div class="card-footer">
+                                        <button type="button" class="btn btn-default classBtnWidth" data-dismiss="modal" onclick="hideFeedbackLayer()">Close</button>
+                                        <button type="submit" id="submitFeedback" class="btn btn-primary float-right classBtnWidth" onclick="hideFeedbackLayer()">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Form Element sizes -->
+                <!-- /.card -->
+            </div>
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+

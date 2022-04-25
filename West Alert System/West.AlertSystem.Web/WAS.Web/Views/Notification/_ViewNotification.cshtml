@@ -1,0 +1,119 @@
+﻿@model WAS.Application.Features.Notification.View.Response
+
+<style>
+    .fa-clock {
+        padding: 12px 12px;
+    }
+
+    .fa-times {
+        padding: 11px 15px;
+    }
+</style>
+<div class="content">
+    <div class="container">
+        <div class="row">
+            @if (Model != null && Model.Notification != null)
+            {
+                <!-- /.col-md-6 -->
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header card-outline card-success">
+                            <h3 class="card-title">
+                                Event Name:  @Model.Notification.EventName
+                            </h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="post">
+                                            <div class="card-body re-not">
+                                                <dl class="row">
+                                                    <div class="col-sm-4">
+                                                        <h6><strong>  Latest Status </strong></h6>
+                                                        <h6>@Model.Notification.EventStatus</h6>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <h6><strong> Type </strong></h6>
+                                                        <h6>@Model.Notification.EventType </h6>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <h6><strong> Urgency </strong></h6>
+                                                        <h6>@Model.Notification.EventUrgency </h6>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <h6><strong> Created On </strong></h6>
+                                                        <h6> @Model.Notification.EventCreatedDate.ToString("MMM dd, yyyy")</h6>
+                                                    </div>
+                                                    <div class="col-sm-8">
+                                                        <h6><strong> Description </strong></h6>
+                                                        <h6> @Model.Notification.EventDescription</h6>
+                                                    </div>
+
+                                                </dl>
+                                            </div>
+                                            <div id="accordion">
+                                                @{ int i = 0;
+                                                    string typeClass = "active";
+                                                    string contentClass = "active show";
+                                                    string areaSelected = "true";
+
+                                                    ViewData.Add(new KeyValuePair<string, object>
+                                                        ("i", i));
+                                                    ViewData.Add(new KeyValuePair<string, object>
+                                                        ("typeClass", typeClass));
+                                                    ViewData.Add(new KeyValuePair<string, object>
+                                                        ("areaSelected", areaSelected));
+                                                    ViewData.Add(new KeyValuePair<string, object>
+                                                        ("contentClass", contentClass));
+
+                                                    await Html.RenderPartialAsync("~/Views/Event/_Notification.cshtml", @Model, ViewData);
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div>Record not found</div>
+            }
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+
+    @{
+        await Html.RenderPartialAsync("~/Views/Notification/_FailedNotifications.cshtml", new WAS.Application.Features.Notification.GetFailedDetails.Response());
+    }
+
+    <!-- /.content -->
+    <script>
+        $(window).on('load', function () {
+
+            if ($("#custom-tabs-three-tab li").length > 0)
+                $($("#custom-tabs-three-tab a")[0]).click();
+
+            updateTimezone($('.timeSpanConvert'));
+        });
+
+        $(document).ready(function () {
+
+            $('#idFirstLevelActionTimezone').val(moment.tz.guess());
+            $('#idSecondLevelActionTimezone').val(moment.tz.guess());
+
+            $('.classApproverAction').click(function () {
+
+                showLoader();
+
+            });
+        });
+
+    </script>
+</div>
+

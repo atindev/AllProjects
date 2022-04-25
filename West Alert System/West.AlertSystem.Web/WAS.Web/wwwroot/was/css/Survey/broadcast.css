@@ -1,0 +1,166 @@
+﻿.classGroupCount {
+    font-size: 1.5rem !important;
+}
+.classDisable {
+    opacity: 0.5 !important;
+    pointer-events: none !important;
+}
+#idselectForGroups {
+    margin-bottom: 0% !important;
+}
+.groupDetailNavigation {
+    font-size: 0.8em;
+    font-style: normal;
+}
+.classGroupCount .table-badge {
+    font-size: .9rem !important;
+}
+.btn-mod-bub {
+    font-size: 9px !important;
+    height: 41px !important;
+    margin: 0px 0px 0px 6px !important;
+    min-width: 49px !important;
+    padding: 6px 1px !important;
+    background: rgb(217, 240, 249);
+    color: rgb(30, 121, 231) !important;
+    border: 0px;
+}
+.classGroupCount .bg-teal {
+    font-size: 1.6em !important;
+    padding: 3px 5px !important;
+}
+.classNotificationButtonParent {
+    white-space: nowrap;
+}
+.classNotificationButtonParent .btn {
+    width: 136px !important;
+    font-size: 0.9rem;
+}
+.ques-no {
+    width: auto !important;
+}
+.btnForIDcreate {
+    width: 40px !important;
+}
+.check-toolbar label {
+    position: relative;
+    cursor:pointer;
+}
+
+.check-toolbar label:after {
+        content: "\f058";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        display: block;
+        position: absolute;
+        top: -22px !important;
+        right: 0 !important;
+        left: auto !important;
+        transform: translate(6px, -6px) scale(0) !important;
+        opacity: 0;
+        border: 0 !important;
+        margin: 0 !important;
+        transition: .2s all;
+        color: #14924c;
+    }
+
+.check-toolbar input[type="checkbox"]:checked + label::after {
+    opacity: 1;
+    transform: translate(6px, -6px) scale(1) !important;
+}
+@media only screen and ( max-width: 768px ) {
+    .mobile_empty {
+        display: none;
+    }
+
+    .BlockOnMobile {
+        width: 136px;
+        display: block !important;
+        margin: 0 auto;
+    }
+}
+#idRefreshNotification {
+    cursor: pointer;
+}
+.info-toolTip {
+    color: #007bff;
+    font-size: 14px;
+    margin-left: 10px;
+}
+.idSurveyName {
+    max-width: 97% !important; 
+}
+#idFollowUpDate {
+    width: 97%;
+    display: inline-block;
+}
+#idResetFollowupTime {
+    display: inline-block;
+    margin-top: 0.7%;
+    cursor:pointer;
+}
+
+
+.classExecutionType .radio {
+    position: relative;
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.classExecutionType label {
+    font-weight: 400 !important;
+    font-size: 16px;
+}
+
+.classExecutionType .radio label {
+    padding-left: 30px;
+}
+
+.classExecutionType .radio label {
+    min-height: 20px;
+    margin-bottom: 0;
+    font-weight: 400 !important;
+    cursor: pointer;
+    line-height: 18px;
+    color: #33414e;
+    font-size: 17px;
+    display: block;
+}
+.custom_radio input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 1px solid rgba(60, 60, 75, 0.3);
+}
+.custom_radio input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.custom_radio .checkmark:after {
+    top: 3px;
+    left: 3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #2db268;
+    content: "";
+    position: absolute;
+    display: none;
+}
+.classExecutionParent {
+    display: flex;
+    align-items: center;
+}
+.executionWizard {
+    margin-left: 10px;
+}

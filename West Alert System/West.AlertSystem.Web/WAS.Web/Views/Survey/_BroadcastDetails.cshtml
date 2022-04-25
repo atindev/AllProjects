@@ -1,0 +1,61 @@
+﻿@model Guid;
+
+@{
+    ViewData["Title"] = ViewBag.subject + " - Details";
+}
+
+<link href="~/was/css/Survey/broadcastDetails.css" rel="stylesheet" />
+
+<div class="content-wrapper">
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                @if (Model != Guid.Empty)
+                {
+                    <input type="hidden" id="idBroadcastId" value="@Model" />
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="card shadow">
+                                <div class="card-header withTwoHeading">
+                                    <div class="col-md-9">
+                                        <h3 class="headerText">Survey Response by Location</h3>
+                                        <p class="m-0 text-secondary">% of employees completed the survey by each location w.r.t total audience for that location</p>
+                                    </div>
+                                </div>
+                                <div id="idLocationChart">
+                                    <div class="steps-img classAlignCenter AlignSpinnerFlex"><img src="~/was/img/ajax_loader_was.svg" alt="loading image" /></div>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card shadow">
+                                <div class="card-header withTwoHeading">
+                                    <div class="col-md-9">
+                                        <h3 class="headerText">Survey Response by Department</h3>
+                                        <p class="m-0 text-secondary">% of employees completed the survey by each department w.r.t total audience for that department</p>
+                                    </div>
+                                </div>
+                                <div id="idDepartmentChart">
+                                    <div class="steps-img classAlignCenter AlignSpinnerFlex"><img src="~/was/img/ajax_loader_was.svg" alt="loading image" /></div>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div>Record not found</div>
+                }
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+            <br />  <br />
+        </div>
+    </div>
+
+</div>
+
+
+<script src="~/was/js/Survey/broadcastDetails.js"></script>

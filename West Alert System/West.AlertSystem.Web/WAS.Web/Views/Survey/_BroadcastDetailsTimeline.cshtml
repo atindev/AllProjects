@@ -1,0 +1,68 @@
+﻿@model WAS.Application.Features.Survey.GetByBroadcastId.Response;
+@{
+    var sentCompleteCls = Model.SentDate != null ? "complete survey-sent" : "";
+    var currentTime = DateTime.UtcNow;
+
+    var startTimeState = string.Empty;
+    var endTimeState = string.Empty;
+    var followUpState = string.Empty;
+
+    if(Model.SentDate != null)
+    {
+        startTimeState = currentTime < Model.StartTime ? "pending" : "complete";
+        endTimeState = currentTime < Model.EndTime ? "pending" : "complete";
+        followUpState = currentTime < Model.FollowUpTime ? "pending" : "complete";
+    }
+}
+
+<input type="hidden" id="totalAudiancehid" value="@Model.AudienceCount">
+<ul class="BroadcastSurveytimeline" id="BroadcastSurveytimeline">
+    <li class="li complete">
+        <div class="timestamp">
+            <span class="date_survey">Broadcasted Date</span>
+        </div>
+        <div class="status">
+            <h6 class="timeSpanConvert" utcTime="@Model.CreatedDate" timeZone="@Model.BroadcastedTimeZone"></h6>
+        </div>
+    </li>
+    <li class="li @sentCompleteCls">
+
+        <div class="steps-img classAlignCenter AlignSpinnerFlex sentdate-continuous-refresh" style="display:none">
+            <img src="~/was/img/ajax_loader_was.svg" alt="loading image" width="45" />
+        </div>
+
+        <div class="timestamp">
+            <span class="date_survey">Sent date</span>
+        </div>
+        <div class="status">
+            <h6 class="timeSpanConvert" utcTime="@Model.SentDate" timeZone="@Model.TimeZone"></h6>
+        </div>
+    </li>
+    <li class="li @startTimeState">
+        <div class="timestamp">
+            <span class="date_survey">Start Date</span>
+        </div>
+        <div class="status">
+            <h6 class="timeSpanConvert" utcTime="@Model.StartTime" timeZone="@Model.TimeZone"></h6>
+        </div>
+    </li>
+    @if (Model.FollowUpTime != null)
+    {
+        <li class="li @followUpState">
+            <div class="timestamp">
+                <span class="date_survey">Follow Up Date</span>
+            </div>
+            <div class="status">
+                <h6 class="timeSpanConvert" utcTime="@Model.FollowUpTime" timeZone="@Model.TimeZone"></h6>
+            </div>
+        </li>
+    }
+    <li class="li @endTimeState">
+        <div class="timestamp">
+            <span class="date_survey">End Date</span>
+        </div>
+        <div class="status">
+            <h6 class="timeSpanConvert" utcTime="@Model.EndTime" timeZone="@Model.TimeZone"></h6>
+        </div>
+    </li>
+</ul>

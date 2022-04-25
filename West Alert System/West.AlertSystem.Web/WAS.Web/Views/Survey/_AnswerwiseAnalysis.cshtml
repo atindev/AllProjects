@@ -1,0 +1,147 @@
+﻿@model WAS.Application.Features.Survey.GetAnswerwiseReport.Response;
+
+@{
+
+    var palettes = new String[] { "#005696", "#6658a8" };
+    var palettes6 = new string[] { "#2f4b7c", "#665191", "#f95d6a", "#ff7c43", "#ffa600", "#005595", "#007EB4", "#00A5B6", "#00C7A0", "#8BE481", "#F9F871" };
+    var currentIndex = 0;
+}
+@if (Model != null && Model.SubmittedCount > 0) 
+{
+
+    @foreach (var answer in Model.Answers)
+    {
+        ++currentIndex;
+        var containerId = "idcontainer" + answer.QuestionNumber;
+
+
+        @if (answer.QuestionType == ((int)WAS.Application.Common.Enum.SurveyQuestionTypes.Boolean_Answer).ToString())
+        {
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="col-12 classDisplayFlex">
+                                        <h3 class="headerText classQuestionNumber">@(currentIndex.ToString())</h3>
+                                        <h3 class="headerText">@(". " +answer.Question)</h3>
+                                    </div>
+                                </div>
+
+                                @if (Model.isWizard)
+                                {
+                                    <div class="col-4">
+                                        <div class="col-sm-12" style="text-align:right;">
+                                            Average Time : @answer.ElapsedPercentage
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        @if (answer.AnswerOptions.Any())
+                        {
+                            <ejs-accumulationchart id="@containerId" width="100%">
+                                <e-accumulationchart-titlestyle fontFamily="inherit" fontStyle="bold" fontWeight="regular" size="17px"
+                                                                color="inherit"></e-accumulationchart-titlestyle>
+                                <e-accumulation-series-collection>
+                                    <e-accumulation-series dataSource="answer.AnswerOptions" tooltipMappingName="ResponseCount" xName="Text" yName="SelectionPercentage" name="@answer.Question" radius="90%" innerRadius="40%" explode="true" height="150" palettes="palettes">
+                                        <e-accumulationseries-datalabel visible="true" name="PercentageText"></e-accumulationseries-datalabel>
+                                    </e-accumulation-series>
+                                </e-accumulation-series-collection>
+                                <e-accumulationchart-legendsettings visible="true" position="Top"></e-accumulationchart-legendsettings>
+                                <e-accumulationchart-tooltipsettings enable="true" format="${point.x} : ${point.y}% (${point.tooltip} people)"></e-accumulationchart-tooltipsettings>
+
+                            </ejs-accumulationchart>
+                        }
+                        else
+                        {
+                            await Html.RenderPartialAsync("~/Views/ReportPage/_NoReport.cshtml");
+                        }
+                    </div>
+                </div>
+            </div>
+
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="col-12 classDisplayFlex">
+                                        <h3 class="headerText classQuestionNumber">@(currentIndex.ToString())</h3>
+                                        <h3 class="headerText">@(". " +answer.Question)</h3>
+                                    </div>
+                                </div>
+                                @if (Model.isWizard)
+                                {
+                                    <div class="col-4">
+                                        <div class="col-sm-12" style="text-align:right;">
+                                            Average Time : @answer.ElapsedPercentage
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        @if (answer.AnswerOptions.Any())
+                        {
+                            <ejs-chart id="@containerId" width="98%" theme="Bootstrap" palettes="palettes6">
+                                <e-chart-titlestyle fontFamily="inherit" fontStyle="bold" fontWeight="regular" size="17px"
+                                                    color="inherit"></e-chart-titlestyle>
+                                <e-chart-primaryxaxis valueType="Category"></e-chart-primaryxaxis>
+
+                                <e-chart-primaryyaxis labelFormat="{value}%"
+                                                      rangePadding="None"
+                                                      minimum=0
+                                                      maximum=100>
+                                </e-chart-primaryyaxis>
+                                <e-series-collection>
+                                    <e-series dataSource="answer.AnswerOptions" tooltipMappingName="ResponseCount" xName="Text" PointColorMapping="Color" yName="SelectionPercentage" name="@answer.Question" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Bar">
+                                        <e-series-marker>
+                                            <e-series-datalabel visible="true" position="Top">
+                                                <e-font color="#ffffff" fontWeight="600"></e-font>
+                                            </e-series-datalabel>
+                                        </e-series-marker>
+                                    </e-series>
+                                </e-series-collection>
+                                <e-chart-legendsettings visible="true"></e-chart-legendsettings>
+                                <e-chart-tooltipsettings enable="true" format="${point.x} : ${point.y} (${point.tooltip} people)"></e-chart-tooltipsettings>
+
+                            </ejs-chart>
+                        }
+                        else
+                        {
+                            await Html.RenderPartialAsync("~/Views/ReportPage/_NoReport.cshtml", "classEmptyOptionQuestions");
+                        }
+                        @if (answer.FormattedOtherOptions!= null &&  answer.FormattedOtherOptions.Any() && answer.FormattedOtherOptions.Count()>0)
+                        {
+                            var first = answer.FormattedOtherOptions.FirstOrDefault().Frequency;
+                            var allSameCls = answer.FormattedOtherOptions.All(x => x.Frequency == first) ? "all-same" : string.Empty;
+
+                            <div class="other-option-wordcloud pb-2">
+                            <ej-tag-cloud id="techWebList_@answer.QuestionNumber" css-class="tag-cloud-custom @allSameCls" dataSource="answer.FormattedOtherOptions" title="Other options" min-font-size="20px">
+                                <e-tag-cloud-fields text="Text" frequency="Frequency" />
+                            </ej-tag-cloud>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        }
+
+    }
+
+}
+
+else
+{
+    await Html.RenderPartialAsync("~/Views/ReportPage/_NoReport.cshtml","classEmptyOptionQuestions");
+}
+
+<ejs-scripts></ejs-scripts>
+@*for rendering tag cloud*@ 
+<ej-script-manager></ej-script-manager>

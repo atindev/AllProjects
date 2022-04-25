@@ -1,0 +1,328 @@
+﻿
+.grid-bt {
+    margin-bottom: 6px !important;
+}
+
+table td {
+    vertical-align: middle !important;
+}
+
+.notify-bell {
+    font-size: 20px;
+}
+
+.radio-bt-table {
+    margin-top: 10px;
+}
+
+.e-query-builder .e-control-wrapper.e-slider-container.e-horizontal {
+    height: 0;
+}
+
+#ruleContent {
+    border: 1px solid #d3d3d3;
+    width: 100%;
+    height: 500px;
+    overflow: auto;
+}
+
+.highcontrast textarea#ruleContent {
+    background-color: #000;
+}
+
+.e-grid .e-headercell.customcss .e-headertext, .e-grid .e-headercell.customcssAuthor .e-headertext {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: bold;
+    color: black !important;
+}
+.e-grid .e-headercell.customcssSelectAll .e-headertext {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: bold;
+    color: black !important;
+}
+.e-grid .e-headercell.customcssCount .e-headertext {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: bold;
+    color: black !important;
+}
+
+.e-grid .e-headercell.customcssLastUpdated .e-headertext {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: bold;
+    color: black !important;
+}
+
+.e-rowcell.customcss {
+    font-size: 0.95rem;
+    white-space: normal !important;
+}
+.e-rowcell.customcssCount {
+    font-size: 0.95rem;
+    white-space: nowrap !important;
+    padding:0px!important;
+}
+
+.e-rowcell.customcssAuthor {
+    font-size: 0.95rem;
+    white-space: normal !important;
+    position: relative;
+    padding: 8px 2px !important;
+}
+.e-rowcell.customcssSelectAll {
+    font-size: 0.95rem;
+    white-space: normal !important;
+    position: relative;
+    padding: 8px 2px !important;
+}
+
+
+.e-rowcell.customcssLastUpdated {
+    font-size: 0.95rem;
+    white-space: normal !important;
+}
+
+.clsLastUpdated {
+    line-height: 1.5 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+}
+
+.clsAuthor {
+    line-height: 1.5 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    width: 90% !important;
+    font-size: 0.9em;
+    margin: 0 auto;
+}
+.clsGroupName {
+    line-height: 1.5 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+}
+.clsGroupDescription {
+    line-height: 1.5 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+}
+
+.e-grid.e-gridhover tr[role='row']:not(.e-editedrow):hover .e-rowcell:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-gridhover tr[role='row']:hover .e-detailrowcollapse:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-gridhover tr[role='row']:hover .e-rowdragdrop:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-rtl .e-gridhover tr[role='row']:hover .e-rowdragdrop:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-gridhover tr[role='row']:hover .e-detailrowexpand:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell) {
+    background-color: white !important;
+    color: #000 !important;
+}
+
+.table-badge {
+    font-size: .8rem;
+    font-weight: 300;
+    padding: 2px 4px;
+    position: relative;
+    right: 8px;
+    top: -18px;
+    text-align:center;
+}
+
+.people-color {
+    color: #3c8dbc;
+}
+
+.e-grid .e-rowcell {
+    height: 64px !important;
+}
+#idBindFilterResult {
+    width: 96%;
+    margin-left: 2%;
+}
+.DN{
+    display:none !important;
+}
+#idAddSubscriptionsToGroup {
+    display: none;
+}
+#querybuilder #querybuilder_group0 {
+    width: 100%;
+}
+#querybuilder .e-rule-filter {
+    width: 26%;
+}
+#querybuilder .e-rule-operator {
+    width: 22%;
+}
+#querybuilder .e-rule-value, #querybuilder .e-template-value {
+    width: 26% !important;
+}
+.addSubscriptionParent {
+    margin-top: 1%;
+    margin-right: 2.7%;
+}
+.e-grid .e-headercell.customcssDetails .e-headertext {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: bold;
+    color: black !important;
+    margin-left:6%;
+}
+.classSubscriberTotalCount{
+    padding-left:4% !important;
+}
+.btn-mod-bub {
+    height: 41px !important;
+    min-width: 35px !important;
+    padding: 6px 1px !important;
+    font-size: 0.6em !important;
+}
+
+.classGroupCount .bg-teal {
+    font-size: 1em !important;
+    padding: 3px 5px !important;
+}
+.classSubscriptionParent {
+    position: relative;
+    top: 12% !important;
+    left:-15% !important;
+}
+.classGroupCount {
+    margin: 0px !important;
+}
+.classFilteredPeople {
+    margin-left: 80%;
+    margin-bottom: 2%;
+    font-weight: normal;
+}
+.filterParent .badge {
+    font-size: 96% !important;
+}
+#GridFilterdSubscriptions .e-checkbox-wrapper {
+    position: absolute;
+    top: 31%;
+    left: 23%;
+}
+#GridFilterdSubscriptions .e-rowcell.e-active {
+    background:none !important;
+}
+#GridFilterdSubscriptions .e-checkbox-wrapper .e-frame.e-check, #GridFilterdSubscriptions .e-css.e-checkbox-wrapper .e-frame.e-check {
+    background-color: #1e7e34;
+}
+.classExistingCountParent{
+    display:grid;
+}
+.classExistingCountChild {
+    padding: 5px 11px;
+    margin-bottom: 3px;
+}
+#idPrivacyCheckbox {
+    margin-top: 6px;
+}
+.disableField {
+    pointer-events: none !important;
+    opacity: 0.5 !important;
+}
+.customcssDetails{
+    white-space:nowrap !important;
+}
+.customcssDetails a {
+    background: transparent !important;
+}
+.classGrpDetails {
+    font-size: 1.2rem;
+}
+#idDeleteGroupText, #idRestoreGroupText {
+    text-align: center !important;
+}
+.classShowDeleteGroups {
+    top: 25% !important;
+}
+
+
+.switch_toggle_Custom {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 22px;
+}
+
+    .switch_toggle_Custom input {
+        display: none;
+    }
+
+.slider_Custom_list {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+    .slider_Custom_list:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+input:checked + .slider_Custom_list {
+    background-color: #007BFF;
+}
+
+input:focus + .slider_Custom_list {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider_Custom_list:before {
+    -webkit-transform: translateX(36px);
+    -ms-transform: translateX(36px);
+    transform: translateX(36px);
+}
+
+.slider_Custom_list:after {
+    content: 'NO';
+    color: white;
+    display: block;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 60%;
+    font-size: 10px;
+    font-family: Verdana, sans-serif;
+}
+
+input:checked + .slider_Custom_list:after {
+    content: 'YES';
+    left: 40%;
+}
+.for_switch_toggle_Custom {
+    margin-top: 6px;
+    margin-right: 10px;
+    float: left;
+}

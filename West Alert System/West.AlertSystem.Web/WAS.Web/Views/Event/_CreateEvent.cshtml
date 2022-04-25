@@ -1,0 +1,77 @@
+﻿
+@model WAS.Application.Features.Events.GetTypeAndUrgency.Response;
+
+ <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Event</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="idNewEventName">Event Name *</label>
+                            <input type="text" class="form-control" name="Name" id="idNewEventName" placeholder="Enter Event Name" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="idNewEventStatus">Latest Status</label>
+                            <input type="text" class="form-control" name="Status" id="idNewEventStatus" placeholder="Enter Status">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Type</label>
+                            <select class="form-control" id="idNewEventType" name="TypeId" required>
+                                @if (Model.EventTypes != null && Model.EventTypes.Any())
+                                {
+                                    foreach (var item in Model.EventTypes)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Urgency</label>
+                            <select class="form-control" id="idNewEventUrgency" name="UrgencyId" required>
+                                @if (Model.EventUrgencies != null && Model.EventUrgencies.Any())
+                                {
+                                    foreach (var item in Model.EventUrgencies)
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                }
+                            </select>
+                            </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="idNewEventDescription">Event Description</label>
+                            <input type="text" name="Description" class="form-control" id="idNewEventDescription" placeholder="Event Description">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" value=@User.Identity.Name id="idEventCreatedBy" name="CreatedBy" />
+            <input type="hidden" value=@User.Identity.Name name="ModifiedBy" />
+            <input type="hidden" value="true" name="IsActive" />
+            <input type="hidden" value="Create" name="OperationType" id="idOperationType" />
+            <input type="hidden" value="" id="idEventID" name="Id" />
+
+
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" id="idEventCreateDismiss" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" id="idbutnCreateEvent">Submit</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->

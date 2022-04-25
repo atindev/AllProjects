@@ -1,0 +1,287 @@
+﻿.spinner-border {
+    margin-top: 18%;
+    margin-left: 17%;
+}
+.headerText {
+    font-size: 1.2rem !important;
+}
+.classBroadcastSurveyHeader {
+    background-color: #004e97;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+.survey_card {
+    padding: 20px;
+    border: 0;
+    margin-bottom: 30px;
+    background-color: #fff;
+    position: relative;
+}
+/*test*/
+.BroadcastSurveytimeline {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+    .BroadcastSurveytimeline .li {
+        transition: all 200ms ease-in;
+    }
+
+    .BroadcastSurveytimeline .timestamp {
+        margin-bottom: 20px;
+        padding: 0px 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-weight: 100;
+    }
+
+    .BroadcastSurveytimeline .status {
+        padding: 0px 20px;
+        display: flex;
+        justify-content: center;
+        border-top: 2px solid #D6DCE0;
+        position: relative;
+        transition: all 200ms ease-in;
+        text-align: center;
+    }
+
+        .BroadcastSurveytimeline .status:before {
+            content: "";
+            width: 25px;
+            height: 25px;
+            background-color: white;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            position: absolute;
+            top: -15px;
+            left: 42%;
+            transition: all 200ms ease-in;
+        }
+        .BroadcastSurveytimeline .status:after {
+            content: "\f00c";
+            display: inline-block;
+            font: normal normal normal 14px/1 FontAwesome;
+            font-size: inherit;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position: absolute;
+            top: -11px;
+            left: 43.5%;
+            transition: all 200ms ease-in;
+            color: #fff;
+        }
+
+.BroadcastSurveytimeline date_survey {
+    font-weight: 400;
+}
+.date_survey {
+    font-weight: 400;
+    white-space: nowrap;
+}
+.BroadcastSurveytimeline .li.complete .status {
+    border-top: 2px solid #01b050;
+}
+
+        .BroadcastSurveytimeline .li.complete .status:before {
+            background-color: #01b050;
+            border: none;
+            transition: all 200ms ease-in;
+        }
+.BroadcastSurveytimeline .li.pending .status {
+    border-top: 2px solid #f5d262ed;
+}
+
+    .BroadcastSurveytimeline .li.pending .status:before {
+        background-color: #f5d262ed;
+        border: none;
+        transition: all 200ms ease-in;
+    }
+
+        .BroadcastSurveytimeline h6{
+            margin-top:20px;
+            min-height: 40px;
+        }
+
+
+.surveyCountCard {
+    padding: 20px;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+    background-color: #fff;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: calc(33.333333% - 10px);
+    position:relative;
+}
+    .surveyCountCard img {
+        width:63px;
+        margin-bottom: 30px;
+    }
+.CountTitle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #01b050;
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: #E9F5EC;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 700;
+}
+.timeShowSurvey .row {
+    background-color: #EDFFF0;
+    padding: 7.5px;
+}
+.timeShowSurvey .row .countInnerShow{
+    font-weight: 600;
+    color: #639B6B;
+}
+.timeShowSurvey .row:nth-child(2) {
+    background-color: #FFF3EC;
+}
+.timeShowSurvey .row:nth-child(3){
+    background-color: #F5F2FF;
+}
+.timeShowSurvey .row:nth-child(2) .countInnerShow{
+    color:#927362;
+}
+.timeShowSurvey .row:nth-child(3) .countInnerShow{
+    color:#61598A;
+}
+
+.sentdate-continuous-refresh {
+    z-index: 99;
+    position: absolute;
+    margin-left: 50px;
+    margin-top: 1.9%;
+}
+
+.totalaudience-continuous-refresh {
+    position: absolute;
+    top: 31px;
+    right: 20px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.broadcast-manualrefresh-basic-ldr {
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -120px;
+    margin-top: -25px;
+    z-index: 9999;
+}
+
+.broadcast-manualrefresh-answer-ldr {
+    width: 400px;
+    height: 400px;
+    position: absolute;
+    left: 50%;
+    top: 60%;
+    margin-left: -120px;
+    margin-top: -25px;
+    z-index: 9999;
+}
+.broadcast-manualrefresh-loc-dep-ldr {
+    width: 400px;
+    height: 400px;
+    position: absolute;
+    left: 55%;
+    top: 30%;
+    margin-left: -120px;
+    margin-top: -25px;
+    z-index: 9999;
+}
+
+
+/*styles form tag cloud control*/
+.other-option-wordcloud {
+    display: flex;
+    justify-content: center;
+}
+
+.e-tagcloud {
+    width: 53% !important;
+}
+
+.e-header, .e-title {
+    text-align: center !important;
+}
+
+.e-box, .e-cloud, .e-ul {
+    text-align: center !important;
+}
+
+.all-same a.e-txt {
+    font-size: 20px;
+}
+
+.e-tagcloud .e-title {
+    border-bottom: 2px solid #3277b287 !important;
+    font-weight: bold !important;
+}
+
+.tag-cloud-custom {
+    box-shadow: rgb(0 0 0 / 35%) 0px 4px 6px !important;
+}
+/*end of styles tag cloud*/
+
+@media screen and (max-width: 992px) {
+    .BroadcastSurveytimeline {
+        display: block !important;
+    }
+        .BroadcastSurveytimeline .li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .BroadcastSurveytimeline .timestamp, .BroadcastSurveytimeline .status {
+            width: 50%;
+            height: 100px;
+            align-items: center;
+            margin: 0;
+        }
+        .BroadcastSurveytimeline .li.complete .status {
+            border-left: 2px solid #01b050;
+            border-top:0;
+        }
+        .BroadcastSurveytimeline .li.pending .status {
+            border-left: 2px solid #f5d262ed;
+            border-top: 0;
+        }
+        .BroadcastSurveytimeline .status {
+            border-left: 2px solid #D6DCE0;
+            border-top:0;
+        }
+        .BroadcastSurveytimeline .timestamp {
+            flex-direction: row-reverse;
+        }
+        .BroadcastSurveytimeline .status:before {
+            top: 40px;
+            left: -13px;
+        }
+        .BroadcastSurveytimeline .status:after {
+            top: 44px;
+            left: -9px;
+        }
+}
+
+@media screen and (max-width: 580px) {
+    .surveyCountCard {
+        width: 100%;
+    }
+}

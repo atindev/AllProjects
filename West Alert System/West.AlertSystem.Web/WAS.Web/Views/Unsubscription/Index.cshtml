@@ -1,0 +1,114 @@
+﻿@model string
+@addTagHelper *, Vereyon.Web.FlashMessage
+
+@{
+    ViewData["Title"] = "Unsubscribe";
+}
+
+<style>
+    .social-auth-links {
+        margin: 10px 13px 0px 0px;
+    }
+    #idRemovePersonalEmail {
+        height: 16px;
+        width: 16px;
+        transform: translateY(3px);
+        cursor: pointer;
+        margin-right: 5px;
+    }
+    .emainForgetInfo {
+        background-color: #ddf4ff;
+        font-size: 14px;
+        margin: 5px 0;
+        padding: 10px;
+    }
+    .sub-label.labelForForget{
+        font-size:16px!important;
+    }
+</style>
+
+<div class="wrapper">
+
+
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container">
+                <div class="row mb-2">
+                    <div class="col-sm-12">
+                    </div><!-- /.col -->
+                    <div class="col-sm-12">
+                        <flash dismissable="true"/>
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <div class="content">
+            <div class="container contain-box">
+                <div class="row">
+
+                    <!-- /.col-md-6 -->
+                    <div class="col-md-2 col-lg-3"></div>
+                    <div class="col-md-8 col-lg-6">
+                        <div class="card">
+                            <div class="card-success">
+
+                                <div class="row">
+
+                                    <!-- /.card-header -->
+                                    <div class="card-body text-center">
+                                        <div class="container container-box">
+                                            <div class="card-body login-card-body">
+                                                <img src="/WAS/img/email-unsubscribe.svg" width="50" alt="email unsubscribe" />
+                                                <p class="login-box-msg h5 mt-4">Unsubscribe Email</p>
+                                                <form action="/WAS/Unsubscription/UnsubscribeMail" method="post">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group">
+                                                                <input type="email" name="Email" class="form-control" id="exampleInputEmail1" placeholder="Email Address" value="@Model">
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-sm-12">
+
+                                                            <input type="checkbox" id="idRemovePersonalEmail" name="RemovePersonalEmail">
+                                                            <label class="sub-label labelForForget" style="cursor:pointer;" for="idRemovePersonalEmail">
+                                                                Forget Me
+                                                            </label>
+                                                            <div class="emainForgetInfo">
+                                                                <span class="">By checking this option, your email address will be completely removed from West Alert System.</span>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                    <div class="social-auth-links text-center mb-6">
+                                                        <button type="submit" class="btn btn-primary bt-full">Send OTP</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <!-- Main Footer -->
+
+    </div>
+</div>

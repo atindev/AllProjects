@@ -1,0 +1,185 @@
+﻿body {
+}
+
+.pro-status {
+    font-size: 19px;
+    border-radius: 17px;
+}
+
+.slider-text {
+    color: #000 !important;
+}
+
+.noti-label {
+    font-size: 23px;
+}
+
+.status-bub {
+    padding: 11px 13px;
+    font-size: 27px;
+}
+
+.bg-default {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    color: #ddd;
+}
+
+.otp-ctrl {
+    text-align: center;
+    font-size: 44px;
+    height: 51px;
+}
+
+.re-not {
+    background: #fefadf;
+    border: 1px solid #e5d66e;
+    padding: 8px;
+    border-radius: 8px;
+    margin: 0px 0px 7px 0px;
+}
+
+.email-chip {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    color: #444;
+    padding: 7px;
+    border-radius: 23px;
+}
+
+
+
+.section-header, .steps-name, .steps-header {
+    color: #444;
+    font-weight: 400;
+    font-size: 1.4em;
+}
+
+.steps-header {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.container-box {
+    width: 50%;
+}
+
+.bt-full {
+    width: 100% !important;
+}
+
+.steps-timeline {
+    outline: 1px dashed rgba(255, 0, 0, 0);
+}
+
+@media screen and (max-width: 500px) {
+    .steps-timeline {
+        border-left: 2px solid #3498DB;
+        margin-left: 25px;
+    }
+}
+
+@media screen and (min-width: 500px) {
+    .steps-timeline {
+        border-top: 2px solid #3498DB;
+        padding-top: 20px;
+        margin-top: 10px;
+        margin-left: 9.65%;
+        margin-right: 7.65%;
+    }
+}
+
+.steps-timeline:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.steps-one,
+.steps-two,
+.steps-three {
+    outline: 1px dashed rgba(0, 128, 0, 0);
+}
+
+@media screen and (max-width: 500px) {
+    .steps-one,
+    .steps-two,
+    .steps-three {
+        margin-left: -25px;
+    }
+}
+
+@media screen and (min-width: 500px) {
+    .steps-one,
+    .steps-two,
+    .steps-three {
+        float: left;
+        width: 28%;
+        margin-top: -50px;
+        margin-left: -16%;
+        margin-right: -3%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .steps-one,
+    .steps-two {
+        padding-bottom: 40px;
+    }
+}
+
+@media screen and (min-width: 500px) {
+    .steps-one {
+        margin-left: -12.65%;
+        margin-right: 18.65%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .steps-three {
+        margin-bottom: -100%;
+    }
+}
+
+@media screen and (min-width: 500px) {
+    .steps-three {
+        margin-left: 5.65%;
+        margin-right: -13.65%;
+    }
+}
+
+.steps-img {
+    display: block;
+    margin: auto;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+@media screen and (max-width: 500px) {
+    .steps-img {
+        float: left;
+        margin-right: 20px;
+    }
+}
+
+.steps-name,
+.steps-description {
+    margin: 0;
+}
+
+@media screen and (min-width: 500px) {
+    .steps-name {
+        text-align: center;
+    }
+}
+
+.steps-description {
+    overflow: hidden;
+}
+
+@media screen and (min-width: 500px) {
+    .steps-description {
+        text-align: center;
+    }
+}

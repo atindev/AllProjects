@@ -1,0 +1,246 @@
+﻿@model WAS.Application.Features.Subscription.GetByMail.Response
+@{
+    var picture = "/was/img/user2-160x160.jpg";
+}
+<div class="modal-header pb-0">
+    <div id="WarningDivSubscriptionDetail" class="validateAfterWarning w-100" style="display:none">
+        <i class="fas fa-exclamation" aria-hidden="true"></i>
+        <div class="ValidateAfterText overflow-hidden">
+            <h4 id="WarningHeaderSubscriptionDetail"></h4>
+            <p id="WarningTextSubscriptionDetail"></p>
+        </div>
+    </div>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    @if (Model != null && Model.Subscription != null)
+    {
+        <div class="row m-0">
+            <div class="col-md-4 text-center largeCheckIcon">
+                <img src="@picture" class="user-image img-circle elevation-2 mb-3" alt="User Image" data-useremail="@Model.Subscription.OfficialEmail" width="120">
+                <span class="CheckWASadminBefore ad-user-role" data-useremail="@Model.Subscription.OfficialEmail"></span>
+                <h4 class="modal-title" id="idSubscriberHead">@Model.Subscription.FirstName @Model.Subscription.LastName</h4>
+                <p class="text-muted m-0"><div class="description ad-user-designation" data-useremail="@Model.Subscription.OfficialEmail"></div></p>
+            </div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-sm-6 mb-3">
+                        <span class="sDetailsTitle text-muted border-bottom">Work Email</span>
+                        <span class="sDetailsName">@Model.Subscription.OfficialEmail</span>
+                        <input type="hidden" id="hdnSubscriptionsId" value=@Model.Subscription.Id />
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <span class="sDetailsTitle text-muted border-bottom">Personal Email</span>
+                        <span class="sDetailsName">@Model.Subscription.PersonalEmail</span>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <span class="sDetailsTitle text-muted border-bottom">Work Mobile</span>
+                        <span class="sDetailsName">@Model.Subscription.OfficeMobile</span>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <span class="sDetailsTitle text-muted border-bottom">Personal Mobile</span>
+                        <span class="sDetailsName">@Model.Subscription.PersonalMobile</span>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <span class="sDetailsTitle text-muted border-bottom">Work Phone</span>
+                        <span class="sDetailsName">@Model.Subscription.OfficePhone</span>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <span class="sDetailsTitle text-muted border-bottom">Home Phone</span>
+                        <span class="sDetailsName">@Model.Subscription.HomePhone</span>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <span class="sDetailsTitle text-muted border-bottom">Location</span>
+                        <span class="sDetailsName">@Model.Subscription.LocationName</span>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <span class="sDetailsTitle text-muted border-bottom">Shift</span>
+                        <span class="sDetailsName">@Model.Subscription.ShiftName</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <h3 class="head-bg MemberOFGroup" style="font-size:1em;">
+                        Member of:
+                        <button type="button" class="btn float-right bg-gradient-primary addButton customCSSAdd" id="idAddSubscriptionsToExistingGroup" onclick="Showmodelpopup()" data-toggle="modal" data-target="#modal-sg" title="Add to Group"><i class="fas fa-plus" aria-hidden="true"></i></button>
+                    </h3>
+                    @foreach (var item in Model.Subscription.Groups)
+                    {
+                        <span class="groupSquareTiles clsGroups" data-toggle="tooltip" data-placement="top" title="@item.Name">@item.Name</span>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row m-0">
+            <div class="head-border col-12 mb-3 mt-2"><h3 class="head-bg" style="font-size:1em;">Communication Preference:</h3></div>
+            <div class="clearfix"></div>
+            <div class="col-sm-6">
+                <h5 class="comm pl-0"><img class="mr-2" src="~/was/img/mail2.png" alt="Unable to load the image" width="25" />Email</h5>
+                <div class="form-group clearfix ck-top row">
+                    <div class="icheck-success d-inline col-md-6" id="idEmailParent">
+                        @if (Model.Subscription.IsOfficialEmail)
+                        {
+                            <input type="checkbox" id="IsOfficialEmail" name="IsOfficialEmail" checked disabled>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="IsOfficialEmail" name="IsOfficialEmail" disabled>
+                        }
+                        <label class="sub-label" for="IsOfficialEmail">
+                            Work Email
+                        </label>
+                    </div>
+                    <div class="icheck-success d-inline col-md-6">
+                        @if (Model.Subscription.IsPersonalEmail)
+                        {
+                            <input type="checkbox" id="IsPersonalEmail" name="IsPersonalEmail" checked disabled>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="IsPersonalEmail" name="IsPersonalEmail" disabled>
+                        }
+                        <label class="sub-label" for="IsPersonalEmail">
+                            Personal Email
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <h5 class="comm pl-0"><img class="mr-2" src="~/was/img/text.png" alt="Unable to load the image" width="25" />Text Messages</h5>
+                <div class="form-group clearfix ck-top row">
+                    <div class="icheck-success d-inline col-md-6">
+                        @if (Model.Subscription.IsTextOfficeMobile)
+                        {
+                            <input type="checkbox" id="IsTextOfficeMobile" name="IsTextOfficeMobile" checked disabled>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="IsTextOfficeMobile" name="IsTextOfficeMobile" disabled>
+                        }
+                        <label class="sub-label" for="IsTextOfficeMobile">
+                            Work Mobile
+                        </label>
+                    </div>
+                    <div class="icheck-success d-inline col-md-6">
+                        @if (Model.Subscription.IsTextPersonalMobile)
+                        {
+                            <input type="checkbox" id="IsTextPersonalMobile" name="IsTextPersonalMobile" checked disabled>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="IsTextPersonalMobile" name="IsTextPersonalMobile" disabled>
+                        }
+                        <label class="sub-label" for="IsTextPersonalMobile">
+                            Personal Mobile
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <h5 class="comm pl-0"><img class="mr-2" src="~/was/img/whatsapp.png" alt="Unable to load the image" width="25" />Whatsapp Messages</h5>
+                <div class="form-group clearfix ck-top row">
+                    <div class="icheck-success d-inline col-md-6">
+                        @if (Model.Subscription.IsWhatsAppOfficeMobile)
+                        {
+                            <input type="checkbox" id="IsWhatsAppOfficeMobile" name="IsWhatsAppOfficeMobile" checked disabled>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="IsWhatsAppOfficeMobile" name="IsWhatsAppOfficeMobile" disabled>
+                        }
+                        <label class="sub-label" for="IsWhatsAppOfficeMobile">
+                            Work Mobile
+                        </label>
+                    </div>
+                    <div class="icheck-success d-inline col-md-6">
+                        @if (Model.Subscription.IsWhatsAppPersonalMobile)
+                        {
+                            <input type="checkbox" id="IsWatsAppPersonalMobile" name="IsWhatsAppPersonalMobile" checked disabled>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="IsWatsAppPersonalMobile" name="IsWhatsAppPersonalMobile" disabled>
+                        }
+                        <label class="sub-label" for="IsWatsAppPersonalMobile">
+                            Personal Mobile
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <h5 class="comm pl-0"><img class="mr-2" src="~/was/img/voice.png" alt="Unable to load the image" width="25" />Voice</h5>
+                <div class="form-group clearfix ck-top row">
+                    <div class="icheck-success d-inline col-md-6">
+                        @if (Model.Subscription.IsVoiceOfficeMobile)
+                        {
+                            <input type="checkbox" id="IsVoiceOfficeMobile" name="IsVoiceOfficeMobile" checked disabled>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="IsVoiceOfficeMobile" name="IsVoiceOfficeMobile" disabled>
+                        }
+                        <label class="sub-label" for="IsVoiceOfficeMobile">
+                            Work Mobile
+                        </label>
+                    </div>
+                    <div class="icheck-success d-inline col-md-6">
+                        @if (Model.Subscription.IsVoicePersonalMobile)
+                        {
+                            <input type="checkbox" id="IsVoicePersonalMobile" name="IsVoicePersonalMobile" checked disabled>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="IsVoicePersonalMobile" name="IsVoicePersonalMobile" disabled>
+                        }
+                        <label class="sub-label" for="IsVoicePersonalMobile">
+                            Personal Mobile
+                        </label>
+                    </div>
+                    <div class="icheck-success d-inline col-md-6">
+                        @if (Model.Subscription.IsVoiceOfficePhone)
+                        {
+                            <input type="checkbox" id="IsVoiceOfficePhone" name="IsVoiceOfficePhone" checked disabled>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="IsVoiceOfficePhone" name="IsVoiceOfficePhone" disabled>
+                        }
+                        <label class="sub-label" for="IsVoiceOfficePhone">
+                            Work Phone
+                        </label>
+                    </div>
+                    <div class="icheck-success d-inline col-md-6">
+                        @if (Model.Subscription.IsVoiceHomePhone)
+                        {
+                            <input type="checkbox" id="IsVoiceHomePhone" name="IsVoiceHomePhone" checked disabled>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="IsVoiceHomePhone" name="IsVoiceHomePhone" disabled>
+                        }
+                        <label class="sub-label" for="IsVoiceHomePhone">
+                            Home Phone
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center">
+            <i class="fas fa-exclamation alertButtonModal" aria-hidden="true"></i>
+            <p class="h5 mb-4 pr-2 pl-2">No record found</p>
+        </div>
+    }
+
+</div>
+
+<script>
+    populateUserRoleforGrid($(".ad-user-role"));
+    populateUserDesignation($(".ad-user-designation"));
+</script>
+<script src="~/was/js/Subscription/OcrSubscription.js"></script>

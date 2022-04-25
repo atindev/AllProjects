@@ -1,0 +1,48 @@
+﻿
+@{var picture = "/was/img/user2-160x160.jpg";}
+<div class="profile_section_Was row">
+    <div class="col-md-12">
+        <div class="row profile_details">
+            <div class="col-md-4">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <img src="@picture" class="mb-3 user-image img-circle elevation-2" alt="User Image" data-useremail="@User.Identity.Name">
+                        <h6>@((User.Identity as System.Security.Claims.ClaimsIdentity)?.FindFirst("name")?.Value)</h6>
+                        <p class="text-muted m-0"><div class="description ad-user-designation" data-useremail="@User.Identity.Name"></div></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card h-100">
+                    <div class="card-body row pb-0">
+                        <div class="col-md-8">
+                            <p>
+                                <span class="pr_title text-muted mb-1">Email</span>
+                                <span class="pr_content" id="OfficialEmail">@User.Identity.Name</span>
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <p>
+                                <span class="pr_title text-muted mb-1">Employee ID</span>
+                                <span class="pr_content">@Model.ADUser.EmployeeId</span>
+                            </p>
+                        </div>
+                        <div class="col-md-8">
+                            <p>
+                                <span class="pr_title text-muted mb-1">Office Location</span>
+                                <span class="pr_content" id="OfficeLocation" name="OfficeLocation">@Model.ADUser.Location</span>
+                            </p>
+                        </div>
+                        <div class="col-md-4 managerprofile_details">
+                            <p>
+                                <span class="pr_title text-muted mb-1">Reports to</span>
+                                <img src="@Model.ADUser.ManagerPictureBase64" class="user-image img-circle elevation-2" alt="User Image">
+                                <span class="pr_content">@Model.ADUser.ReportManager</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

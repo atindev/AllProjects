@@ -1,0 +1,153 @@
+﻿@model WAS.Application.Features.IncomingMessage.View.Response
+@{
+    ViewData["Title"] = "View Incoming Message";
+    var picture = "/was/img/user2-160x160.jpg";
+    var displayMessage = "";
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">
+                        <button type="button" class="btn btn-reset btn-default" id="incoming-messagetab" onclick="document.getElementById('clsBackButtonForIncomingMessageView').click()">
+                            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                            @if (ViewBag.value == "dashboard")
+                            {
+                                <a href="/WAS/Dashboard/View?source=IncomingMessageTab" id="clsBackButtonForIncomingMessageView"> </a>
+                            }
+                            else
+                            {
+                                if (Model.IncomingMessage.IsVoice)
+                                {
+                                    <a href="/WAS/IncomingMessage/List?source=IncomingCallTab" id="clsBackButtonForIncomingMessageView"> </a>
+                                }
+                                else
+                                {
+                                    <a href="/WAS/IncomingMessage/List" id="clsBackButtonForIncomingMessageView"> </a>
+                                }
+                            }
+
+                        </button>
+                        @if (Model.IncomingMessage.IsVoice)
+                        {
+                            displayMessage = "Incoming Call";
+                        }
+                        else
+                        {
+                            displayMessage = "Incoming Message";
+                        }
+                        @displayMessage
+                    </h1>
+                </div>
+                <div class="col-sm-6">
+
+                </div><!-- /.col -->
+
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                @if (Model != null && Model.IncomingMessage != null)
+                {
+                    <!-- /.col-md-6 -->
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header card-outline card-success">
+                                <h3 class="card-title">
+                                    Message Type:  @if (Model.IncomingMessage.IsText)
+                                    {<img src="/was/img/ic_text.svg" alt="" title="Text Message" width="20" />}
+                                    else if (Model.IncomingMessage.IsWhatsApp)
+                                    {<img src="/was/img/ic_WhatsApp.svg" alt="" title="WhatsApp Message" width="20" />}
+                                    else
+                                    {<img src="/was/img/ic_Voice.svg" alt="" width="20" title="Voice Message" />}
+                                </h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="post">
+                                                <div id="accordion">
+                                                    <img src="@picture" class="user-image img-circle elevation-2 steps-img" alt="User Image" data-useremail="@Model.IncomingMessage.SubscriberEmail">
+                                                    <div class="text-center">
+                                                        @if (Model.IncomingMessage.SubscriberEmail != null)
+                                                        {
+                                                            <a href="#"><span class="username ad-user" data-useremail="@Model.IncomingMessage.SubscriberEmail"></span></a><br />
+                                                            @if (@Model.IncomingMessage.SubscriberLocation != null && @Model.IncomingMessage.SubscriberLocation != "")
+                                                            {
+                                                                <span class="description">@Model.IncomingMessage.SubscriberLocation</span><br />
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="#"><span class="username"> Anonymous User</span></a><br />
+                                                            <div class="clsLastUpdatedWithImage clsImageTextPadding" data-toggle="tooltip" data-placement="top">@Model.IncomingMessage.FromPhone</div>
+                                                        }
+                                                        <span class="description timeSpanConvert" utcTime="@Model.IncomingMessage.CreatedDate.ToString()"></span>
+                                                    </div>
+                                                    <div>
+                                                        <br />
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <div class="card card-outline card-primary">
+                                                            <div class="card-header">
+                                                                <h3 class="card-title">
+                                                                    @if (!Model.IncomingMessage.IsVoice)
+                                                                    {
+                                                                        <span>Message</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span>Audio</span>
+                                                                    }
+                                                                </h3>
+                                                            </div>
+                                                            <div class="card-body">
+                                                                @if (!Model.IncomingMessage.IsVoice)
+                                                                {
+                                                                    @Model.IncomingMessage.Message
+                                                                }
+                                                                else
+                                                                {
+                                                                    <audio controls class="col-sm-12">
+                                                                        <source src="/WAS/IncomingMessage/GetAudio?path=@Model.IncomingMessage.Message" type="audio/wav">
+                                                                    </audio>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div>Record not found</div>
+                }
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-wrapper -->
+    </div>
+</div>
+
+<script>
+    $(window).on('load', function () {
+        updateTimezone($('.timeSpanConvert'));
+    });
+</script>

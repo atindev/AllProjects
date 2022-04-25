@@ -1,0 +1,162 @@
+﻿@model UserVerificationModel;
+@{
+    Layout = null;
+    ViewData["Title"] = "Verification";
+}
+<link rel="stylesheet" href="~/was/css/adminlte.min.css">
+<link rel="stylesheet" href="~/was/css/ionicons.min.css">
+<link rel="stylesheet" href="~/was/css/style-rebrand.css" asp-append-version="true">
+<!-- Font Awesome Icons -->
+<link rel="stylesheet" href="~/was/css/fontawesome-free/css/all.min.css">
+
+<!-- Theme style -->
+<!-- SweetAlert2 -->
+<link rel="stylesheet" href="~/was/css/sweetalert2.min.css">
+<!-- Toastr -->
+<link rel="stylesheet" href="~/was/css/toastr.min.css">
+<link rel="stylesheet" href="~/was/css/icheck-bootstrap.min.css">
+<link rel="stylesheet" href="~/was/lib/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+<link rel="stylesheet" href="~/was/css/material.css">
+<link href="~/was/css/intlTelInput.css" rel="stylesheet" />
+<link href="~/was/css/site.css" rel="stylesheet" asp-append-version="true" />
+<link href="~/was/css/style_wizard.css" rel="stylesheet" />
+<link href="~/was/css/Survey/verification.css" rel="stylesheet" />
+
+<link rel="icon" href="~/was/favicon.ico" type="image/favicon.ico" sizes="16x16">
+<script src="~/was/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/was/js/sweetalert2.min.js"></script>
+<script src="~/was/js/toastr.min.js"></script>
+<script src="~/was/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/was/js/Subscription/jquery.steps.js"></script>
+<script src="~/was/js/moment.min.js"></script>
+<script src="~/was/js/moment-timezone-with-data.js"></script>
+<script src="~/was/js/Survey/verification.js"></script>
+
+<div class="content-wrapper" id="idMainContent">
+    <!-- /.content-header -->
+    <div class="content-header">
+        <div class="container">
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- Main content -->
+    <div class="content">
+        <div class="container">
+            <div class="row Was_subscribe_top">
+                <input type="hidden" id="idUserBlockedTime" value=@Model.UserBlockedInterval />
+                <input type="hidden" id="idBroadcastId" value=@Model.BroadcastId />
+                <div class="col-12">
+                    <div class="card">
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="content">
+                                <div class="container">
+                                    <div class="row">
+                                        <!-- /.col-md-6 -->
+                                        <div class="col-sm-12">
+                                            <div class="card wizard_card">
+                                                <!-- /.card-header -->
+                                                <div class="card-body">
+                                                    <div class="container">
+                                                        <!-- Wizard -->
+                                                        <div class="outer-container">
+                                                            <div id="wizard">
+                                                                <!-- SECTION 1 -->
+                                                                <h4>Basic Information</h4>
+                                                                <section>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="form-group">
+                                                                                <label>Please add your Employee Id or User Id or Work Email </label>
+                                                                                <input type="text" class="form-control form-control-da" id="OfficialEmail" name="OfficialEmail" placeholder="Enter Employee Id or User Id or Email ..." autocomplete="off" list="autocompleteOff">
+                                                                                <span id="spanEmailError" style="color:red"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </section>
+
+                                                                <!-- SECTION 2 -->
+                                                                <h4>Verification</h4>
+                                                                <section>
+                                                                    <div class="validateBeforeText">
+                                                                        <i class="fas fa-question" aria-hidden="true"></i>
+                                                                        <div class="overflow-hidden">
+                                                                            <p>Please answer the below security questions to confirm your identity</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div id="idValidationSection">
+
+                                                                    </div>
+                                                                    <div class="validateAfterWarning">
+                                                                        <i class="fas fa-exclamation" aria-hidden="true"></i>
+                                                                        <div class="ValidateAfterText overflow-hidden">
+                                                                            <h4>Warning!</h4>
+                                                                            <p>You will be asked 3 security questions in sequence. You need to answer all 3 correctly in order to proceed. If you answer incorrectly to any of the questions, your email will be blocked for @Model.UserBlockedInterval minutes</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </section>
+
+                                                                <h4>Start Survey</h4>
+                                                                <section>
+                                                                    <div class="profile_section_Was row">
+                                                                        <div class="col-md-12">
+                                                                        </div>
+                                                                    </div>
+                                                                </section>
+
+
+                                                            </div>
+                                                        </div>
+                                                        <!-- Wizard -->
+                                                    </div>
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.row -->
+                                </div><!-- /.container-fluid -->
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
+                    <br /><br />
+                </div>
+
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <!--alert popup with only Ok button-->
+    <input type="hidden" id="idAlertpopup" data-toggle="modal" data-target="#modalSubAlertpopup" />
+    <div class="modal fade" id="modalSubAlertpopup" value="" operatnType="">
+        <div class="modal-dialog text-center modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close classAlertClose" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pt-0">
+                    <i class="fas fa-exclamation alertButtonModal" aria-hidden="true"></i>
+                    <p id="idmodalpopupText" class="h5 mb-4"></p>
+                    <button type="button" value="" class="btn btn-warning mb-2 classAlertClose" data-dismiss="modal" id="idAlertPopupSubmit">Ok</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+</div>
+
+<div id="loading" class="modal modal-backdrop divLoader">
+    <div class="LoaderOuter">
+        <div class="WASLoader">
+            <div class="mt-2"><svg aria-hidden="true" focusable="false" data-icon="bell" width="25" height="25" class="svg-inline" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M224 512c35.32 0 63.97-28.65 63.97-64H160.03c0 35.35 28.65 64 63.97 64zm215.39-149.71c-19.32-20.76-55.47-51.99-55.47-154.29 0-77.7-54.48-139.9-127.94-155.16V32c0-17.67-14.32-32-31.98-32s-31.98 14.33-31.98 32v20.84C118.56 68.1 64.08 130.3 64.08 208c0 102.3-36.15 133.53-55.47 154.29-6 6.45-8.66 14.16-8.61 21.71.11 16.4 12.98 32 32.1 32h383.8c19.12 0 32-15.6 32.1-32 .05-7.55-2.61-15.27-8.61-21.71z"></path></svg></div>
+        </div>
+    </div>
+</div>
+
+@await Component.InvokeAsync("Notyf")

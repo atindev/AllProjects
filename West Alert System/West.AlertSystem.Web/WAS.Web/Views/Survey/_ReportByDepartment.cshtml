@@ -1,0 +1,30 @@
+﻿@model WAS.Application.Features.Survey.GetSubmissionReportByDepartment.Response;
+@{ 
+    var palettes7 = new string[] { "#2DB268", "#9EB0A2" };
+}
+
+@if (Model != null)
+{
+
+@if (Model.CompletedSurveyByDepartment != null || Model.PendingSubmissionSurveyByDepartment != null)
+{
+    <ejs-chart id="idSubmissionByDepartment" width="100%" height="300px" palettes="palettes7">
+        <e-chart-titlestyle fontFamily="inherit" fontStyle="bold" fontWeight="regular" size="17px"
+                            color="inherit"></e-chart-titlestyle>
+        <e-chart-primaryxaxis valueType="Category">
+        </e-chart-primaryxaxis>
+        <e-series-collection>
+            <e-series dataSource="@Model.CompletedSurveyByDepartment" xName="DepartmentName" yName="SubmittedCount" name="Completed" type="@Syncfusion.EJ2.Charts.ChartSeriesType.StackingColumn100"></e-series>
+            <e-series dataSource="@Model.PendingSubmissionSurveyByDepartment" xName="DepartmentName" yName="PendingCount" name="Pending" type="@Syncfusion.EJ2.Charts.ChartSeriesType.StackingColumn100"></e-series>
+        </e-series-collection>
+        <e-chart-tooltipsettings enable="true" format="${point.x} : <b>${point.y} (${point.percentage}%)</b>"></e-chart-tooltipsettings>
+    </ejs-chart>
+}
+else
+{
+    await Html.RenderPartialAsync("~/Views/ReportPage/_NoReport.cshtml");
+}
+
+}
+
+<ejs-scripts></ejs-scripts>

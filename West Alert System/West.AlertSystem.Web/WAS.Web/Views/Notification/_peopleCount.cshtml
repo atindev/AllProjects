@@ -1,0 +1,36 @@
+﻿@model bool;
+
+<span class="float-right was-Notification-Count">
+    <span class="classGroupCount" id="idTotalSubscribers">
+        <i class="fas fa-user-friends people-color" aria-hidden="true"></i>
+        <span class="badge badge-danger table-badge"></span>
+    </span>
+
+    <a class="btn btn-app btn-reset btn-mod-bub classGroupCount classSMSSubscribers">
+        <span class="badge bg-teal"></span>
+        <i class="fas fa-inbox bub-icon" aria-hidden="true"></i> SMS
+    </a>
+    <a class="btn btn-app btn-reset btn-mod-bub classGroupCount classEmailSubscribers">
+        <span class="badge bg-teal"></span>
+        <i class="fas fa-envelope bub-icon" aria-hidden="true"></i> MAIL
+    </a>
+    @if (Model)
+    {
+        <a class="btn btn-app btn-reset btn-mod-bub classGroupCount classWhatsAppSubscribers">
+            <span class="badge bg-teal"></span>
+            <i class="fab fa-whatsapp-square bub-icon" aria-hidden="true"></i> WhatsApp
+        </a>
+    }
+    else
+    {
+        <a class="btn btn-app btn-reset btn-mod-bub classGroupCount classVoiceSubscribers">
+            <span class="badge bg-teal"></span>
+            <i class="fas fa-microphone-alt bub-icon" aria-hidden="true"></i> VOICE
+        </a>
+        <a class="btn btn-app btn-reset btn-mod-bub classGroupCount classWhatsAppSubscribers">
+            <span class="badge bg-teal"></span>
+            <i class="fab fa-whatsapp-square bub-icon" aria-hidden="true"></i> WhatsApp
+        </a>
+    }
+
+</span>

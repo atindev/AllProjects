@@ -1,0 +1,405 @@
+﻿@model WAS.Application.Common.Models.CreateSurvey;
+@{
+    Layout = null;
+    var alertDisplay = "";
+    var currentIndex = 0;
+    var smileyImages = new List<string>(){"feedback_very_dissatisfied.png", "feedback_dissatisfied.png", "feedback_neutral.png",
+    "feedback_satisfied.png", "feedback_very_satisfied.png" };
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="~/was/css/adminlte.min.css">
+    <link rel="stylesheet" href="~/was/css/ionicons.min.css">
+    <link rel="stylesheet" href="~/was/css/style-rebrand.css" asp-append-version="true">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="~/was/css/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="~/was/css/sweetalert2.min.css">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="~/was/css/toastr.min.css">
+    <link rel="stylesheet" href="~/was/css/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="~/was/lib/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+    <link rel="stylesheet" href="~/was/css/material.css">
+    <link href="~/was/css/intlTelInput.css" rel="stylesheet" />
+    <link href="~/was/css/site.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/was/css/style_wizard.css" rel="stylesheet" />
+
+    <link href="~/was/css/Survey/create.css" rel="stylesheet" />
+    <link href="~/was/css/Survey/FillSurvey.css" rel="stylesheet" />
+    <link href="~/was/css/Survey/SurveyAll.css" rel="stylesheet" />
+
+    <link rel="icon" href="~/was/favicon.ico" type="image/favicon.ico" sizes="16x16">
+    <script src="~/was/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/was/js/sweetalert2.min.js"></script>
+    <script src="~/was/js/toastr.min.js"></script>
+    <script src="~/was/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/was/js/Survey/surveyGlobal.js"></script>
+    <script src="~/was/js/Survey/FillSurvey.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <title>FillSurvey</title>
+</head>
+<body>
+    <div class="logoForSurvey mt-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2">
+
+                </div>
+                <div class="col-md-8">
+                    <div class="LogoforSurveyInner">
+                        <img src="~/was/img/was-logo-04.png" width="100" alt="WAS Logo" />
+                        <img src="~/was/img/west-logo.png" width="100" alt="West Pharma Logo" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-wrapper" style="padding-bottom:100px;">
+
+        @if (@ViewBag.message != "exist")
+        {
+            alertDisplay = "DN";
+
+            <div id="idMainContent" class="pt-4">
+
+                @if (Model != null && Model.Questions != null && Model.Questions.Count > 0)
+                {
+                    <input type="hidden" id="idCurrentUser" value="@ViewBag.currentUser" />
+                    <input type="hidden" id="idBroadcastId" value="@ViewBag.broadcastId" />
+                    <input type="hidden" id="idSurveyStartTime" value="@ViewBag.surveyStartTime" />
+
+
+                    <div class="content pt-4">
+                        <div class="container">
+                            <div class="row">
+                                <!-- /.col-md-6 -->
+                                <div class="col-md-2"></div>
+                                <div class="col-md-8 SurveyWASCreate FillSurvey SurveyNewWidth">
+                                    <div class="classStartSurveyUser shadow">
+                                        <img src="/was/img/email_start_survey.svg" alt="" width="60">
+                                        <h4>@Model.Subject</h4>
+                                    </div>
+                                    <div class="SurveyIntroTop survey_card shadow">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="idSurveyDescriptionParent">
+                                                    <label id="idDescriptionLabel"><strong>Description</strong></label>
+                                                    <span>@Model.Description</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="idSurveyContent">
+                                        @foreach (var questions in Model.Questions)
+                                        {
+                                            ++currentIndex;
+                                            var surveyParent = "idSurveyParent" + @questions.QuestionNumber;
+                                            var parentPreview = "idSurveyMainPreview" + @questions.QuestionNumber;
+                                            var required = questions.IsRequired ? "required" : string.Empty;
+
+                                            <div class="SurveyMainParent PaddingAdjust" id="@surveyParent" questionType="@questions.QuestionType" ratingType="@questions.RatingType" questionnumber="@questions.QuestionNumber" isrequired="@Json.Serialize(questions.IsRequired)" shortAnswerLength="@questions.ShortAnswerLength" >
+
+                                                @if (questions.QuestionType == ((int)WAS.Application.Common.Enum.SurveyQuestionTypes.Short_Answer).ToString())
+                                                {
+                                                    <div class="SurveyShortAnswer classPreviewContent survey_card shadow" id="@parentPreview" questionnumber="@questions.QuestionNumber">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="form-group mb-0">
+                                                                    <span class="classQuestionNumber">@(currentIndex.ToString())</span>
+                                                                    <label class="mediumFont classQuestionText @required">@questions.Question</label>
+                                                                    <textarea class="form-control classShortAnswer answer-entry" rows="3" placeholder="@questions.ShortAnswerPlaceHolder"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else if (questions.QuestionType == ((int)WAS.Application.Common.Enum.SurveyQuestionTypes.Boolean_Answer).ToString())
+                                                {
+                                                    <div class="radioQuestionPreview classPreviewContent survey_card shadow" id="@parentPreview" questionnumber="@questions.QuestionNumber" isrequired="@Json.Serialize(questions.IsRequired)">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group mb-0">
+                                                                    <span class="classQuestionNumber">@(currentIndex.ToString())</span>
+                                                                    <label class="mediumFont classQuestionText @required">@questions.Question</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-sm-12">
+                                                                <div class="d-flex">
+                                                                    @for (var i = 0; i < @questions.Options.Count; i++)
+                                                                    {
+                                                                        var optionParent = "idOptionId" + @questions.QuestionNumber + i;
+                                                                        var optionName = "optionName" + @questions.QuestionNumber;
+                                                                        var currentValue = @questions.Options.ElementAt(i);
+
+                                                                        <div class="d-inline mr-3">
+                                                                            <div class="radio">
+                                                                                <label class="custom_radio" for="@optionParent">
+                                                                                    @currentValue.Text<input class="classBooleanAnswer answer-entry" type="radio" id="@optionParent" name="@optionName" value="@currentValue.Id">
+                                                                                    <span class="checkmark"></span>
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                    </div>
+                                                }
+                                                else if (questions.QuestionType == ((int)WAS.Application.Common.Enum.SurveyQuestionTypes.Multiple_Choice).ToString())
+                                                {
+                                                    <div class="radioQuestionPreview classPreviewContent survey_card shadow" id="@parentPreview" questionnumber="@questions.QuestionNumber" isrequired="@Json.Serialize(questions.IsRequired)">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group mb-0">
+                                                                    <span class="classQuestionNumber">@(currentIndex.ToString())</span>
+                                                                    <label class="mediumFont classQuestionText @required">@questions.Question</label>
+                                                                </div>
+                                                            </div>
+
+                                                            @for (var i = 0; i < @questions.Options.Count; i++)
+                                                            {
+                                                                var optionParent = "idOptionId" + @questions.QuestionNumber + i;
+                                                                var optionName = "optionName" + @questions.QuestionNumber;
+                                                                var currentValue = @questions.Options.ElementAt(i);
+
+                                                                <div class="col-md-12">
+                                                                    <div class="radio">
+                                                                        <label class="custom_radio" for="@optionParent">
+                                                                            @currentValue.Text<input class="classMultiChoice answer-entry" type="radio" id="@optionParent" name="@optionName" value="@currentValue.Id">
+                                                                            <span class="checkmark"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            @if (questions.IsOtherOptionEnabled)
+                                                            {
+                                                                string currentOptionId = "idOtherOptionId" + questions.QuestionNumber;
+                                                                string currentOptionName = "optionName" + @questions.QuestionNumber;
+
+                                                                <div class="col-md-12  d-flex other-radio-parent-div">
+                                                                    <div class="radio">
+                                                                        <label class="custom_radio" for="@currentOptionId">
+                                                                            Other<input class="classMultiChoice answer-entry" type="radio" data-otherradio="true" id="@currentOptionId" name="@currentOptionName" value="Other">
+                                                                            <span class="checkmark"></span>
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-md-8 other-radio-input-div other-opt-div" style="margin-left: auto !important;display:none">
+                                                                        <input type="text" class="form-control other-radio-input-elmnt other-opt-inpt" placeholder="Write Here" maxlength="50">
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            @if (questions.IsCommentsEnabled)
+                                                            {
+                                                                <div class="col-md-12 form-group mt-1">
+                                                                    <label class="mediumFont">Comments</label>
+                                                                    <input type='text' id="idComments_@questions.QuestionNumber" class='form-control comment-txt' placeholder='Write Here' />
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else if (questions.QuestionType == ((int)WAS.Application.Common.Enum.SurveyQuestionTypes.Multi_Select).ToString())
+                                                {
+                                                    <div class="checkBoxQuestionPreview classPreviewContent survey_card shadow" id="@parentPreview" questionnumber="@questions.QuestionNumber" isrequired="@Json.Serialize(questions.IsRequired)">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group mb-0">
+                                                                    <span class="classQuestionNumber">@(currentIndex.ToString())</span>
+                                                                    <label class="mediumFont classQuestionText @required">@questions.Question</label>
+                                                                </div>
+                                                            </div>
+                                                            @for (var i = 0; i < @questions.Options.Count; i++)
+                                                            {
+                                                                var optionParent = "idOptionId" + @questions.QuestionNumber + i;
+                                                                var optionName = "optionName" + @questions.QuestionNumber;
+                                                                var currentValue = @questions.Options.ElementAt(i);
+                                                                <div class="col-md-12">
+                                                                    <div class="checkbox">
+                                                                        <input class="classMultiSelect answer-entry" type="checkbox" id="@optionParent" name="@optionName" value="@currentValue.Id">
+                                                                        <label for="@optionParent">@currentValue.Text</label>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            @if (questions.IsOtherOptionEnabled)
+                                                            {
+                                                                var otherOptionId = "idOtherOptionId" + @questions.QuestionNumber;
+                                                                var optionName = "optionName" + @questions.QuestionNumber;
+                                                                <div class="col-md-12 d-flex other-chkbox-parent-div">
+                                                                    <div class="checkbox">
+                                                                        <input class="classMultiSelect answer-entry" type="checkbox" data-otherchkbox="true" id="@otherOptionId" name="@optionName" value="Others">
+                                                                        <label for="@otherOptionId">Others</label>
+                                                                    </div>
+                                                                    <div class="col-md-8 other-chkbox-input-div other-opt-div" style="margin-left: auto !important;display:none">
+                                                                        <input type="text" class="form-control other-chkbox-input-elmnt other-opt-inpt" placeholder="Write Here" maxlength="50">
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            @if (questions.IsCommentsEnabled)
+                                                            {
+                                                                <div class="col-md-12 form-group mt-1">
+                                                                    <label class="mediumFont">Comments</label>
+                                                                    <input type='text' id="idComments_@questions.QuestionNumber" class='comment-txt form-control' placeholder='Write Here' />
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else if (questions.QuestionType == ((int)WAS.Application.Common.Enum.SurveyQuestionTypes.Rating).ToString())
+                                                {
+                                                    <div class="starQuestionPreview classPreviewContent survey_card shadow" id="@parentPreview" questionnumber="@questions.QuestionNumber" isrequired="@Json.Serialize(questions.IsRequired)">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group mb-0">
+                                                                    <span class="classQuestionNumber">@(currentIndex.ToString())</span>
+                                                                    <label class="mediumFont classQuestionText @required">@questions.Question</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-12">
+                                                                @*star*@
+                                                                @if (questions.RatingType == (int)WAS.Application.Common.Enum.SurveyRatingTypes.Worst_Excellent || questions.RatingType == (int)WAS.Application.Common.Enum.SurveyRatingTypes.Disagree_Agree)
+                                                                {
+                                                                    <div class="row star_option_preview">
+                                                                        @for (var i = 0; i < @questions.Options.Count; i++)
+                                                                        {
+                                                                            var currentValue = @questions.Options.ElementAt(i);
+                                                                            <div class="col"><div class="text-center"><img class="classStarImage answer-entry" value="@currentValue.Id" currentindex="@i" src="/was/img/survey_images/Rating_Scale_big.svg" alt=""><span>@currentValue.Text</span></div></div>
+                                                                        }
+                                                                    </div>
+                                                                }
+                                                                @*smiley*@
+                                                                else if (questions.RatingType == (int)WAS.Application.Common.Enum.SurveyRatingTypes.Smileys)
+                                                                {
+                                                                    <div class="row star_option_preview">
+                                                                        @for (var i = 0; i < @questions.Options.Count; i++)
+                                                                        {
+                                                                            var currentValue = @questions.Options.ElementAt(i);
+                                                                            <div class="col">
+                                                                                <div class="text-center">
+                                                                                    <img class="classSmiley answer-entry" value="@currentValue.Id" currentindex="@i" src="/was/img/@smileyImages[i]" alt=""><span>@currentValue.Text</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+                                                                    </div>
+                                                                }
+                                                                @*slider*@
+                                                                else if (questions.RatingType == (int)WAS.Application.Common.Enum.SurveyRatingTypes.Slider)
+                                                                {
+                                                                    <div class="row star_option_preview sliderPreviewMain">
+                                                                        <div class="classSliderParent answer-entry">
+                                                                            @{
+                                                                                var maxVal = Convert.ToInt32(questions.Options[0].Text);
+                                                                                double currentWidth = (100.00 / maxVal);
+                                                                                string sliderClass = (maxVal == 10) ? "sliderMaxTen" : "sliderMaxFive";
+                                                                            }
+                                                                            @for (var i = 0; i < @maxVal; i++)
+                                                                            {
+                                                                                <div class="classSliderPart @sliderClass" style="width:@currentWidth%">
+                                                                                    @(i+1)
+                                                                                    @if (i < maxVal - 1)
+                                                                                    {
+                                                                                        <div class="sliderBar"></div>
+                                                                                    }
+                                                                                </div>
+                                                                            }
+                                                                        </div>
+                                                                        <div class="classSliderParentText">
+                                                                            <div class="classSliderTextContent">Not at all likely</div>
+                                                                            <div class="classSliderTextContent classSliderFillRightText">Extremely likely</div>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+
+                                                            </div>
+                                                            @if (questions.IsCommentsEnabled)
+                                                            {
+                                                                <div class="col-md-12 form-group mt-1">
+                                                                    <label class="mediumFont">Comments</label>
+                                                                    <input type='text' id="idComment_@questions.QuestionNumber" class='form-control comment-txt' placeholder='Write Here' />
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="col-md-12 text-md-right p-0" id="idSurveyActionParent">
+                                        <button type="button" class="btn--a m-0 createNewSurey clearSurvey" onclick="clearAllSelection()" id="idClearSurvey">Reset</button>
+                                        <button type="button" class="btn--a  submitSurvey" id="idSubmitSurvey">Submit Survey</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-2"></div>
+                            </div>
+                            <!-- /.row -->
+                        </div><!-- /.container-fluid -->
+                    </div>
+                    <!--alert popup with only Ok button-->
+                    <input type="hidden" id="idAlertToggle" data-toggle="modal" data-target="#modalSubAlert" />
+                    <div class="modal fade" id="modalSubAlert" value="" operatnType="">
+                        <div class="modal-dialog text-center modal-md">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body pt-0">
+                                    <i class="fas fa-exclamation alertButtonModal" aria-hidden="true"></i>
+                                    <p id="idmodalsmText" class="h5 mb-4"></p>
+                                    <button type="button" class="btn btn-warning mb-2" data-dismiss="modal">Ok</button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                }
+
+                else if (Model != null && (Model.Questions == null || Model.Questions.Count == 0))
+                {
+
+                    @await Html.PartialAsync("~/Views/Survey/_SurveyExpired.cshtml", "We are sorry but this survey does not exist or Expired")
+                }
+
+                else if (Model == null && @ViewBag.message == "timeout")
+                {
+
+                    @await Html.PartialAsync("~/Views/Survey/_SessionExpired.cshtml", (Guid)ViewBag.broadcastId)
+                }
+
+                else
+                {
+                    @await Html.PartialAsync("~/Views/Survey/_SurveyExpired.cshtml", "You are not authorized to access this survey")
+
+                }
+
+            </div>
+        }
+
+        @if(!string.IsNullOrEmpty(ViewBag.UserName))
+        {
+            ViewData.Add(new KeyValuePair<string, object>("CurrUser",(string)ViewBag.CurrUser));
+        }
+        @await Html.PartialAsync("~/Views/Survey/_SurveyCompleted.cshtml", @alertDisplay,ViewData)
+
+    </div>
+
+    <div id="loading" class="modal modal-backdrop divLoader">
+        <div class="LoaderOuter">
+            <div class="WASLoader">
+                <div><svg aria-hidden="true" focusable="false" data-icon="bell" width="25" height="25" class="svg-inline" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M224 512c35.32 0 63.97-28.65 63.97-64H160.03c0 35.35 28.65 64 63.97 64zm215.39-149.71c-19.32-20.76-55.47-51.99-55.47-154.29 0-77.7-54.48-139.9-127.94-155.16V32c0-17.67-14.32-32-31.98-32s-31.98 14.33-31.98 32v20.84C118.56 68.1 64.08 130.3 64.08 208c0 102.3-36.15 133.53-55.47 154.29-6 6.45-8.66 14.16-8.61 21.71.11 16.4 12.98 32 32.1 32h383.8c19.12 0 32-15.6 32.1-32 .05-7.55-2.61-15.27-8.61-21.71z"></path></svg></div>
+            </div>
+        </div>
+    </div>
+</body>
+@await Component.InvokeAsync("Notyf")
+</html>

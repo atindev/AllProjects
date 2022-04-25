@@ -1,0 +1,136 @@
+﻿@model WAS.Application.Features.Training.GetVideo.Response;
+@{
+    ViewData["Title"] = "Training";
+}
+<link rel="stylesheet" href="~/was/css/TrainingVideo.css">
+<div class="content-header">
+    <div class="container">
+        <div class="row mb-2">
+            <div class="col-md-8">
+                <h1 class="m-0 text-dark">Training</h1>
+            </div><!-- /.col -->
+            <div class="col-md-4">
+                <select asp-for="@Model.VideoCategories.FirstOrDefault().LanguageCode"
+                        class="form-control preferred-language"
+                        asp-items="@(new SelectList(Model.AllLanguages,"Code","Name"))">
+                </select>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</div>
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 card TrainingSectionWAS">
+                <div class="HeroSection row">
+                    <div class="col-md-5">
+                        <a href="@Url.Action("View", "Training", new { videoId = Model.VideoCategories[0].TrainingVideos[0].Id })"><img class="mb-2" src="@Model.VideoCategories[0].TrainingVideos[0].VideoThumbnail" alt="" /></a>
+                    </div>
+                    <div class="col-md-7">
+                        <h3><a href="@Url.Action("View", "Training", new { videoId = Model.VideoCategories[0].TrainingVideos[0].Id })">@Model.VideoCategories[0].Category</a></h3>
+                        <p>@Model.VideoCategories[0].CategoryDescription</p>
+                        @foreach (var video in Model.VideoCategories[0].TrainingVideos)
+                        {
+                            @if (video.Id == 1)
+                            {
+                                <div class="TrainingFirst mb-3">
+                                    <div class="play_link d-flex position-relative">
+                                        <a href="@Url.Action("View", "Training", new { videoId = video.Id })"><i class="fas fa-play" aria-hidden="true"></i>@video.Name<span class="">@video.VideoDuration</span></a>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="catSingleItem">
+                                    <div class="play_link d-flex position-relative">
+                                        <a href="@Url.Action("View", "Training", new { videoId = video.Id})"><i class="fas fa-play" aria-hidden="true"></i>@video.Name<span class="">@video.VideoDuration</span></a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="row WAStrainingCat">
+                    <div class="col-md-4">
+                        <div class="catHeroTop">
+                            <div class="TrainingFirst mb-3">
+                                <h3 class="TCatTitle mb-3">@Model.VideoCategories[1].Category</h3>
+                                <a href="@Url.Action("View", "Training", new { videoId = Model.VideoCategories[1].TrainingVideos[0].Id })">
+                                    <img class="mb-2" src="@Model.VideoCategories[1].TrainingVideos[0].VideoThumbnail" alt="" />
+                                </a>
+                                <p>@Model.VideoCategories[1].CategoryDescription</p>
+                                <div class="play_link d-flex position-relative">
+                                    <a href="@Url.Action("View", "Training", new { videoId = Model.VideoCategories[1].TrainingVideos[0].Id })"><i class="fas fa-play" aria-hidden="true"></i>@Model.VideoCategories[1].TrainingVideos[0].Name<span class="">@Model.VideoCategories[1].TrainingVideos[0].VideoDuration</span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="catHeroTop">
+                            
+                            @foreach (var (video, index) in Model.VideoCategories[2].TrainingVideos.Select((value, i) => (value, i)))
+                            {
+                                @if (index==0)
+                                {
+                                    <h3 class="TCatTitle mb-3">@Model.VideoCategories[2].Category</h3>
+                                    <a href="@Url.Action("View", "Training", new { videoId = video.Id })">
+                                        <img class="mb-2" src="@video.VideoThumbnail" alt="" />
+                                    </a>
+                                    <p>@Model.VideoCategories[2].CategoryDescription </p>
+                                    <div class="TrainingFirst mb-3">
+                                        <div class="play_link d-flex position-relative">
+                                            <a href="@Url.Action("View", "Training", new { videoId = video.Id })"><i class="fas fa-play" aria-hidden="true"></i>@video.Name<span class="">@video.VideoDuration</span></a>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="catSingleItem">
+                                        <div class="play_link d-flex position-relative">
+                                            <a href="@Url.Action("View", "Training", new { videoId = video.Id })"><i class="fas fa-play" aria-hidden="true"></i>@video.Name<span class="">@video.VideoDuration</span></a>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="catHeroTop">
+                            @foreach (var (video, index) in Model.VideoCategories[3].TrainingVideos.Select((value, i) => (value, i)))
+                            {
+                                @if (index == 0)
+                                {
+                                    <h3 class="TCatTitle mb-3">@Model.VideoCategories[3].Category</h3>
+                                    <a href="@Url.Action("View", "Training", new { videoId = video.Id })">
+                                        <img class="mb-2" src="@video.VideoThumbnail" alt="" />
+                                    </a>
+                                    <p>@Model.VideoCategories[3].CategoryDescription</p>
+                                    <div class="TrainingFirst mb-3">
+                                        <div class="play_link d-flex position-relative">
+                                            <a href="@Url.Action("View", "Training", new { videoId = video.Id })"><i class="fas fa-play" aria-hidden="true"></i>@video.Name<span class="">@video.VideoDuration</span></a>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="catSingleItem">
+                                        <div class="play_link d-flex position-relative">
+                                            <a href="@Url.Action("View", "Training", new { videoId = video.Id})"><i class="fas fa-play" aria-hidden="true"></i>@video.Name<span class="">@video.VideoDuration</span></a>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(".preferred-language").on("change", function () {
+        const language = $(this).val();
+        window.location.href = `/WAS/Training/List/${language}`;
+    });
+</script>

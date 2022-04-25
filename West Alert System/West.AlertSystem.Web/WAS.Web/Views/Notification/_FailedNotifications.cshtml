@@ -1,0 +1,61 @@
+﻿@using  System.Security.Claims;
+@model WAS.Application.Features.Notification.GetFailedDetails.Response;
+@{
+    var picture = "/was/img/user2-160x160.jpg";
+}
+
+<link href="~/was/css/Notification/failedNotifications.css" rel="stylesheet" />
+
+<input type="hidden" id="idFailedNotificationClick" data-toggle="modal" data-target="#modal-FailedNotification" />
+<div class="modal fade" id="modal-FailedNotification">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Failure Report</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <ejs-grid id="GridFailedNotifications" dataSource="@Model.FailedNotifications" allowPaging="true" allowTextWrap="true" allowSelection="true" gridLines="Both" dataBound="updateUserDetails">
+                        <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+                        <e-grid-columns>
+                            <e-grid-column field="SubscriberName" headerText="Sent To" template="#idListSubscriptionName" customAttributes=@(new { @class = "customcssAuthor" }) headerTextAlign="Center" textAlign="Center" width="210"></e-grid-column>
+                            <e-grid-column field="CreatedDate" headerText="Sent Date" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center" width="150"></e-grid-column>
+                            <e-grid-column field="ToNumber" headerText="Phone Number" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center" width="150"></e-grid-column>
+                            <e-grid-column field="Status" headerText="Status" customAttributes=@(new { @class = "customcssStatus" }) headerTextAlign="Center" textAlign="Center" width="130"></e-grid-column>
+                            <e-grid-column field="ErrorMessage" template="#idErrorName" headerText="Error Message" customAttributes=@(new { @class = "customcssErrortext" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                        </e-grid-columns>
+                    </ejs-grid>
+                    <script id="idListSubscriptionName" type="text/x-template">
+                        <img src="@picture" class="user-image img-circle-grid elevation-2 steps-img steps-imgGrid" alt="User Image" data-useremail="${SubscriberEmail}" data-userid="${SubscriberId}">
+                        <div class="clsAuthor ad-user-grid" data-useremail="${SubscriberEmail}" data-toggle="tooltip" data-placement="top" title="${SubscriberName}">${SubscriberName}</div>
+                        <div class="clsAuthor userWithLocation" data-toggle="tooltip" data-placement="top" title="${SubscriberLocation}"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${SubscriberLocation}</div>
+                    </script>
+                    <script id="idErrorName" type="text/x-template">
+                        ${if(ErrorMessage!=null && ErrorMessage!="" && ErrorURL!=null && ErrorURL!="")}
+                        <a class="preview iconPositionCorrection" href="${ErrorURL}" target="_blank"><i class="fas fa-times-circle text-danger" aria-hidden="true"></i> ${ErrorMessage} <i class="fas fa-external-link-alt text-muted" aria-hidden="true"></i></a>
+                        ${else if(ErrorMessage!=null && ErrorMessage!="")}
+                        <div class="clsErrorName" data-toggle="tooltip" data-placement="top">${ErrorMessage}</div>
+                        ${else if(ErrorCode!=null && ErrorCode!="")}
+                        <a href="${ErrorURL}" target="_blank">Error ${ErrorCode} - Twilio</a>
+                        ${/if}
+                    </script>
+                </div>
+            </div>
+
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default btn-reset" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script>
+    function updateUserDetails() {
+        populateUserPicturesforGrid($(".img-circle-grid"));
+    }
+</script>

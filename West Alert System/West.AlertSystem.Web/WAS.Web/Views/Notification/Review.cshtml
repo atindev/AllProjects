@@ -1,0 +1,68 @@
+﻿@model WAS.Application.Features.Notification.View.Response
+@using  System.Security.Claims;
+@{
+    ViewData["Title"] = "Review Notifications";
+    ViewData["Review"] = "Approver";
+
+    if (User.HasClaim(ClaimTypes.Role, "GlobalAdministrator"))
+    {
+        ViewData["Review"] = "GlobalAdministrator";
+    }
+
+    if (User.HasClaim(ClaimTypes.Role, "Approver"))
+    {
+        if (Model.Notification.Status == WAS.Application.Common.Enum.Status.Submitted)
+            ViewData["Review"] = WAS.Application.Common.Enum.ApprovalLevel.First;
+        else
+        {
+            if(ViewData["Review"].ToString()!= "GlobalAdministrator")
+                ViewData["Review"] = WAS.Application.Common.Enum.ApprovalLevel.Second;
+        }
+    }
+    if (User.HasClaim(ClaimTypes.Role, "CommunicationTeam"))
+    {
+        if (Model.Notification.Status == WAS.Application.Common.Enum.Status.Submitted)
+        {
+            if (ViewData["Review"].ToString() != "GlobalAdministrator")
+                ViewData["Review"] = WAS.Application.Common.Enum.ApprovalLevel.First;
+        }
+        else
+            ViewData["Review"] = WAS.Application.Common.Enum.ApprovalLevel.Second;
+    }
+    if (Model != null && Model.Notification.IsPrivateNotification && (Model.Notification.IsApprovalRequired ?? false))
+    {
+        ViewData["Review"] = null;
+        if (Model.Notification.ApproverForPrivate == @User.Identity.Name)
+            ViewData["Review"] = WAS.Application.Common.Enum.ApprovalLevel.Second;
+    }
+
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">
+                        <button type="button" class="btn btn-reset btn-default" onclick="document.getElementById('clsBackButtonForNotificationReview').click()">
+                            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                            <a href="/WAS/Notification/ListSubmitted" id="clsBackButtonForNotificationReview">
+                            </a>
+                        </button>  Review Notification
+                    </h1>
+                </div>
+
+                <div class="col-sm-6">
+
+                </div><!-- /.col -->
+
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    @await Html.PartialAsync("_ViewNotification", Model);
+    <!-- /.content-wrapper -->
+</div>

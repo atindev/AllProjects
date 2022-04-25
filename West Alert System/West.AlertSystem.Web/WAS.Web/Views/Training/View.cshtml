@@ -1,0 +1,60 @@
+﻿@model WAS.Application.Features.Training.GetVideoById.Response;
+@{
+    ViewData["Title"] = "Video Detail";
+}
+<link rel="stylesheet" href="~/was/css/TrainingVideo.css">
+<div class="content-header">
+    <div class="container">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <a href="/WAS/Training/List/@Model.TrainingVideo.LanguageCode"><i class="fas fa-long-arrow-alt-left mr-2" aria-hidden="true"></i> Back to training</a>
+            </div><!-- /.col -->
+        </div>
+    </div><!-- /.container-fluid -->
+</div>
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <!-- /.col-md-6 -->
+            <!--training detail template start-->
+            <div class="col-12 card bg-white TrainingSectionWAS">
+                <div class="TrainingDetailPage">
+                    <h2 class="mb-4">@Model.TrainingVideo.Name</h2>
+                    <div class="HeroSection row">
+                        <div class="col-md-12">
+                            <div class="embed-responsive embed-responsive-16by9 mb-3">
+                                <iframe class="embed-responsive-item" src="@Model.TrainingVideo.URL" title="@Model.TrainingVideo.Name" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            <p>@Model.TrainingVideo.VideoDescription</p>
+                        </div>
+                    </div>
+                    <div><br/></div>
+                    @if (Model.Videos.Any())
+                    {
+                        <div class="row WAStrainingCat">
+                            <div class="col-12">
+                                <h2 class="TCatTitle mb-3">Recommended videos for you:</h2>
+                            </div>
+                            @foreach (var video in Model.Videos)
+                            {
+                                <div class="col-md-6">
+                                    <div class="catHeroTop">
+                                        <div class="TrainingFirst mb-3">
+                                            <a href="@Url.Action("View", "Training", new { videoId = video.Id })">
+                                                <img class="mb-2" src="@video.VideoThumbnail" alt="" />
+                                            </a>
+                                            <div class="play_link d-flex position-relative">
+                                                <a href="@Url.Action("View", "Training", new { videoId = video.Id })"><i class="fas fa-play" aria-hidden="true"></i>@video.Name<span class="">@video.VideoDuration</span></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

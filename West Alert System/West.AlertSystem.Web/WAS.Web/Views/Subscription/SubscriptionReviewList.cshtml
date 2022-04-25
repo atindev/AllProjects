@@ -1,0 +1,126 @@
+﻿@model WAS.Application.Features.Subscription.GetOcrSubscriptionList.Response;
+
+@{
+    ViewData["Title"] = "SubscriptionReviewList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/was/css/Subscription/OcrSubscription.css" rel="stylesheet" />
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-9">
+                    <h1 class="m-0 text-dark">Review Subscriptions</h1>
+                    <p class="m-0 text-secondary">Below are the employee subscriptions pending for your review</p>
+                </div><!-- /.col -->
+                <div class="col-sm-3">
+                    <select asp-for="@Model.AdminLocationId" 
+                            class="form-control selected-location"
+                            asp-items="@(new SelectList(Model.Locations,"Id","Name"))">
+                    </select>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <!-- /.col-md-6 -->
+
+                <div class="col-sm-12">
+                    <div>
+                        <div class="tab-content" id="custom-content-below-tabContent">
+                            <div class="tab-pane fade active show" id="custom-content-below-home" role="tabpanel" aria-labelledby="custom-content-below-home-tab">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        @if (Model.OcrSubscriptionList.Any())
+                                        {
+                                            <div class="card">
+                                                <div class="card-header border-transparent">
+
+                                                    <div class="row">
+                                                        <div class="col-lg-9">
+                                                        </div>
+                                                        <div class="col-lg-3">
+                                                            <input type="text" class="form-control float-right" id="idsearchByText" placeholder="Filter by Text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body p-0">
+                                                    <div class="table-responsive">
+                                                        <ejs-grid id="GridOcrSubscriptionList" dataSource="@Model.OcrSubscriptionList" allowTextWrap="true" allowPaging="true" gridLines="Both">
+                                                            <e-grid-searchSettings fields="@(new string[] {"FirstName", "LastName", "EmployeeId", "OfficialEmail"})" operator="contains" key="" ignoreCase="true"></e-grid-searchSettings>
+                                                            <e-grid-columns>
+                                                                <e-grid-column field="FirstName" headerText="First Name" template="#idFirstName" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                                <e-grid-column field="LastName" headerText="Last Name" template="#idLastName" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                                <e-grid-column field="EmployeeId" headerText="Employee ID" template="#idEmployeeId" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                                <e-grid-column field="OfficialEmail" headerText="Work Email" template="#idOfficialEmail" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                                <e-grid-column field="UserId" headerText="User ID" template="#idUserId" customAttributes=@(new { @class = "customcss" }) headerTextAlign="Center" textAlign="Center"></e-grid-column>
+                                                                <e-grid-column field="Id" headerText="Review" template="#idReview" customAttributes=@(new { @class = "customcssDetails" }) headerTextAlign="Center" textAlign="Center" width="100"></e-grid-column>
+                                                            </e-grid-columns>
+                                                            <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+                                                        </ejs-grid>
+                                                        <script id="idFirstName" type="text/x-template">
+                                                            ${if(FirstName != null)}
+                                                            <div data-toggle="tooltip" data-placement="top" title="${FirstName}">${FirstName}</div>
+                                                            ${/if}
+                                                        </script>
+                                                        <script id="idLastName" type="text/x-template">
+                                                            ${if(LastName != null)}
+                                                            <div data-toggle="tooltip" data-placement="top" title="${LastName}">${LastName}</div>
+                                                            ${/if}
+                                                        </script>
+                                                        <script id="idEmployeeId" type="text/x-template">
+                                                            ${if(EmployeeId != null)}
+                                                            <div data-toggle="tooltip" data-placement="top" title="${EmployeeId}">${EmployeeId}</div>
+                                                            ${/if}
+                                                        </script>
+                                                        <script id="idUserId" type="text/x-template">
+                                                            ${if(UserId != null)}
+                                                            <div data-toggle="tooltip" data-placement="top" title="${UserId}">${UserId}</div>
+                                                            ${/if}
+                                                        </script>
+                                                        <script id="idOfficialEmail" type="text/x-template">
+                                                            ${if(OfficialEmail != null)}
+                                                            <div data-toggle="tooltip" data-placement="top" title="${OfficialEmail}">${OfficialEmail}</div>
+                                                            ${/if}
+                                                        </script>
+                                                        <script id="idOfficialEmail" type="text/x-template">
+                                                            <div data-toggle="tooltip" data-placement="top" title="${OfficialEmail}">${OfficialEmail}</div>
+                                                        </script>
+                                                        <script id="idReview" type="text/x-template">
+                                                            <a value="ocrSubscriptionDetails" href="/WAS/Subscription/SubscriptionReview?ocrSubscriptionId=${Id}" class="icon-button IconOCRedit spanAlignmentFix"><i class="fas fa-edit" aria-hidden="true"></i><span class="BGwidthAnimate"></span></a>
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-12 bg-white emptyTemplateWas text-center mb-5">
+                                                <img src="/was/img/No_Groups_or_People.svg" width="300" alt="" />
+                                                <h2>No Subscriptions Available in this Location for Review</h2>
+                                                <p>You will see the review list when a there are subscriptions pending for review, to go to dashboard click on the Dashboard button</p>
+                                                <a href="/WAS/Dashboard/View" class="btn" title="Goto Dashboard" data-placement="bottom">Dashboard</a>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <br /><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+
+<script src="~/was/js/Subscription/OcrSubscription.js"></script>

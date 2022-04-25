@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = null;
+}
+
+<title>West Alert System</title>
+<link href="~/was/css/landing.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/was/css/adminlte.min.css">
+<link rel="icon" href="~/was/favicon.ico" type="image/favicon.ico" sizes="16x16">
+<script src="~/was/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/was/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        if (checkBrowser()) {
+            window.location.href = '/was/Account/UnsupportedBrowser';
+        }
+    });
+
+    function checkBrowser() {
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))  // If Internet Explorer
+        {
+            return true;
+        }
+        else  // If another browser, return 0
+        {
+            return false;
+        }
+    }
+
+</script>
+
+<div class="header">
+    <a class="training_view" href="/WAS/Training/List/en-US" target="_blank"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="graduation-cap" class="svg-inline--fa fa-graduation-cap fa-w-20" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" width="20"><path fill="#fff" d="M622.34 153.2L343.4 67.5c-15.2-4.67-31.6-4.67-46.79 0L17.66 153.2c-23.54 7.23-23.54 38.36 0 45.59l48.63 14.94c-10.67 13.19-17.23 29.28-17.88 46.9C38.78 266.15 32 276.11 32 288c0 10.78 5.68 19.85 13.86 25.65L20.33 428.53C18.11 438.52 25.71 448 35.94 448h56.11c10.24 0 17.84-9.48 15.62-19.47L82.14 313.65C90.32 307.85 96 298.78 96 288c0-11.57-6.47-21.25-15.66-26.87.76-15.02 8.44-28.3 20.69-36.72L296.6 284.5c9.06 2.78 26.44 6.25 46.79 0l278.95-85.7c23.55-7.24 23.55-38.36 0-45.6zM352.79 315.09c-28.53 8.76-52.84 3.92-65.59 0l-145.02-44.55L128 384c0 35.35 85.96 64 192 64s192-28.65 192-64l-14.18-113.47-145.03 44.56z"></path></svg> I need training</a>
+    <div class="inner-header flex">
+        <div class="row2">
+            <div class="plain-logo">
+                <img class="logo-pos" src="~/was/img/was-logo-02.png" width="130" title="West Alert System" alt="WAS Logo">
+                <a id="play-video" class="video-play-button" title="Watch Introduction Video" href="#" data-toggle="modal" data-target="#myModal">
+                    <span></span>
+                </a>
+            </div>
+            <h1>Welcome To <br />WEST ALERT SYSTEM</h1>
+            <a href="/was/Account/SignIn" class="button">Get Started</a>
+            <p class="alt_login">Do not have a west account for single sign-on? <br /><a class="button secondary" href="/WAS/Subscription/WizardSubscription">Click here</a></p>
+        </div>
+    </div>
+
+
+    <div>
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+             viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(50,181,66,0.7" />
+                <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(0,85,150,0.5)" />
+                <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(0,85,150,0.3)" />
+                <use xlink:href="#gentle-wave" x="48" y="7" fill="#005596" />
+            </g>
+        </svg>
+    </div>
+    <!--Waves end-->
+
+</div>
+<!--Header ends-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="modal-body p-0">
+                <video controls id="video1" style="width: 100%; height: auto; margin:0 auto; frameborder:0;">
+                    <source src="https://wasstorageaccdevv2.blob.core.windows.net/was-training-videos/West Alert System Introduction.mp4?sv=2020-02-10&ss=b&srt=o&sp=rwlacx&se=2022-04-20T18:11:00Z&st=2021-04-20T10:11:00Z&spr=https&sig=z%2FEfpE0GL%2FHg%2Bx3mPsGWpkxj%2B0vZSbnmLAGnEN%2FEcSY%3D" type="video/mp4">
+                    Your browser doesn't support HTML5 video tag.
+                </video>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Content starts-->
+<div class="content flex">
+    <p><img src="~/was/img/west-white.png" width="300" alt="" /> </p>
+</div>
+<!--Content ends-->
+<script>
+    $(document).ready(function () {
+        $('body').tooltip({
+            selector: '[title]'
+        });
+    });
+    $('#myModal').on('shown.bs.modal', function () {
+        $('#video1')[0].play();
+    })
+    $('#myModal').on('hidden.bs.modal', function () {
+        $('#video1')[0].pause();
+    })
+</script>

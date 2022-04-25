@@ -1,0 +1,411 @@
+﻿.classGroupCount {
+    font-size: 1.5rem !important;
+}
+
+.classDisable {
+    opacity: 0.5 !important;
+    pointer-events: none !important;
+}
+
+#idselectForGroups {
+    margin-bottom: 0% !important;
+}
+
+.groupDetailNavigation {
+    font-size: 0.8em;
+    font-style: normal;
+}
+
+.classGroupCount .table-badge {
+    font-size: .9rem !important;
+}
+
+.classEventLabel {
+    font-size: 1em !important;
+}
+
+.btn-mod-bub {
+    font-size: 9px !important;
+    height: 41px !important;
+    margin: 0px 0px 0px 6px !important;
+    min-width: 49px !important;
+    padding: 6px 1px !important;
+}
+
+.classGroupCount .bg-teal {
+    font-size: 1.6em !important;
+    padding: 3px 5px !important;
+}
+
+.classToggleLabel {
+    position: relative;
+    left: -90%;
+    cursor: pointer;
+}
+
+.classToggleMainParent {
+    padding-left: 1.2em !important;
+    padding-top: 1.3em !important;
+    /*width: 8%;*/
+    width: 6%;
+    display: inline-block;
+}
+
+.colParentForToggle {
+    white-space: nowrap;
+    display: block;
+}
+
+.colHeadParentToggle {
+    /*width: 53%;*/
+    width: 39%;
+    display: inline-block;
+}
+
+#idCreateEventNewly, #idCreateCategoryNewly {
+    cursor: pointer;
+    color: #fff;
+    height: 100%;
+    background-color: #0069d9;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.classNotificationButtonParent {
+    white-space: nowrap;
+}
+/**template selection start **/
+
+.template_select .sub-menu {
+    display: none;
+}
+
+.template_select li {
+    list-style-type: none;
+}
+
+    .template_select li a {
+        padding: 0 20px 15px 35px;
+        cursor: pointer;
+        position: relative;
+        width: 100%;
+        display: block;
+        border-bottom: 1px solid #f1f1f1;
+        margin-top: 15px;
+        color: #000;
+    }
+
+.template_select ul li a {
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+.template_select > li:first-child > a {
+    margin-top: 0;
+}
+
+.template_select > li.has-children > a:before {
+    background-image: url(../../img/notification_templates.svg);
+}
+
+.template_select li a:before {
+    position: absolute;
+    left: 0;
+    width: 22px;
+    height: 24px;
+    content: "";
+    background-image: url(../../img/notification_template.svg);
+}
+
+.template_select > li.has-children > a:after, .mob_drop_down .card-title:after {
+    position: absolute;
+    right: 0;
+    content: "";
+    top: 5px;
+    border: solid #808080;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transition: 0.4s;
+}
+
+.mob_drop_down {
+    cursor: pointer;
+}
+
+    .mob_drop_down .card-title:after {
+        right: 20px !important;
+        top: 15px !important;
+    }
+
+.sub_opened .card-title:after {
+    top: 20px !important;
+}
+
+.template_select > li.open.has-children > a:after, .sub_opened .card-title:after {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+
+.template_select, .template_select ul {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    position: relative;
+    display: block;
+}
+/**template selection end **/
+
+.classNotificationButtonParent .btn {
+    width: 136px !important;
+    font-size: 0.9rem;
+}
+
+.ques-no {
+    width: auto !important;
+}
+
+.colParentForToggle .classToggleLabel {
+    left: auto;
+    margin-right: 40px;
+}
+
+.colHeadParentToggle .ques-list {
+    margin: 0px 0 0 32px;
+}
+
+.Was_template_select {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.templateListItem:hover {
+    color: #0a0adc !important;
+}
+
+.selectedTemplate {
+    color: #2ec752 !important;
+}
+
+.colParentForEventName {
+    white-space: nowrap;
+    display: block;
+}
+
+.btnForIDcreate {
+    width: 40px !important;
+}
+
+.classNotificationButtonParent .dropdown-toggle::after {
+    float: right;
+    margin-top: 7px;
+}
+
+.classNotificationButtonParent .dropdown-item.active, .classNotificationButtonParent .dropdown-item:active, .classNotificationButtonParent .dropdown-item:focus, .classNotificationButtonParent .dropdown-item:hover {
+    background: #fff !important;
+    outline: none !important;
+    color: #212529 !important;
+}
+
+@media only screen and ( max-width: 768px ) {
+    .mobile_empty {
+        display: none;
+    }
+
+    .BlockOnMobile {
+        width: 136px;
+        display: block !important;
+        margin: 0 auto;
+    }
+}
+
+#idRefreshNotification {
+    cursor: pointer;
+}
+
+.info-toolTip {
+    color: #007bff;
+    font-size: 17px;
+    margin-left: 10px;
+}
+
+.switch_toggle_Custom {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 22px;
+}
+
+.switch_toggle_Custom input {
+    display: none;
+}
+
+.slider_Custom_list {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 34px;
+}
+.slider_Custom_list:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+}
+input:checked + .slider_Custom_list {
+    background-color: #007BFF;
+}
+
+input:focus + .slider_Custom_list {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider_Custom_list:before {
+    -webkit-transform: translateX(36px);
+    -ms-transform: translateX(36px);
+    transform: translateX(36px);
+}
+
+.slider_Custom_list:after {
+    content: 'NO';
+    color: white;
+    display: block;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 60%;
+    font-size: 10px;
+    font-family: Verdana, sans-serif;
+}
+
+input:checked + .slider_Custom_list:after {
+    content: 'YES';
+    left: 40%;
+}
+
+.for_switch_toggle_Custom {
+    margin-top: 6px;
+    margin-right: 10px;
+    float: left;
+}
+.NewDesignWAS .QuesforNotification {
+    display: flex;
+    align-items: baseline;
+    font-size: 18px;
+}
+.NewDesignWAS .classQuestionNumber {
+    font-weight: 600 !important;
+    background: #D9F0F9;
+    color: #1E79E7;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    margin-right: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float: left;
+    font-size: 20px;
+}
+.NewDesignWAS .was-Notification-Count {
+    float: none !important
+}
+    .NewDesignWAS .was-Notification-Count a {
+        background: rgb(217, 240, 249);
+        color: rgb(30, 121, 231);
+        border: 0px;
+    }
+.NewDesignWAS .validateAfterWarning.small_warning {
+    padding: 5px 20px;
+    display: flex;
+    align-items: center;
+}
+    .NewDesignWAS .validateAfterWarning.small_warning i {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+.NewDesignWAS .check-toolbar label, .NewDesignWAS .radio-toolbar label {
+    position: relative;
+    cursor: pointer;
+}
+    .NewDesignWAS .check-toolbar label:after {
+        content: "\f058";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        display: block;
+        position: absolute;
+        top: -22px !important;
+        right: 0 !important;
+        left: auto !important;
+        transform: translate(6px, -6px) scale(0) !important;
+        opacity: 0;
+        border: 0 !important;
+        margin: 0 !important;
+        transition: .2s all;
+        color: #14924c;
+    }
+.check-toolbar input[type="checkbox"]:checked + label::after {
+    opacity: 1;
+    transform: translate(6px, -6px) scale(1) !important;
+}
+.NewDesignWAS .radio-toolbar input[type="radio"]:checked + label {
+    border-color: #005596;
+    color: #fff;
+    background: #005596;
+}
+.NewNotifiFooter .btn {
+    padding: 10px 30px;
+    font-weight: 500;
+    font-size: 16px;
+    width: auto !important;
+    border: 0;
+    border-radius: 0;
+}
+    .NewNotifiFooter .btn:hover{
+        opacity:0.9;
+    }
+    .NewNotifiFooter .btn-primary {
+        background: #005595;
+    }
+.NewDesignWAS .custom-control-label::before {
+    background-color: #ccc !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    width: 60px !important;
+    height: 22px !important;
+    border-radius: 34px !important;
+}
+.NewDesignWAS .custom-control-label::after {
+    background-color: #fff !important;
+    height: 18px !important;
+    width: 18px !important;
+}
+.NewDesignWAS .custom-control-label {
+    padding-left: 30px !important;
+}
+.NewDesignWAS .custom-switch .custom-control-input:checked ~ .custom-control-label::after {
+    -webkit-transform: translateX(2.3rem);
+    transform: translateX(2.3rem);
+}
+.NewDesignWAS .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: #007bff !important;
+}

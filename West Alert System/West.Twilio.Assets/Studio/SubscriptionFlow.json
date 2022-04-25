@@ -1,0 +1,3190 @@
+{
+  "description": "Main flow for West Alert System",
+  "states": [
+    {
+      "name": "Trigger",
+      "type": "trigger",
+      "transitions": [
+        {
+          "next": "sp_init_message",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "incomingCall"
+        },
+        {
+          "event": "incomingRequest"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 20,
+          "y": -170
+        }
+      }
+    },
+    {
+      "name": "sp_init_message",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "send_msg_default",
+          "event": "noMatch"
+        },
+        {
+          "next": "msg_init_join",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value matches_any_of Join West-Alert-System, Join WAS",
+              "arguments": [
+                "{{trigger.message.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "Join West-Alert-System, Join WAS"
+            }
+          ]
+        },
+        {
+          "next": "send_message_wait",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value matches_any_of opt-in keywords",
+              "arguments": [
+                "{{trigger.message.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "cancel, end, stop, stopall, unsubscribe, start, unstop, yes, help, info"
+            }
+          ]
+        },
+        {
+          "next": "func_IM_token",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value starts_with IM-",
+              "arguments": [
+                "{{trigger.message.Body}}"
+              ],
+              "type": "starts_with",
+              "value": "IM-"
+            }
+          ]
+        },
+        {
+          "next": "func_IM_token",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value starts_with NR-",
+              "arguments": [
+                "{{trigger.message.Body}}"
+              ],
+              "type": "starts_with",
+              "value": "NR-"
+            }
+          ]
+        },
+        {
+          "next": "msg_reply_forgetme_confirmation",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value matches_any_of forget-me, forget me",
+              "arguments": [
+                "{{trigger.message.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "forget-me, forget me"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{trigger.message.Body}}",
+        "offset": {
+          "x": -50,
+          "y": -10
+        }
+      }
+    },
+    {
+      "name": "msg_init_join",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_WE",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 50,
+          "y": 290
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Hello, Process for your subscription to West Alert System has been initiated for *{{contact.channel.address | replace:'whatsapp:',''}}*.\n \nPlease answer the follow-up questions to subscribe via various channels to receive west alerts.\n\nReply with *Quit* anytime during the process to end it."
+      }
+    },
+    {
+      "name": "msg_quit",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 533,
+          "y": 159
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Alright, the process is now cancelled."
+      }
+    },
+    {
+      "name": "msg_noreply",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 920,
+          "y": 160
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "We haven't received any input for a while; the process has ended automatically.\nYou can send *Join WAS* anytime to restart the process."
+      }
+    },
+    {
+      "name": "msg_reply_ask_WE",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "sp_validation_WE",
+          "event": "incomingMessage"
+        },
+        {
+          "next": "msg_noreply",
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 60,
+          "y": 560
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Please input your *Employee Id* or *User Id* or *Work Email*?",
+        "timeout": "300"
+      }
+    },
+    {
+      "name": "sp_validation_WE",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "var_UserId",
+          "event": "noMatch"
+        },
+        {
+          "next": "msg_quit",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to Quit",
+              "arguments": [
+                "{{widgets.msg_reply_ask_WE.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "Quit"
+            }
+          ]
+        },
+        {
+          "next": "var_WE",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value is work email",
+              "arguments": [
+                "{{widgets.msg_reply_ask_WE.inbound.Body}}"
+              ],
+              "type": "contains",
+              "value": "@westpharma.com"
+            }
+          ]
+        },
+        {
+          "next": "var_EmpId",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value is emp id",
+              "arguments": [
+                "{{widgets.msg_reply_ask_WE.inbound.Body}}"
+              ],
+              "type": "regex",
+              "value": "\\d{1,10}"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.msg_reply_ask_WE.inbound.Body}}",
+        "offset": {
+          "x": -20,
+          "y": 790
+        }
+      }
+    },
+    {
+      "name": "var_WE",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "func_graph_token",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.msg_reply_ask_WE.inbound.Body}}",
+            "key": "WorkEmail"
+          },
+          {
+            "value": "{{widgets.msg_reply_ask_WE.inbound.Body}}",
+            "key": "EmployeeId"
+          },
+          {
+            "value": "{{widgets.msg_reply_ask_WE.inbound.Body}}",
+            "key": "UserId"
+          }
+        ],
+        "offset": {
+          "x": 30,
+          "y": 1040
+        }
+      }
+    },
+    {
+      "name": "msg_validation_WE_Failed",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_WE",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -450,
+          "y": 770
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Entered input is not acceptable for Employee Id or User Id or Work Email. \n\nIn case of work email, it has to be of @westpharma.com domain.\n\nReply with *Quit* anytime during the process to end it."
+      }
+    },
+    {
+      "name": "msg_reply_ask_number_type",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "sp_validation_number_type",
+          "event": "incomingMessage"
+        },
+        {
+          "next": "msg_noreply",
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 280,
+          "y": 1840
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "How do you want us to map your phone number - {{trigger.message.From| replace:'whatsapp:',''}}?\n\nReply with *Work* or *Personal*",
+        "timeout": "300"
+      }
+    },
+    {
+      "name": "sp_validation_number_type",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_validation_NT_Failed",
+          "event": "noMatch"
+        },
+        {
+          "next": "var_NT_WorkNumber",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1",
+              "arguments": [
+                "{{widgets.msg_reply_ask_number_type.inbound.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "1,Work"
+            }
+          ]
+        },
+        {
+          "next": "var_NT_Personal",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 2",
+              "arguments": [
+                "{{widgets.msg_reply_ask_number_type.inbound.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "2,Personal"
+            }
+          ]
+        },
+        {
+          "next": "msg_quit",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to Quit",
+              "arguments": [
+                "{{widgets.msg_reply_ask_number_type.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "Quit"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.msg_reply_ask_number_type.inbound.Body}}",
+        "offset": {
+          "x": 230,
+          "y": 2110
+        }
+      }
+    },
+    {
+      "name": "msg_validation_NT_Failed",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_number_type",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -150,
+          "y": 2120
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Entered input is not acceptable, please reply with eith *1* or *2*.\n\nReply with *Quit* anytime during the process to end it."
+      }
+    },
+    {
+      "name": "var_NT_Personal",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "msg_NT_preview",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "PersonalMobile",
+            "key": "PN1_NumberType"
+          },
+          {
+            "value": "{{contact.channel.address}}",
+            "key": "PN1_PhoneNumber"
+          }
+        ],
+        "offset": {
+          "x": 220,
+          "y": 2410
+        }
+      }
+    },
+    {
+      "name": "msg_reply_ask_SMS",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "sp_validation_other_channels",
+          "event": "incomingMessage"
+        },
+        {
+          "next": "msg_noreply",
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 100,
+          "y": 3240
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Would you like to receive alerts to your phone number - {{flow.variables.PN1_PhoneNumber}} via *SMS*?\n\nReply with YES or NO",
+        "timeout": "300"
+      }
+    },
+    {
+      "name": "msg_NT_preview",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "sp_check_flow_jump4",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 340,
+          "y": 2740
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "We have mapped your Phone Number  *{{flow.variables.PN1_PhoneNumber}}* as *{{flow.variables.PN1_NumberType}}*"
+      }
+    },
+    {
+      "name": "sp_validation_other_channels",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_validation_sms_channels_Failed",
+          "event": "noMatch"
+        },
+        {
+          "next": "var_PN1_IsSMS_YES",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1 or YES",
+              "arguments": [
+                "{{widgets.msg_reply_ask_SMS.inbound.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "1, Yes"
+            }
+          ]
+        },
+        {
+          "next": "var_PN1_IsSMS_NO",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value matches_any_of 2 or No",
+              "arguments": [
+                "{{widgets.msg_reply_ask_SMS.inbound.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "2, No"
+            }
+          ]
+        },
+        {
+          "next": "msg_quit",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to Quit",
+              "arguments": [
+                "{{widgets.msg_reply_ask_SMS.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "Quit"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.msg_reply_ask_SMS.inbound.Body}}",
+        "offset": {
+          "x": 10,
+          "y": 3480
+        }
+      }
+    },
+    {
+      "name": "msg_validation_sms_channels_Failed",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_SMS",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -450,
+          "y": 3500
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Entered input is not acceptable.\n \nReply with a corresponding number.\n\nReply with *Quit* anytime during the process to end it."
+      }
+    },
+    {
+      "name": "var_PN1_IsSMS_YES",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_Voice",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "YES",
+            "key": "PN1_IsSMS"
+          }
+        ],
+        "offset": {
+          "x": -40,
+          "y": 3760
+        }
+      }
+    },
+    {
+      "name": "var_PN1_IsSMS_NO",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_Voice",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "NO",
+            "key": "PN1_IsSMS"
+          }
+        ],
+        "offset": {
+          "x": 290,
+          "y": 3760
+        }
+      }
+    },
+    {
+      "name": "msg_reply_ask_Voice",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "sp_validation_voice_channel",
+          "event": "incomingMessage"
+        },
+        {
+          "next": "msg_noreply",
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 30,
+          "y": 4060
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Would you like to receive alerts to your phone number - {{flow.variables.PN1_PhoneNumber}} via *Voice*?\n\nReply with YES or NO",
+        "timeout": "300"
+      }
+    },
+    {
+      "name": "sp_validation_voice_channel",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_validation_Voice_channels_Failed",
+          "event": "noMatch"
+        },
+        {
+          "next": "var_PN1_IsVoice_YES",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1 or YES",
+              "arguments": [
+                "{{widgets.msg_reply_ask_Voice.inbound.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "1, Yes"
+            }
+          ]
+        },
+        {
+          "next": "var_PN1_IsVoice_NO",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value matches_any_of 2 or No",
+              "arguments": [
+                "{{widgets.msg_reply_ask_Voice.inbound.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "2, No"
+            }
+          ]
+        },
+        {
+          "next": "msg_quit",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to Quit",
+              "arguments": [
+                "{{widgets.msg_reply_ask_Voice.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "Quit"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.msg_reply_ask_Voice.inbound.Body}}",
+        "offset": {
+          "x": 110,
+          "y": 4290
+        }
+      }
+    },
+    {
+      "name": "msg_validation_Voice_channels_Failed",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_Voice",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -280,
+          "y": 4290
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Entered input is not acceptable.\n \nReply with a corresponding number.\n\nReply with *Quit* anytime during the process to end it."
+      }
+    },
+    {
+      "name": "var_PN1_IsVoice_YES",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_WhatsApp",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "YES",
+            "key": "PN1_IsVoice"
+          }
+        ],
+        "offset": {
+          "x": -150,
+          "y": 4610
+        }
+      }
+    },
+    {
+      "name": "var_PN1_IsVoice_NO",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_WhatsApp",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "NO",
+            "key": "PN1_IsVoice"
+          }
+        ],
+        "offset": {
+          "x": 200,
+          "y": 4610
+        }
+      }
+    },
+    {
+      "name": "msg_reply_ask_WhatsApp",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "sp_validation_whatsapp_channel",
+          "event": "incomingMessage"
+        },
+        {
+          "next": "msg_noreply",
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -20,
+          "y": 4870
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Would you like to receive alerts to your phone number - {{flow.variables.PN1_PhoneNumber}} via *WhatsApp*?\n\nReply with YES or NO",
+        "timeout": "300"
+      }
+    },
+    {
+      "name": "sp_validation_whatsapp_channel",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_validation_Whatsapp_channels_Failed",
+          "event": "noMatch"
+        },
+        {
+          "next": "var_PN1_IsWhatsApp_YES",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 1 or YES",
+              "arguments": [
+                "{{widgets.msg_reply_ask_WhatsApp.inbound.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "1, Yes"
+            }
+          ]
+        },
+        {
+          "next": "var_PN1_IsWhatsApp_NO",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value matches_any_of 2 or No",
+              "arguments": [
+                "{{widgets.msg_reply_ask_WhatsApp.inbound.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "2, No"
+            }
+          ]
+        },
+        {
+          "next": "msg_quit",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to Quit",
+              "arguments": [
+                "{{widgets.msg_reply_ask_WhatsApp.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "Quit"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.msg_reply_ask_WhatsApp.inbound.Body}}",
+        "offset": {
+          "x": -230,
+          "y": 5180
+        }
+      }
+    },
+    {
+      "name": "msg_validation_Whatsapp_channels_Failed",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_WhatsApp",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -580,
+          "y": 5180
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Entered input is not acceptable.\n \nReply with a corresponding number.\n\nReply with *Quit* anytime during the process to end it."
+      }
+    },
+    {
+      "name": "var_PN1_IsWhatsApp_YES",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "msg_send_ask_shift",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "YES",
+            "key": "PN1_IsWhatsApp"
+          }
+        ],
+        "offset": {
+          "x": -200,
+          "y": 5430
+        }
+      }
+    },
+    {
+      "name": "var_PN1_IsWhatsApp_NO",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "msg_send_ask_shift",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "NO",
+            "key": "PN1_IsWhatsApp"
+          }
+        ],
+        "offset": {
+          "x": 150,
+          "y": 5430
+        }
+      }
+    },
+    {
+      "name": "sp_final_confirmation_check",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_validation_final_conf_Failed",
+          "event": "noMatch"
+        },
+        {
+          "next": "func_token",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to Confirm",
+              "arguments": [
+                "{{widgets.msg_reply_final_confirmation.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "Confirm"
+            }
+          ]
+        },
+        {
+          "next": "var_modify_PT",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to PT",
+              "arguments": [
+                "{{widgets.msg_reply_final_confirmation.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "next": "var_modify_SMS",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to SMS",
+              "arguments": [
+                "{{widgets.msg_reply_final_confirmation.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "next": "var_modify_Voice",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to Voice",
+              "arguments": [
+                "{{widgets.msg_reply_final_confirmation.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "3"
+            }
+          ]
+        },
+        {
+          "next": "var_modify_WhatsApp",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to WhatsApp",
+              "arguments": [
+                "{{widgets.msg_reply_final_confirmation.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "4"
+            }
+          ]
+        },
+        {
+          "next": "msg_quit",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to Quit",
+              "arguments": [
+                "{{widgets.msg_reply_final_confirmation.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "Quit"
+            }
+          ]
+        },
+        {
+          "next": "var_modify_Shift",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to shift",
+              "arguments": [
+                "{{widgets.msg_reply_final_confirmation.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "5"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.msg_reply_final_confirmation.inbound.Body}}",
+        "offset": {
+          "x": -170,
+          "y": 7130
+        }
+      }
+    },
+    {
+      "name": "msg_reply_final_confirmation",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "sp_final_confirmation_check",
+          "event": "incomingMessage"
+        },
+        {
+          "next": "msg_noreply",
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -30,
+          "y": 6950
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Hello *{{flow.variables.FirstName}}*,\nPlease review the below details for {{flow.variables.PN1_PhoneNumber| replace:'whatsapp:',''}} and Confirm to complete the subscription process.\n\n1. Phone Type: *{{flow.variables.PN1_NumberType}}*\n2. SMS Enabled: *{{flow.variables.PN1_IsSMS}}*\n3. Voice Enabled: *{{flow.variables.PN1_IsVoice}}*\n4. WhatsApp Enabled: *{{flow.variables.PN1_IsWhatsApp}}*\n5. Shift ID: {{flow.variables.ShiftID}}\n\n*Terms of Use*\nhttps://westpharmaceutical.sharepoint.com/SitePages/Legal%20Notice.aspx\n\nIf you want to change any of the above details, Reply with the corresponding number.\nEx: to change *Phone Type*, reply with *1*\n\nReply with *Confirm* to complete the subscription process & by Confirming you accept the *Terms of Use* of West Alert System.",
+        "timeout": "300"
+      }
+    },
+    {
+      "name": "msg_validation_final_conf_Failed",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "msg_reply_final_confirmation",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -470,
+          "y": 7070
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Entered input is not acceptable.\n  \nReply with either *Confirm* to Save the details or with a number to modify specific detail.\n\nReply with *Quit* anytime during the process to end it."
+      }
+    },
+    {
+      "name": "msg_details_saved",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "msg_reply_feedback",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -730,
+          "y": 8250
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Hello *{{flow.variables.FirstName}}*, Your subscription to West Alert System(WAS) for your *{{flow.variables.PN1_NumberType}}* - *{{flow.variables.PN1_PhoneNumber| replace:'whatsapp:',''}}* is successful.\n\nTo subscribe from your personal email or to modify other contact details and communication preferences, visit https://was.westpharma.com"
+      }
+    },
+    {
+      "name": "var_modify_PT",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_number_type",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "YES",
+            "key": "ModifyPT"
+          }
+        ],
+        "offset": {
+          "x": 110,
+          "y": 7490
+        }
+      }
+    },
+    {
+      "name": "var_modify_SMS",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "sp_validate_if_workmobile_sms",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "YES",
+            "key": "ModifyIsSMS"
+          }
+        ],
+        "offset": {
+          "x": 500,
+          "y": 7500
+        }
+      }
+    },
+    {
+      "name": "var_modify_Voice",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "sp_validate_if_workmobile_voice",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "YES",
+            "key": "ModifyIsVoice"
+          }
+        ],
+        "offset": {
+          "x": 840,
+          "y": 7510
+        }
+      }
+    },
+    {
+      "name": "var_modify_WhatsApp",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "sp_validate_if_workmobile_whatsapp",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "YES",
+            "key": "ModifyIsWhatsApp"
+          }
+        ],
+        "offset": {
+          "x": 1170,
+          "y": 7510
+        }
+      }
+    },
+    {
+      "name": "sp_check_flow_jump4",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "sp_validate_if_workmobile",
+          "event": "noMatch"
+        },
+        {
+          "next": "reset_modify_PT",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to YES",
+              "arguments": [
+                "{{flow.variables.ModifyPT}}"
+              ],
+              "type": "equal_to",
+              "value": "YES"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{flow.variables.ModifyPT}}",
+        "offset": {
+          "x": 710,
+          "y": 2750
+        }
+      }
+    },
+    {
+      "name": "reset_modify_PT",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "msg_reply_final_confirmation",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "NO",
+            "key": "ModifyPT"
+          }
+        ],
+        "offset": {
+          "x": 1100,
+          "y": 2750
+        }
+      }
+    },
+    {
+      "name": "var_question",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "GenerateQnAAnswer",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{trigger.message.Body}}",
+            "key": "question"
+          }
+        ],
+        "offset": {
+          "x": -1130,
+          "y": -10
+        }
+      }
+    },
+    {
+      "name": "GenerateQnAAnswer",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "var_QnAAnswer",
+          "event": "success"
+        },
+        {
+          "next": "msg_send_fail",
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -1130,
+          "y": 200
+        },
+        "parameters": [
+          {
+            "value": "{{widgets.var_question.question}}",
+            "key": "question"
+          }
+        ],
+        "url": "https://thistle-platypus-3016.twil.io/generateqnaanswer"
+      }
+    },
+    {
+      "name": "var_QnAAnswer",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "msg_send_qnaAnswer",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.GenerateQnAAnswer.parsed.answers[0].answer}}",
+            "key": "answer"
+          }
+        ],
+        "offset": {
+          "x": -1390,
+          "y": 420
+        }
+      }
+    },
+    {
+      "name": "msg_send_qnaAnswer",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -1390,
+          "y": 630
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "{{flow.variables.answer}}"
+      }
+    },
+    {
+      "name": "msg_send_fail",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -1030,
+          "y": 420
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Something went wrong!. Please try after sometime."
+      }
+    },
+    {
+      "name": "send_message_wait",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 1140,
+          "y": -180
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "We will wait to hear back from you!"
+      }
+    },
+    {
+      "name": "msg_send_ask_shift",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "sp_validation_shifts",
+          "event": "incomingMessage"
+        },
+        {
+          "next": "msg_noreply",
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -40,
+          "y": 5880
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Please select your shift by replying to this message with corresponding number:\n\n*1* Office Support\n*2* 1st - 8 hr. shift\n*3* 2nd - 8 hr. shift\n*4* 3rd - 8 hr. shift\n*5* Team 1/A - 12 hr. shift\n*6* Team 2/B - 12 hr. shift\n*7* Team 3/C - 12 hr. shift\n*8* Team 4/D - 12 hr. shift",
+        "timeout": "300"
+      }
+    },
+    {
+      "name": "sp_validation_shifts",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_validation_shifts_Failed",
+          "event": "noMatch"
+        },
+        {
+          "next": "var_shift",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value matches_any_of shifts",
+              "arguments": [
+                "{{widgets.msg_send_ask_shift.inbound.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "1,2,3,4,5,6,7,8"
+            }
+          ]
+        },
+        {
+          "next": "msg_quit",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to Quit",
+              "arguments": [
+                "{{widgets.msg_send_ask_shift.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "Quit"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.msg_send_ask_shift.inbound.Body}}",
+        "offset": {
+          "x": -50,
+          "y": 6450
+        }
+      }
+    },
+    {
+      "name": "msg_validation_shifts_Failed",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "msg_send_ask_shift",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -390,
+          "y": 6450
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Entered input is not acceptable.\n \nReply with a corresponding number for your shift.\n\nReply with *Quit* anytime during the process to end it."
+      }
+    },
+    {
+      "name": "var_shift",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "sp_check_flow_jump6",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.msg_send_ask_shift.inbound.Body}}",
+            "key": "ShiftID"
+          }
+        ],
+        "offset": {
+          "x": 70,
+          "y": 6650
+        }
+      }
+    },
+    {
+      "name": "var_modify_Shift",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "msg_send_ask_shift",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "YES",
+            "key": "ModifyShiftID"
+          }
+        ],
+        "offset": {
+          "x": 1510,
+          "y": 7510
+        }
+      }
+    },
+    {
+      "name": "sp_check_flow_jump6",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_reply_final_confirmation",
+          "event": "noMatch"
+        },
+        {
+          "next": "reset_modify_ShiftID",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to YES",
+              "arguments": [
+                "{{flow.variables.ModifyShiftID}}"
+              ],
+              "type": "equal_to",
+              "value": "YES"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{flow.variables.ModifyShiftID}}",
+        "offset": {
+          "x": 420,
+          "y": 6650
+        }
+      }
+    },
+    {
+      "name": "reset_modify_ShiftID",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "msg_reply_final_confirmation",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "NO",
+            "key": "ModifyShiftID"
+          }
+        ],
+        "offset": {
+          "x": 830,
+          "y": 6650
+        }
+      }
+    },
+    {
+      "name": "func_subscription",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "sp_validation_response",
+          "event": "success"
+        },
+        {
+          "next": "msg_details_failed",
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -510,
+          "y": 7800
+        },
+        "parameters": [
+          {
+            "value": "{{flow.variables.FirstName}}",
+            "key": "FirstName"
+          },
+          {
+            "value": "{{flow.variables.LastName}}",
+            "key": "LastName"
+          },
+          {
+            "value": "{{flow.variables.PN1_NumberType}}",
+            "key": "PhoneType"
+          },
+          {
+            "value": "{{flow.variables.PN1_PhoneNumber}}",
+            "key": "PhoneNumber"
+          },
+          {
+            "value": "{{flow.variables.PN1_IsSMS}}",
+            "key": "IsSMS"
+          },
+          {
+            "value": "{{flow.variables.PN1_IsVoice}}",
+            "key": "IsVoice"
+          },
+          {
+            "value": "{{flow.variables.PN1_IsWhatsApp}}",
+            "key": "IsWhatsApp"
+          },
+          {
+            "value": "{{flow.variables.ShiftID}}",
+            "key": "ShiftID"
+          },
+          {
+            "value": "{{flow.variables.UPN}}",
+            "key": "Upn"
+          },
+          {
+            "value": "{{widgets.var_token.token}}",
+            "key": "Token"
+          }
+        ],
+        "url": "https://thistle-platypus-3016.twil.io/createsubscription-dev"
+      }
+    },
+    {
+      "name": "msg_send_IM_thankyou",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -1060,
+          "y": 1000
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Thank you, we have received your message. We will review and take necessary action.\n\nIf it is an emergency, please reach out to your local security personel directly."
+      }
+    },
+    {
+      "name": "msg_details_failed",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_WE",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -190,
+          "y": 8040
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Hello *{{flow.variables.FirstName}}*, your WAS subscription is not successful. Please try again!"
+      }
+    },
+    {
+      "name": "func_token",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "var_token",
+          "event": "success"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -460,
+          "y": 7380
+        },
+        "parameters": [],
+        "url": "https://thistle-platypus-3016.twil.io/generatetoken-dev"
+      }
+    },
+    {
+      "name": "var_token",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "func_subscription",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.func_token.body}}",
+            "key": "token"
+          }
+        ],
+        "offset": {
+          "x": -680,
+          "y": 7580
+        }
+      }
+    },
+    {
+      "name": "sp_validation_response",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_details_updated",
+          "event": "noMatch"
+        },
+        {
+          "next": "msg_details_saved",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to Save Successful",
+              "arguments": [
+                "{{widgets.func_subscription.parsed.ResponseMessage}}"
+              ],
+              "type": "equal_to",
+              "value": "Save Successful"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.func_subscription.parsed.ResponseMessage}}",
+        "offset": {
+          "x": -920,
+          "y": 8010
+        }
+      }
+    },
+    {
+      "name": "msg_details_updated",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "msg_reply_feedback",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -1120,
+          "y": 8240
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Hello *{{flow.variables.FirstName}}*, We found an existing subscription for your profile and updated the preferences as per your inputs.\n\nTo subscribe from your personal email or to modify other contact details and communication preferences, visit https://was.westpharma.com"
+      }
+    },
+    {
+      "name": "var_allPreferencesEnabled",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "msg_send_ask_shift",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "YES",
+            "key": "PN1_IsSMS"
+          },
+          {
+            "value": "YES",
+            "key": "PN1_IsVoice"
+          },
+          {
+            "value": "YES",
+            "key": "PN1_IsWhatsApp"
+          }
+        ],
+        "offset": {
+          "x": 910,
+          "y": 3270
+        }
+      }
+    },
+    {
+      "name": "func_graph_token",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "var_graph_token",
+          "event": "success"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 40,
+          "y": 1300
+        },
+        "url": "https://thistle-platypus-3016.twil.io/generatetoken-dev"
+      }
+    },
+    {
+      "name": "var_graph_token",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "func_GetGraphUser",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.func_graph_token.body}}",
+            "key": "GraphToken"
+          }
+        ],
+        "offset": {
+          "x": 400,
+          "y": 1300
+        }
+      }
+    },
+    {
+      "name": "func_GetGraphUser",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "sp_validation_graphuser",
+          "event": "success"
+        },
+        {
+          "next": "msg_send_graphuser_error",
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 800,
+          "y": 1300
+        },
+        "parameters": [
+          {
+            "value": "{{flow.variables.GraphToken}}",
+            "key": "GraphToken"
+          },
+          {
+            "value": "{{flow.variables.WorkEmail}}",
+            "key": "WorkEmail"
+          },
+          {
+            "value": "{{flow.variables.EmployeeId}}",
+            "key": "EmployeeId"
+          },
+          {
+            "value": "{{flow.variables.UserId}}",
+            "key": "UserId"
+          }
+        ],
+        "url": "https://thistle-platypus-3016.twil.io/getgraphuser-dev"
+      }
+    },
+    {
+      "name": "var_graphuser_details",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "msg_sendreply_user_details_preview",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.func_GetGraphUser.parsed.FirstName}}",
+            "key": "FirstName"
+          },
+          {
+            "value": "{{widgets.func_GetGraphUser.parsed.LastName}}",
+            "key": "LastName"
+          },
+          {
+            "value": "{{widgets.func_GetGraphUser.parsed.UserPrincipalName}}",
+            "key": "UPN"
+          }
+        ],
+        "offset": {
+          "x": 1420,
+          "y": 1560
+        }
+      }
+    },
+    {
+      "name": "var_EmpId",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "func_graph_token",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.msg_reply_ask_WE.inbound.Body}}",
+            "key": "EmployeeId"
+          },
+          {
+            "value": "{{widgets.msg_reply_ask_WE.inbound.Body}}",
+            "key": "WorkEmail"
+          },
+          {
+            "value": "{{widgets.msg_reply_ask_WE.inbound.Body}}",
+            "key": "UserId"
+          }
+        ],
+        "offset": {
+          "x": 410,
+          "y": 1030
+        }
+      }
+    },
+    {
+      "name": "sp_validate_from_workmobile",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_number_type",
+          "event": "noMatch"
+        },
+        {
+          "next": "var_NT_WorkNumber",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If from number matcher work mobile",
+              "arguments": [
+                "{{contact.channel.address}}"
+              ],
+              "type": "matches_any_of",
+              "value": "{{flow.variables.WorkMobile}},{{flow.variables.WorkPhone}}"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{contact.channel.address}}",
+        "offset": {
+          "x": 480,
+          "y": 1570
+        }
+      }
+    },
+    {
+      "name": "var_NT_WorkNumber",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "msg_NT_preview",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "WorkMobile",
+            "key": "PN1_NumberType"
+          },
+          {
+            "value": "{{contact.channel.address}}",
+            "key": "PN1_PhoneNumber"
+          },
+          {
+            "value": "{{contact.channel.address}}",
+            "key": "WorkMobile"
+          }
+        ],
+        "offset": {
+          "x": 610,
+          "y": 2400
+        }
+      }
+    },
+    {
+      "name": "sp_validate_if_workmobile",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_SMS",
+          "event": "noMatch"
+        },
+        {
+          "next": "var_allPreferencesEnabled",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to WorkMobile",
+              "arguments": [
+                "{{flow.variables.PN1_NumberType}}"
+              ],
+              "type": "equal_to",
+              "value": "WorkMobile"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{flow.variables.PN1_NumberType}}",
+        "offset": {
+          "x": 480,
+          "y": 2990
+        }
+      }
+    },
+    {
+      "name": "msg_send_no_pref_change",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "msg_reply_final_confirmation",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 330,
+          "y": 8000
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Hello, You cannot modify preferences for Work Mobile."
+      }
+    },
+    {
+      "name": "sp_validate_if_workmobile_sms",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_SMS",
+          "event": "noMatch"
+        },
+        {
+          "next": "msg_send_no_pref_change",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to WorkMobile",
+              "arguments": [
+                "{{flow.variables.PN1_NumberType}}"
+              ],
+              "type": "equal_to",
+              "value": "WorkMobile"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{flow.variables.PN1_NumberType}}",
+        "offset": {
+          "x": 480,
+          "y": 7740
+        }
+      }
+    },
+    {
+      "name": "sp_validate_if_workmobile_voice",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_Voice",
+          "event": "noMatch"
+        },
+        {
+          "next": "msg_send_no_pref_change",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to WorkMobile",
+              "arguments": [
+                "{{flow.variables.PN1_NumberType}}"
+              ],
+              "type": "equal_to",
+              "value": "WorkMobile"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{flow.variables.PN1_NumberType}}",
+        "offset": {
+          "x": 910,
+          "y": 7740
+        }
+      }
+    },
+    {
+      "name": "sp_validate_if_workmobile_whatsapp",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_WhatsApp",
+          "event": "noMatch"
+        },
+        {
+          "next": "msg_send_no_pref_change",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to WorkMobile",
+              "arguments": [
+                "{{flow.variables.PN1_NumberType}}"
+              ],
+              "type": "equal_to",
+              "value": "WorkMobile"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{flow.variables.PN1_NumberType}}",
+        "offset": {
+          "x": 1330,
+          "y": 7750
+        }
+      }
+    },
+    {
+      "name": "msg_send_graphuser_error",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "msg_reply_ask_WE",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 1030,
+          "y": 1560
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "We could not find any employee records with provided details.\n\nLet us try again!\n\nReply with *Quit* anytime during the process to end it."
+      }
+    },
+    {
+      "name": "sp_validation_graphuser",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "var_graphuser_details",
+          "event": "noMatch"
+        },
+        {
+          "next": "msg_send_graphuser_error",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "func_GetGraphUser.parsed.FirstName",
+              "arguments": [
+                "{{widgets.func_GetGraphUser.parsed.FirstName}}"
+              ],
+              "type": "is_blank",
+              "value": "Is Blank"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.func_GetGraphUser.parsed.FirstName}}",
+        "offset": {
+          "x": 1230,
+          "y": 1290
+        }
+      }
+    },
+    {
+      "name": "msg_sendreply_user_details_preview",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "sp_validate_profile_confirmation",
+          "event": "incomingMessage"
+        },
+        {
+          "next": "msg_noreply",
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 1440,
+          "y": 1760
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "We have found this profile based on the input provided.\n\nFirst Name: {{flow.variables.FirstName}}\nLast Name: {{flow.variables.LastName}}\n\nReply with *Confirm* or *Retry*",
+        "timeout": "300"
+      }
+    },
+    {
+      "name": "sp_validate_profile_confirmation",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_validation_UserProfile_Failed",
+          "event": "noMatch"
+        },
+        {
+          "next": "sp_validate_from_workmobile",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to Confirm",
+              "arguments": [
+                "{{widgets.msg_sendreply_user_details_preview.inbound.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "1, Confirm"
+            }
+          ]
+        },
+        {
+          "next": "msg_reply_ask_WE",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to retry",
+              "arguments": [
+                "{{widgets.msg_sendreply_user_details_preview.inbound.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "2, Retry"
+            }
+          ]
+        },
+        {
+          "next": "msg_quit",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to Quit",
+              "arguments": [
+                "{{widgets.msg_sendreply_user_details_preview.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "Quit"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.msg_sendreply_user_details_preview.inbound.Body}}",
+        "offset": {
+          "x": 1010,
+          "y": 1810
+        }
+      }
+    },
+    {
+      "name": "msg_validation_UserProfile_Failed",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "msg_sendreply_user_details_preview",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 1360,
+          "y": 2000
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Entered input is not acceptable, please reply with eith *1* or *2*.\n\nReply with *Quit* anytime during the process to end it."
+      }
+    },
+    {
+      "name": "func_IM_token",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "func_incomingMessage",
+          "event": "success"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -600,
+          "y": 400
+        },
+        "parameters": [],
+        "url": "https://thistle-platypus-3016.twil.io/generatetoken-dev"
+      }
+    },
+    {
+      "name": "func_incomingMessage",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "msg_send_IM_thankyou",
+          "event": "success"
+        },
+        {
+          "next": "msg_send_IM_failed",
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -900,
+          "y": 720
+        },
+        "parameters": [
+          {
+            "value": "{{widgets.func_IM_token.body}}",
+            "key": "Token"
+          },
+          {
+            "value": "{{trigger.message.Body}}",
+            "key": "Message"
+          },
+          {
+            "value": "{{contact.channel.address}}",
+            "key": "FromPhone"
+          },
+          {
+            "value": "true",
+            "key": "IsText"
+          }
+        ],
+        "url": "https://thistle-platypus-3016.twil.io/incomingmessage-dev"
+      }
+    },
+    {
+      "name": "msg_send_IM_failed",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -710,
+          "y": 1000
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "We couldn't capture your message.\nPlease try again!"
+      }
+    },
+    {
+      "name": "func_forgetMe_token",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "func_forgetMe",
+          "event": "success"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 2460,
+          "y": 460
+        },
+        "parameters": [],
+        "url": "https://thistle-platypus-3016.twil.io/generatetoken-dev"
+      }
+    },
+    {
+      "name": "func_forgetMe",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "sp_validation_forgetMeResponse",
+          "event": "success"
+        },
+        {
+          "next": "msg_send_forgetme_failed",
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 2440,
+          "y": 720
+        },
+        "parameters": [
+          {
+            "value": "{{widgets.func_forgetMe_token.body}}",
+            "key": "Token"
+          },
+          {
+            "value": "{{contact.channel.address | replace:'whatsapp:',''}}",
+            "key": "MobileNumber"
+          }
+        ],
+        "url": "https://thistle-platypus-3016.twil.io/forgetme-dev"
+      }
+    },
+    {
+      "name": "sp_validation_forgetMeResponse",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_norecords",
+          "event": "noMatch"
+        },
+        {
+          "next": "sp_validation_IsPersonalMobile",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "func_forgetMe.parsed.SubscriberId",
+              "arguments": [
+                "{{widgets.func_forgetMe.parsed.SubscriberId}}"
+              ],
+              "type": "is_not_blank",
+              "value": "Is Not Blank"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.func_forgetMe.parsed.SubscriberId}}",
+        "offset": {
+          "x": 2420,
+          "y": 980
+        }
+      }
+    },
+    {
+      "name": "sp_validation_IsPersonalMobile",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_noworkmobile_forget",
+          "event": "noMatch"
+        },
+        {
+          "next": "msg_forgetMeSuccess",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to true",
+              "arguments": [
+                "{{widgets.func_forgetMe.parsed.IsPersonalMobile}}"
+              ],
+              "type": "equal_to",
+              "value": "true"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.func_forgetMe.parsed.IsPersonalMobile}}",
+        "offset": {
+          "x": 2680,
+          "y": 1220
+        }
+      }
+    },
+    {
+      "name": "msg_norecords",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 2230,
+          "y": 1240
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "We could not find any subscription for your mobile number  *{{contact.channel.address | replace:'whatsapp:',''}}* .\n\nYou can send *Join WAS* to subscribe to *West Alert System*."
+      }
+    },
+    {
+      "name": "msg_forgetMeSuccess",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 2980,
+          "y": 1500
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Hello *{{widgets.func_forgetMe.parsed.SubscriberFirstName}}*,\n\nYour number *{{contact.channel.address | replace:'whatsapp:',''}}* is successfully removed from your *West Alert System* subscription.\n\nYou can send *Join WAS* to update your *West Alert System* subscription anytime."
+      }
+    },
+    {
+      "name": "msg_noworkmobile_forget",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 2560,
+          "y": 1510
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Hello *{{widgets.func_forgetMe.parsed.SubscriberFirstName}}*,\n\nWe found that *{{contact.channel.address | replace:'whatsapp:',''}}* is a work number, and work numbers are *not* allowed to forget."
+      }
+    },
+    {
+      "name": "msg_reply_forgetme_confirmation",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "sp_validation_forgetConfirmation",
+          "event": "incomingMessage"
+        },
+        {
+          "next": "msg_noreply",
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 1990,
+          "y": -110
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Hello ,\nReply with *Confirm* to remove mobile number *{{contact.channel.address | replace:'whatsapp:',''}}* from your *West Alert System* subscription.",
+        "timeout": "300"
+      }
+    },
+    {
+      "name": "sp_validation_forgetConfirmation",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_validation_forget_conf_Failed",
+          "event": "noMatch"
+        },
+        {
+          "next": "msg_quit",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to Quit",
+              "arguments": [
+                "{{widgets.msg_reply_forgetme_confirmation.inbound.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "Quit, Cancel"
+            }
+          ]
+        },
+        {
+          "next": "func_forgetMe_token",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to Confirm",
+              "arguments": [
+                "{{widgets.msg_reply_forgetme_confirmation.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "Confirm"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.msg_reply_forgetme_confirmation.inbound.Body}}",
+        "offset": {
+          "x": 2280,
+          "y": 180
+        }
+      }
+    },
+    {
+      "name": "msg_validation_forget_conf_Failed",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 1960,
+          "y": 460
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Entered input is not acceptable.\n  \nReply with *Confirm* to remove *{{contact.channel.address | replace:'whatsapp:',''}}* from your subscription.\n\nReply with *Quit* anytime during the process to end it."
+      }
+    },
+    {
+      "name": "msg_send_forgetme_failed",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 2930,
+          "y": 950
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "We couldn't capture your message.\nPlease try again!"
+      }
+    },
+    {
+      "name": "msg_reply_feedback",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "var_feedback_response",
+          "event": "incomingMessage"
+        },
+        {
+          "next": "msg_noreply",
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -910,
+          "y": 8470
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Was this a simple and engaging subscription process?\n  \n 1. 😀 Very Satisfied\n 2. 🙂 Satisfied\n 3. 😕 Dissatisfied\n 4. 😦 Very Dissatisfied",
+        "timeout": "300"
+      }
+    },
+    {
+      "name": "var_feedback_response",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "func_feedback_token",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.msg_reply_feedback.inbound.Body}}",
+            "key": "feedbackValue"
+          }
+        ],
+        "offset": {
+          "x": -910,
+          "y": 8690
+        }
+      }
+    },
+    {
+      "name": "msg_feedback_confirmation",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -840,
+          "y": 9450
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Thank you for your invaluable feedback!"
+      }
+    },
+    {
+      "name": "func_feedback_token",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "func_feedback",
+          "event": "success"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -570,
+          "y": 8940
+        },
+        "parameters": [],
+        "url": "https://thistle-platypus-3016.twil.io/generatetoken-dev"
+      }
+    },
+    {
+      "name": "func_feedback",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "msg_feedback_confirmation",
+          "event": "success"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -550,
+          "y": 9180
+        },
+        "parameters": [
+          {
+            "value": "{{flow.variables.PN1_PhoneNumber}}",
+            "key": "PhoneNumber"
+          },
+          {
+            "value": "{{flow.variables.UPN}}",
+            "key": "Upn"
+          },
+          {
+            "value": "{{widgets.func_feedback_token.body}}",
+            "key": "Token"
+          },
+          {
+            "value": "{{widgets.var_feedback_response.feedbackValue}}",
+            "key": "Feedback"
+          }
+        ],
+        "url": "https://thistle-platypus-3016.twil.io/feedback-dev"
+      }
+    },
+    {
+      "name": "send_msg_default",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "validate_default_msg_response",
+          "event": "incomingMessage"
+        },
+        {
+          "next": "msg_noreply",
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -2120,
+          "y": 120
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Hello, How can we assist you today?\n\n*1.* Subscribe to West Alert System\n*2.* Unsubscribe from West Alert System\n*3.* Remove your mobile number from WAS\n*4.* Alert Admin about an emergency\n*5.* Respond to your recent notification\n\nReply with a *number* corresponding to your choice.",
+        "timeout": "300"
+      }
+    },
+    {
+      "name": "validate_default_msg_response",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "msg_default_invalidInput",
+          "event": "noMatch"
+        },
+        {
+          "next": "msg_subscribe_help",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If Subscribe",
+              "arguments": [
+                "{{widgets.send_msg_default.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "next": "msg_unsubscribe_help",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If Unsubscribe",
+              "arguments": [
+                "{{widgets.send_msg_default.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "next": "msg_forgetme_help",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If Forgetme",
+              "arguments": [
+                "{{widgets.send_msg_default.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "3"
+            }
+          ]
+        },
+        {
+          "next": "msg_directmsg_help",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If direct message",
+              "arguments": [
+                "{{widgets.send_msg_default.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "4"
+            }
+          ]
+        },
+        {
+          "next": "msg_respondnotif_help",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If respond",
+              "arguments": [
+                "{{widgets.send_msg_default.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "5"
+            }
+          ]
+        },
+        {
+          "next": "msg_quit",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value matches_any_of quit,cancel",
+              "arguments": [
+                "{{widgets.send_msg_default.inbound.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "quit,cancel"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.send_msg_default.inbound.Body}}",
+        "offset": {
+          "x": -2130,
+          "y": 340
+        }
+      }
+    },
+    {
+      "name": "msg_subscribe_help",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -2160,
+          "y": 570
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "To *Subscribe* to West Alert System (WAS), send a message in the below format. It will initiate the subscription process and will prompt you with few questions to answer.\n\n*Join West-Alert-System* or \n*Join WAS*"
+      }
+    },
+    {
+      "name": "msg_unsubscribe_help",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -1820,
+          "y": 570
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "To stop receiving messages or *Unsubscribe* on this number, send a message as *STOP*. \nTo start receiving messages again, you can send *START* anytime!\n\nYou can manage all your contact information and change communication preferences at https://was.westpharma.com/"
+      }
+    },
+    {
+      "name": "msg_forgetme_help",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -2160,
+          "y": 800
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "To remove this number altogether from West Alert System (WAS), send a message as *forget me* and then provide your confirmation to remove it."
+      }
+    },
+    {
+      "name": "msg_directmsg_help",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -1810,
+          "y": 800
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "To *Alert* West Alert System Administrators about an incident or emergency at your workplace, Send a message in the below format. It will be available for admins to see and take necessary action. \n\n*IM-<Your Message>*\n\nYou can also call one of the below two numbers and record your message as VoiceMail. \n\nFor *United States*\n +1 614 602 5789\n +1 855 957 5789 (Toll-Free)"
+      }
+    },
+    {
+      "name": "msg_respondnotif_help",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -2150,
+          "y": 1020
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "To *Respond* to the recent Notification received on this number, send a message in the below format. \n\n*NR-<Your Message>*"
+      }
+    },
+    {
+      "name": "msg_default_invalidInput",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "send_msg_default",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -2490,
+          "y": 530
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Invalid input for the available choices. Please choose the number corresponding to your choice. \nFor example, reply with *5* for *responding to recent notification*"
+      }
+    },
+    {
+      "name": "var_UserId",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "func_graph_token",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.msg_reply_ask_WE.inbound.Body}}",
+            "key": "UserId"
+          },
+          {
+            "value": "{{widgets.msg_reply_ask_WE.inbound.Body}}",
+            "key": "WorkEmail"
+          },
+          {
+            "value": "{{widgets.msg_reply_ask_WE.inbound.Body}}",
+            "key": "EmployeeId"
+          }
+        ],
+        "offset": {
+          "x": -310,
+          "y": 1040
+        }
+      }
+    }
+  ],
+  "initial_state": "Trigger",
+  "flags": {
+    "allow_concurrent_calls": true
+  }
+}

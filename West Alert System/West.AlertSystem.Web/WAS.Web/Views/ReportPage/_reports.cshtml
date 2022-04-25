@@ -1,0 +1,309 @@
+﻿@model WAS.Application.Features.Report.GetReports.Response;
+@using Syncfusion.EJ2;
+@{
+    var palettes = new String[] { "#005696", "#6658a8", "#a954a6", "#df4f91", "#ff5b6f", "#ff7c44", "#ffa600" };
+    var palettes2 = new String[] { "#a954a6", "#86C14D", "#CCCF5F", "#FFDE82" };
+    var palettes3 = new String[] { "#41D083", "#D84A49" };
+    var palettes4 = new String[] { "#005595", "#007EB4", "#00A5B6", "#00C7A0", "#8BE481", "#F9F871" };
+    var palettes5 = new string[] { "#00C7A0" };
+    var palettes6 = new string[] { "#2f4b7c", "#665191", "#f95d6a", "#ff7c43", "#ffa600" };
+    var palettes7 = new string[] { "#2DB268", "#9EB0A2" };
+}
+
+<div id="Tooltip" style="display:none;background:#000;">
+    <div id='displayGroupSize'>
+        <div id="value" style="color:#fff;background:#181818a8;padding:10px;">
+            <span style="display:block;font-weight:700; padding-bottom:5px;white-space:nowrap;border-bottom:1px solid #fff;margin-bottom:5px;">Employees by Groups</span>
+            <span id="label" style="white-space:nowrap">${GroupName} :<strong style="margin-left:5px">${Count}</strong></span>
+        </div>
+    </div>
+</div>
+<div class="WasReportsPage container p-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Employee Subscriptions/Deactivations Trend</h3>
+                        <p class="m-0 text-secondary">Trend of Employees subscribing to the system over the period of time as well as trend to highlight when employee accounts getting deactivated in the system.</p>
+                    </div>
+                    @if (Model.SubscriberAndUnsubscriberCountPerDays.Any())
+                    {
+                        <ejs-chart id="container15" width="100%" height="300px" palettes="palettes3">
+                            <e-chart-tooltipsettings enable="true">
+                            </e-chart-tooltipsettings>
+                            <e-chart-primaryxaxis valueType="DateTime"
+                                                  labelFormat="dd-MMMM-yyyy"
+                                                  intervalType="Days"
+                                                  edgeLabelPlacement="Shift">
+                                <e-majorgridlines width="0"></e-majorgridlines>
+                            </e-chart-primaryxaxis>
+                            <e-series-collection>
+                                <e-series dataSource="Model.SubscriberAndUnsubscriberCountPerDays" name="Subscription" xName="Date" yName="SubscriberCountPerDay" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Line">
+                                    <e-series-marker visible="true" height="10" width="10"></e-series-marker>
+                                </e-series>
+                                <e-series dataSource="Model.SubscriberAndUnsubscriberCountPerDays" name="Deactivation" xName="Date" yName="UnsubscriberCountPerDay" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Line">
+                                    <e-series-marker visible="true" height="10" width="10"></e-series-marker>
+                                </e-series>
+                            </e-series-collection>
+                        </ejs-chart>
+                    }
+                    else
+                    {
+                        await Html.RenderPartialAsync("~/Views/ReportPage/_NoReport.cshtml");
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header withTwoHeading">
+                        <div class="col-md-3 GlobalSubscriptionDiv">
+                            <div class="GlobalSubscriptionHeader">
+                                Global :
+                            </div>
+                            <span>
+                                @Model.SubscriptionLocationPercentage.GlobalSubscription /
+                                @Model.SubscriptionLocationPercentage.GlobalEmployeeCount
+                                <strong>@Model.SubscriptionLocationPercentage.GlobalSubscriptionPercentage %</strong>
+                            </span>
+                        </div>
+                        <div class="col-md-9">
+                            <h3>Subscription Percentage by Location</h3>
+                            <p class="m-0 text-secondary">% of employees subscribed by each location w.r.t total active employees of that location</p>
+                        </div>
+                    </div>
+                    @if (Model.SubscriptionLocationPercentage != null)
+                    {
+                        <ejs-chart id="splineContainer" width="100%" height="300px" palettes="palettes7">
+                            <e-chart-titlestyle fontFamily="inherit" fontStyle="bold" fontWeight="regular" size="17px"
+                                                color="inherit"></e-chart-titlestyle>
+                            <e-chart-primaryxaxis valueType="Category">
+                            </e-chart-primaryxaxis>
+                            <e-series-collection>
+                                <e-series dataSource="@Model.SubscriptionLocationPercentage.SubscriptionPercentages" xName="LocationName" yName="SubscribedCount" name="Subscribed" type="@Syncfusion.EJ2.Charts.ChartSeriesType.StackingColumn100"></e-series>
+                                <e-series dataSource="@Model.SubscriptionLocationPercentage.RemainingSubscriptionPercentages" xName="LocationName" yName="RemainingSubscribedCount" name="Remaining" type="@Syncfusion.EJ2.Charts.ChartSeriesType.StackingColumn100"></e-series>
+                            </e-series-collection>
+                            <e-chart-tooltipsettings enable="true" format="${point.x} : <b>${point.y} (${point.percentage}%)</b>"></e-chart-tooltipsettings>
+                        </ejs-chart>
+                    }
+                    else
+                    {
+                        await Html.RenderPartialAsync("~/Views/ReportPage/_NoReport.cshtml");
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Subscriptions by various Channels</h3>
+                        <p class="m-0 text-secondary">This shows how many employees are subscribing to the system using each of these channels available for them.</p>
+                    </div>
+                    @if (Model.SubscriptionModeCount.Any())
+                    {
+                        <ejs-accumulationchart id="chart-container" width="100%" height="300px" theme="Bootstrap">
+                            <e-accumulationchart-titlestyle fontFamily="inherit" fontStyle="bold" fontWeight="regular" size="17px"
+                                                            color="inherit"></e-accumulationchart-titlestyle>
+                            <e-accumulation-series-collection>
+                                <e-accumulation-series dataSource="Model.SubscriptionModeCount" xName="ModeOfSubscription" palettes="palettes" yName="Count" name="Subscriptions by various Channels" startAngle="270" endAngle="90" radius="90%" innerRadius="40%" explode="true" height="150">
+                                    <e-accumulationseries-datalabel visible="true"></e-accumulationseries-datalabel>
+                                </e-accumulation-series>
+                            </e-accumulation-series-collection>
+                            <e-accumulationchart-legendsettings visible="true"></e-accumulationchart-legendsettings>
+                            <e-accumulationchart-tooltipsettings enable="true"></e-accumulationchart-tooltipsettings>
+                        </ejs-accumulationchart>
+                    }
+                    else
+                    {
+                        await Html.RenderPartialAsync("~/Views/ReportPage/_NoReport.cshtml");
+                    }
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Employees Subscribed by Business Location</h3>
+                        <p class="m-0 text-secondary">Total no. of employees subscribed to the system from each of the Business Locations.</p>
+                    </div>
+                    @if (Model.SubscriptionLocationCounts.Any())
+                    {
+                        <ejs-accumulationchart id="chart-container12" width="100%" height="300px">
+                            <e-accumulationchart-titlestyle fontFamily="inherit" fontStyle="bold" fontWeight="regular" size="17px"
+                                                            color="inherit"></e-accumulationchart-titlestyle>
+                            <e-accumulation-series-collection>
+                                <e-accumulation-series dataSource="Model.SubscriptionLocationCounts" xName="LocationName" yName="LocationCount" name="Employees Subscribed by Business Location" radius="90%" innerRadius="40%" explode="true" height="150" palettes="palettes">
+                                    <e-accumulationseries-datalabel visible="true"></e-accumulationseries-datalabel>
+                                </e-accumulation-series>
+                            </e-accumulation-series-collection>
+                            <e-accumulationchart-legendsettings visible="true"></e-accumulationchart-legendsettings>
+                            <e-accumulationchart-tooltipsettings enable="true"></e-accumulationchart-tooltipsettings>
+
+                        </ejs-accumulationchart>
+                    }
+                    else
+                    {
+                        await Html.RenderPartialAsync("~/Views/ReportPage/_NoReport.cshtml");
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Subscriptions by Month</h3>
+                        <p class="m-0 text-secondary">Total no. of subscribed employees by each month</p>
+                    </div>
+                    @if (Model.SubscriptionPerMonths.Any())
+                    {
+                        <ejs-chart id="container1" width="100%" height="300px" palettes="palettes4">
+                            <e-chart-titlestyle fontFamily="inherit" fontStyle="bold" fontWeight="regular" size="17px"
+                                                color="inherit"></e-chart-titlestyle>
+                            <e-chart-primaryxaxis valueType="Category"></e-chart-primaryxaxis>
+                            <e-series-collection>
+                                <e-series dataSource="Model.SubscriptionPerMonths" xName="MonthName" summaryFillColor="color" yName="SubscriptionCount" name="Subscriptions by Month" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Column">
+                                    <e-series-marker>
+                                        <e-series-datalabel visible="true" position="Top">
+                                            <e-font color="#ffffff" fontWeight="600"></e-font>
+                                        </e-series-datalabel>
+                                    </e-series-marker>
+                                </e-series>
+                            </e-series-collection>
+                            <e-chart-legendsettings visible="true"></e-chart-legendsettings>
+                            <e-chart-tooltipsettings enable="true"></e-chart-tooltipsettings>
+                        </ejs-chart>
+                    }
+                    else
+                    {
+                        await Html.RenderPartialAsync("~/Views/ReportPage/_NoReport.cshtml");
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Notifications Sent by Month</h3>
+                        <p class="m-0 text-secondary">Total no. of Notifications sent across channels in each of the months.</p>
+                    </div>
+                    @if (Model.NotificationPerMonths.Any())
+                    {
+                        <ejs-chart id="container2" theme="Bootstrap" width="100%" height="300px" palettes="palettes5">
+                            <e-chart-titlestyle fontFamily="inherit" fontStyle="bold" fontWeight="regular" size="17px"
+                                                color="inherit"></e-chart-titlestyle>
+                            <e-chart-primaryxaxis valueType="Category"></e-chart-primaryxaxis>
+                            <e-series-collection>
+                                <e-series dataSource="Model.NotificationPerMonths" xName="NotifiactionModeSum" PointColorMapping="color" yName="Count" name="Notifications Sent by Month" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Column">
+                                    <e-series-marker>
+                                        <e-series-datalabel visible="true" position="Top">
+                                            <e-font color="#ffffff" fontWeight="600"></e-font>
+                                        </e-series-datalabel>
+                                    </e-series-marker>
+                                </e-series>
+                            </e-series-collection>
+
+                            <e-chart-legendsettings visible="true"></e-chart-legendsettings>
+                            <e-chart-tooltipsettings enable="true"></e-chart-tooltipsettings>
+                        </ejs-chart>
+                    }
+                    else
+                    {
+                        await Html.RenderPartialAsync("~/Views/ReportPage/_NoReport.cshtml");
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Notifications Sent by Channels</h3>
+                        <p class="m-0 text-secondary">This shows how many notifications has been sent through each of the available channels.</p>
+                    </div>
+                    @if (Model.NotificationChannels.Any() && Model.NotificationChannels[0].Count != 0 || Model.NotificationChannels[1].Count != 0 && Model.NotificationChannels[2].Count != 0)
+                    {
+                        <ejs-accumulationchart id="chart-container7" width="100%" height="300px" theme="Bootstrap">
+                            <e-accumulationchart-titlestyle fontFamily="inherit" fontStyle="bold" fontWeight="regular" size="17px"
+                                                            color="inherit"></e-accumulationchart-titlestyle>
+                            <e-accumulation-series-collection>
+                                <e-accumulation-series dataSource="Model.NotificationChannels" xName="NotificationChannel" palettes="palettes" yName="Count" name="Notifications Sent by Channels" startAngle="270" endAngle="90" radius="90%" innerRadius="40%" explode="true" height="150">
+                                    <e-accumulationseries-datalabel visible="true">
+                                    </e-accumulationseries-datalabel>
+                                </e-accumulation-series>
+                            </e-accumulation-series-collection>
+                            <e-accumulationchart-legendsettings visible="true"></e-accumulationchart-legendsettings>
+                            <e-accumulationchart-tooltipsettings enable="true"></e-accumulationchart-tooltipsettings>
+                        </ejs-accumulationchart>
+                    }
+                    else
+                    {
+                        await Html.RenderPartialAsync("~/Views/ReportPage/_NoReport.cshtml");
+                    }
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Employees by Groups</h3>
+                        <p class="m-0 text-secondary">Groups are custom created by site administrators for targeted alerts. This chart shows the groups and their sizing by no. of employee’s part of it</p>
+                    </div>
+                    @if (Model.AllGroups.Any())
+                    {
+                        <ejs-treemap id="container4" dataSource="Model.AllGroups" weightValuePath="Count" width="100%" height="300px" palette="palettes6">
+                            <e-treemap-legendsettings visible="true"></e-treemap-legendsettings>
+                            <e-treemap-leafitemsettings labelPath="GroupName"></e-treemap-leafitemsettings>
+                            <e-treemap-tooltipsettings visible='true' template="#Tooltip"></e-treemap-tooltipsettings>
+                        </ejs-treemap>
+                    }
+                    else
+                    {
+                        await Html.RenderPartialAsync("~/Views/ReportPage/_NoReport.cshtml");
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Employee Feedback on Subscription Process</h3>
+                        <p class="m-0 text-secondary">Employee Feedback on Subscription Process across Channels like (Web, Text or WhatsApp) and it is being grouped by Very Satisfied, Satisfied, Dissatisfied and Very Dissatisfied.</p>
+                    </div>
+                    @if (Model.FeedbackChannels.Any())
+                    {
+                        <ejs-chart id="container9" width="100%" height="300px" palettes="palettes6" theme="Bootstrap">
+                            <e-chart-titlestyle fontFamily="inherit" fontStyle="bold" fontWeight="regular" size="17px"
+                                                color="inherit"></e-chart-titlestyle>
+                            <e-chart-primaryxaxis valueType="Category"></e-chart-primaryxaxis>
+                            <e-series-collection>
+                                @foreach (var item in Model.FeedbackChannels)
+                                {
+                                    <e-series dataSource="item.FeedbackRatings" xName="Rating" summaryFillColor="color" yName="Count" name="@item.FeedbackChannel" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Bar">
+                                        <e-series-marker>
+                                            <e-series-datalabel visible="true" position="Top">
+                                                <e-font color="#ffffff" fontWeight="600"></e-font>
+                                            </e-series-datalabel>
+                                        </e-series-marker>
+                                    </e-series>
+                                }
+                            </e-series-collection>
+                            <e-chart-legendsettings visible="true"></e-chart-legendsettings>
+                            <e-chart-tooltipsettings enable="true"></e-chart-tooltipsettings>
+                        </ejs-chart>
+                    }
+                    else
+                    {
+                        await Html.RenderPartialAsync("~/Views/ReportPage/_NoReport.cshtml");
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer_spacing"></div>
+</div>
+<ejs-scripts></ejs-scripts>

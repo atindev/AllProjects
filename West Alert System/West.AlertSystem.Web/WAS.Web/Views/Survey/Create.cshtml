@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/was/css/Survey/create.css" rel="stylesheet" />
+<link href="~/was/css/Survey/SurveyAll.css" rel="stylesheet" />
+<script src="~/was/js/Survey/surveyGlobal.js"></script>
+<script src="~/was/js/Survey/ratingQuestion.js"></script>
+
+<div class="content-wrapper" style="padding-bottom:100px;">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8">
+                    <h1 class="m-0 text-dark">
+                        <a href="/WAS/Survey/List" title="Back to survey list">
+                            <button type="button" class="btn btn-reset btn-default">
+                                <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                            </button>
+                        </a>Create Survey
+                    </h1>
+                </div><!-- /.col -->
+                <div class="col-lg-2">
+
+                </div><!-- /.col -->
+
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8 SurveyWASCreate SurveyNewWidth">
+                    <div class="SurveyIntroTop survey_card shadow">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="required">Survey Title</label>
+                                    <input type="text" class="form-control" placeholder="" id="idSurveySubject" maxlength="100">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea class="form-control" rows="3" id="idSurveyDescription" maxlength="1000"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="idSurveyContent">
+
+                    </div>
+                    <div class="col-md-12 text-md-right p-0">
+                        <button type="button" class="btn--a add_new_post" id="idSurveyAddQuestion"><img src="~/was/img/survey_images/Survey_Add_Question.svg" alt="" width="25">Add New Question</button>
+                        <button type="button" class="btn--a createNewSurey" id="idSaveSurvey">Save Survey</button>
+                    </div>
+                </div>
+                <div class="col-lg-2"></div>
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+</div>
+
+<script src="~/was/js/Survey/survey.js"></script>

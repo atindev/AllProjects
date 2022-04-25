@@ -1,0 +1,123 @@
+﻿.e-grid .e-headercell.customcss .e-headertext, .e-grid .e-headercell.customcssAuthor .e-headertext {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: bold;
+    color: black !important;
+}
+
+.e-grid .e-headercell.customcssLastUpdated .e-headertext {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: bold;
+    color: black !important;
+}
+
+.e-rowcell.customcss {
+    font-size: 0.95rem;
+    white-space: normal !important;
+}
+
+.e-rowcell.customcssAuthor {
+    font-size: 0.95rem;
+    white-space: normal !important;
+    position: relative;
+    padding: 8px 2px !important;
+}
+
+.e-rowcell.customcssLastUpdated {
+    font-size: 0.95rem;
+    white-space: normal !important;
+}
+
+.clsLastUpdated {
+    line-height: 1.5 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+}
+
+.clsAuthor {
+    line-height: 1.5 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    width: 90% !important;
+    font-size: 0.9em;
+    margin: 0 auto;
+}
+.clsGroupName {
+    line-height: 1.5 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+}
+.clsGroupDescription {
+    line-height: 1.5 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+}
+
+.e-grid.e-gridhover tr[role='row']:not(.e-editedrow):hover .e-rowcell:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-gridhover tr[role='row']:hover .e-detailrowcollapse:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-gridhover tr[role='row']:hover .e-rowdragdrop:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-rtl .e-gridhover tr[role='row']:hover .e-rowdragdrop:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell), .e-grid.e-gridhover tr[role='row']:hover .e-detailrowexpand:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell) {
+    background-color: white !important;
+    color: #000 !important;
+}
+
+.table-badge {
+    font-size: .8rem;
+    font-weight: 300;
+    padding: 2px 4px;
+    position: relative;
+    right: 8px;
+    top: -18px;
+    text-align:center;
+}
+
+.people-color {
+    color: #3c8dbc;
+}
+
+.e-grid .e-rowcell {
+    height: 64px !important;
+}
+.DN{
+    display:none !important;
+}
+.e-grid .e-headercell.customcssDetails .e-headertext {
+    font-size: 1rem;
+    font-family: 'Source Sans Pro';
+    font-size: 15px;
+    font-weight: bold;
+    color: black !important;
+}
+#idLoadSubscriptionView .e-checkbox-wrapper .e-frame.e-check, #GridFilterdSubscriptions .e-css.e-checkbox-wrapper .e-frame.e-check {
+    background-color: #1e7e34;
+}
+#idLoadSubscriptionView .e-checkbox-wrapper {
+    position: absolute;
+    top: 31%;
+    left: 23%;
+}
+.deleteSubscription{
+    padding:12px;
+}
+#idselectForPeople .select2-container {
+    width: calc(100% - 40px) !important;
+}
+
+#idselectForPeople .btn-primary {
+    width: 40px !important;
+}
+
+
+

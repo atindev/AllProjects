@@ -1,0 +1,312 @@
+﻿@import url(//fonts.googleapis.com/css?family=Lato:300:400);
+
+body {
+    margin: 0;
+    font-family: 'Lato', sans-serif;
+}
+
+h1 {
+    font-family: 'Lato', sans-serif!important;
+    font-weight: 300!important;
+    letter-spacing: 2px!important;
+    font-size: 48px!important;
+    color: #005596!important;
+    margin: 20px 0!important;
+    line-height:54px!important
+}
+
+p {
+    font-family: 'Lato', sans-serif;
+    letter-spacing: 1px;
+    font-size: 14px;
+    color: #fff;
+}
+
+/*.plain-logo {
+    position: absolute;
+    top: 17%;
+    width: 100%;
+}*/
+.modal-content{
+    margin-top:60px;
+}
+.logo-pos {
+    position: relative;
+    margin-left: -50px;
+}
+
+.header {
+    position: relative;
+    text-align: center;
+    background: linear-gradient(60deg, rgba(84,58,183,1) 0%, rgba(0,172,193,1) 100%);
+    background-image: url('/was/img/bg2.png');
+    background-size: cover;
+    color: white;
+}
+
+.logo {
+    width: 50px;
+    fill: white;
+    padding-right: 15px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.inner-header {
+    min-height: 70vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.flex { /*Flexbox for containers*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.waves {
+    position: relative;
+    width: 100%;
+    height: calc(10vh + 7px);
+    margin-bottom: -7px; /*Fix for safari gap*/
+    max-height: 150px;
+}
+p.alt_login {
+    font-size: 20px;
+    color: #005596;
+    font-weight: 700;
+    margin-top: 50px;
+}
+p.alt_login a{
+    margin-top: 20px;
+    font-size: 16px;
+    padding: 7px 30px;
+}
+.button {
+    font-size: 20px;
+    text-decoration: none;
+    color: #ffffff;
+    border: #005696 1px solid;
+    padding: 10px 50px;
+    border-radius: 35px;
+    position: relative;
+    display: inline-block;
+    font-weight: 400;
+    background-color: #005696;
+    line-height: 24px;
+}
+
+.button:hover {
+    background-color: transparent;
+    color: #005696;
+}
+.button.secondary{
+    background-color: #00B14F;
+    border: #00B14F 1px solid;
+
+}
+.button.secondary:hover{
+    background-color: transparent;
+    color: #00B14F
+}
+.content {
+    position: relative;
+    height: 20vh;
+    text-align: center;
+    background-color: #005596;
+}
+img{
+    max-width:100%;
+    height:auto;
+}
+/* Animation */
+
+.parallax > use {
+    animation: move-forever 25s cubic-bezier(.55,.5,.45,.5) infinite;
+}
+
+    .parallax > use:nth-child(1) {
+        animation-delay: -2s;
+        animation-duration: 7s;
+    }
+
+    .parallax > use:nth-child(2) {
+        animation-delay: -3s;
+        animation-duration: 10s;
+    }
+
+    .parallax > use:nth-child(3) {
+        animation-delay: -4s;
+        animation-duration: 13s;
+    }
+
+    .parallax > use:nth-child(4) {
+        animation-delay: -5s;
+        animation-duration: 20s;
+    }
+
+@keyframes move-forever {
+    0% {
+        transform: translate3d(-90px,0,0);
+    }
+
+    100% {
+        transform: translate3d(85px,0,0);
+    }
+}
+.header:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(255 255 255 / 70%);
+    left: 0;
+    top: 0;
+}
+.inner-header > .row2 {
+    position:relative;
+}
+.training_view {
+    position: relative;
+    float: right;
+    margin: 10px 20px 0 0;
+    background-color: #005696;
+    color: #fff;
+    font-weight: 700;
+    padding: 6px 20px;
+    text-transform: uppercase;
+    font-size: 13px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+.training_view:hover{
+    color:#f1f1f1;
+}
+.training_view svg{
+    float: left;
+    margin-right: 10px;
+}
+.plain-logo{
+    position:relative;
+}
+.video-play-button {
+    position: absolute;
+    z-index: 10;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    box-sizing: content-box;
+    display: block;
+    width: 16px;
+    height: 16px;
+    background: #005696;
+    border-radius: 50%;
+    padding: 10px 5px 10px 10px;
+    margin-left:60px;
+}
+.video-play-button:before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    display: block;
+    width: 50px;
+    height: 50px;
+    background: #003761;
+    border-radius: 50%;
+    -webkit-animation: pulse-border 1500ms ease-out infinite;
+    animation: pulse-border 1500ms ease-out infinite;
+}
+.video-play-button:after {
+        content: "";
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    display: block;
+    width: 40px;
+    height: 40px;
+    background: #005696;
+    border-radius: 50%;
+    transition: all 200ms;
+}
+.video-play-button span {
+        display: block;
+    position: relative;
+    z-index: 3;
+    width: 0;
+    height: 0;
+    border-left: 14px solid #fff;
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+}
+@-webkit-keyframes pulse-border {
+    0% {
+        transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.5);
+        opacity: 0;
+    }
+}
+
+@keyframes pulse-border {
+    0% {
+        transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.5);
+        opacity: 0;
+    }
+}
+video {
+    width: 100%;
+    height: auto;
+}
+.modal-content .close span {
+    position: absolute;
+    right: -40px;
+    top: -10px;
+    color: #fff;
+    font-size: 40px;
+}
+/*Shrinking for mobile*/
+@media (max-width: 768px) {
+    .waves {
+        height: 40px;
+        min-height: 40px;
+    }
+
+    .content {
+        height: calc(30vh - 33px);
+    }
+
+    h1 {
+        font-size: 24px !important;
+        font-weight: 700 !important;
+        line-height: 28px !important;
+    }
+
+    p.alt_login {
+        font-size: 16px;
+    }
+
+    .training_view {
+        display: inline-block;
+        float: none;
+        margin: 10px auto;
+    }
+    .modal-content .close span {
+        right: 0;
+        top: -45px;
+    }
+}

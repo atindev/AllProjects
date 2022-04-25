@@ -1,0 +1,71 @@
+.TrainingSectionWAS {
+    padding: 30px;
+    margin-bottom: 60px;
+}
+
+.TrainingSectionWAS img {
+    max-width: 100%;
+    height: auto;
+    border:1px solid #c1c1c1;
+}
+
+.TrainingSectionWAS h2 {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.TrainingSectionWAS h3 a, .TCatTitle {
+    color: #1f2d3d;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+    .TrainingSectionWAS h3 a:hover {
+        text-decoration: underline;
+    }
+
+.play_link .fas {
+    font-size: 8px;
+    color: #000;
+    width: 20px;
+    height: 16px;
+    background-color: #d0d0d0;
+    text-align: center;
+    padding-top: 4px;
+    position: absolute;
+    left: 0;
+    top: 5px;
+}
+
+.play_link span {
+    color: #737373;
+    margin-left: 5px;
+}
+
+.play_link a {
+    color: #005596;
+    padding-left: 30px;
+    font-size: 15px;
+}
+
+.WAStrainingCat {
+    margin-top: 40px;
+}
+
+.catSingleItem {
+    border-top: 1px solid #d0d0d0;
+    padding: 12px 0;
+}
+.HeroSection .embed-responsive {
+    border: 2px solid #c1c1c1;
+}
+
+@@media only screen and (max-width: 768px) {
+    .WAStrainingCat {
+        margin-top: 0;
+    }
+
+    .catHeroTop {
+        margin-top: 20px;
+    }
+}

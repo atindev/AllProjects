@@ -1,0 +1,954 @@
+﻿@model WAS.Application.Features.Notification.View.Response
+@{
+    var picture = "/was/img/user2-160x160.jpg";
+    int i = (int)ViewData["i"];
+    string typeClass = (string)ViewData["typeClass"];
+    string contentClass = (string)ViewData["contentClass"];
+    string areaSelected = (string)ViewData["areaSelected"];
+    string classForTimelineDiv = "", classForStepone = "", classForStepthree = "";
+    bool hideDetailsforOthers = (ViewData["hideDetailsforothers"] == null) ? false : (bool)ViewData["hideDetailsforothers"];
+}
+
+<style>
+    @@media screen and (min-width: 500px) {
+        .classForsteps-timeline {
+            width: 50%;
+            margin: 50px auto;
+        }
+
+            .classForsteps-timeline .steps-one, .classForsteps-timeline .steps-three {
+                width: 35%;
+            }
+
+        .stepsthreeOverridenStyle {
+            float: right;
+        }
+    }
+
+    @@media screen and (max-width: 580px) {
+        .customMobilePadding {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        .customMobileShadow {
+            box-shadow: none !important;
+        }
+
+        .WasNotificationRespose {
+            padding: 0 !important;
+        }
+    }
+
+    @@media screen and (max-width: 768px) {
+        .pro-status {
+            clear: both;
+            display: block;
+            white-space: break-spaces;
+        }
+
+        .slider-text {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .card-body {
+            max-width: 100%;
+        }
+
+        .e-accumulationchart {
+            width: 100%;
+            overflow-y: auto;
+        }
+
+        .direct-chat-name {
+            display: block;
+            padding-right: 20px;
+            line-height: 18px;
+            margin-bottom: 3px;
+        }
+
+        .direct-chat-timestamp {
+            font-size: 14px;
+            line-height: 16px;
+            display: block;
+        }
+
+        .chatHeaderWas {
+            position: relative;
+        }
+
+            .chatHeaderWas .float-right img {
+                position: absolute;
+                top: 3px;
+                right: 0;
+            }
+
+        .ResponseIn, .ResponseOut {
+            width: 100% !important;
+        }
+
+        .customBBottom {
+            border-bottom: 1px solid rgba(0,0,0,.125);
+        }
+    }
+
+    .NotificationResponse .card-footer {
+        background-color: #fff;
+        border-top: 1px solid rgba(0,0,0,.125);
+        border-bottom: 1px solid rgba(0,0,0,.125);
+    }
+
+    .NotificationResponse .ResponseOuter:last-child .card-footer {
+        border-bottom: 0;
+    }
+
+    .NotificationResponse .card-body {
+        background-color: #f7f7f7;
+    }
+
+    .ResponseIn, .ResponseOut {
+        width: 95%;
+        position: relative;
+    }
+        .ResponseIn .WasChatBox {
+            margin-left: 50px;
+        }
+
+    .WasNotificationRespose {
+        padding: 1.25rem;
+    }
+        .WasNotificationRespose .btn {
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+        .WasNotificationRespose .direct-chat-img {
+            position: absolute;
+            left: 0;
+            top: 15px;
+        }
+    .AlignSpinnerFlex {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .classForThreesteps .steps-two {
+        min-height: 90px;
+    }
+
+    .classForThreesteps .steps-one:nth-child(2) {
+        display: none !important;
+    }
+
+    @@media screen and (min-width: 500px) {
+        .classForThreesteps {
+            width: 65%;
+            margin: 50px auto;
+        }
+            .classForThreesteps .steps-one, .classForThreesteps .steps-two, .classForThreesteps .steps-three {
+                width: 33%;
+            }
+            .classForThreesteps .steps-two {
+                margin: -50px 0 0 -5%;
+            }
+            .classForThreesteps .steps-three {
+                float: right;
+            }
+    }
+    @@media screen and (max-width: 500px) {
+        .classForThreesteps .text-center {
+            text-align: left !important;
+            overflow: hidden;
+        }
+    }
+</style>
+<div class="card card-default">
+    <input type="hidden" value="@Model.Notification.Id" id="notificaitionId" />
+    <div class="card-header">
+        <h4 class="card-title">
+            <a class="slider-text" data-toggle="collapse" data-parent="#accordion" href="#@("collapse" + Model.Notification.Id)">
+                <strong>
+                    <i class="fas fa-bell text-info noti-label" aria-hidden="true"></i>  Notification @if (i != 0)
+                    {<span> #@i.ToString()</span>}
+                </strong>
+            </a>
+            @if (Model.Notification.IsPrivateNotification)
+            {
+                <a value="notificationDetails" title="Private Notifications will be visible only for the administrator who created them. Notification content, delivery reports, or responses from employees will not be visible to any other administrators." href="/WAS/Notification/View?NotificationId=@Model.Notification.Id" class="icon-button preview iconPositionCorrection"><i class="fas fa-lock icon-preview" aria-hidden="true"></i><span></span></a>
+            }
+            else
+            {
+                <a value="notificationDetails" href="/WAS/Notification/View?NotificationId=@Model.Notification.Id" class="icon-button preview iconPositionCorrection"><i aria-hidden="true" class="fas fa-info-circle icon-preview"></i><span></span></a>
+            }
+        </h4>
+        @if (Model.Notification.Status.ToString() == "Sent")
+        {
+            <span class="float-md-right badge bg-warning pro-status timeSpanConvert" utcTime="@Model.Notification.SentDate?.ToString()" timeZone="@Model.Notification.CreatedTimeZone"><i class="far fa-calendar-alt" aria-hidden="true"></i></span>
+        }
+        else
+        {
+            <span class="float-right badge bg-warning pro-status timeSpanConvert" utcTime="@Model.Notification.ScheduledTime?.ToString()" timeZone="@Model.Notification.TimeZone"><i class="far fa-calendar-alt" aria-hidden="true"></i></span>
+
+        }
+    </div>
+
+    <div id="@("collapse" + Model.Notification.Id)" class="panel-collapse collapse in @if (i == 0) {<span> show </span>}">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <section id="Steps" class="steps-section">
+                        @{
+                            classForTimelineDiv = (Model.Notification.IsApprovalRequired == false) ? "classForsteps-timeline" : "";
+                            if (Model.Notification.IsPrivateNotification && (Model.Notification.IsApprovalRequired ?? false))
+                                classForTimelineDiv = "classForThreesteps";
+                            classForStepone = (Model.Notification.IsApprovalRequired == false) ? "stepOneOverridenStyle" : "";
+                            classForStepthree = (Model.Notification.IsApprovalRequired == false) ? "stepsthreeOverridenStyle" : "";
+
+                        }
+
+                        @if (!hideDetailsforOthers)
+                        {
+
+                            <div class="steps-timeline @classForTimelineDiv">
+
+                                <div class="steps-one @classForStepone">
+                                    <img src="@picture" class="user-image img-circle elevation-2 steps-img" alt="User Image" data-useremail="@Model.Notification.CreatedBy">
+                                    <h3 class="steps-name">
+                                        Created
+                                    </h3>
+                                    <div class="text-center">
+                                        <a href="#"><span class="username ad-user" data-useremail="@Model.Notification.CreatedBy"></span></a><br />
+                                        @if (@Model.Notification.CreaterLocation != null && @Model.Notification.CreaterLocation != "")
+                                        {
+                                            <span class="description userWithLocation"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> @Model.Notification.CreaterLocation</span><br />
+                                        }
+                                        <span class="description timeSpanConvert timeUpdated" utcTime="@Model.Notification.CreatedDate.ToString()" timeZone="@Model.Notification.CreatedTimeZone"></span>
+                                    </div>
+                                </div>
+
+                                <div class="steps-one">
+
+                                    @if ((Model.Notification.IsApprovalRequired == false) || (Model.Notification.IsPrivateNotification))
+                                    {
+                                        <div class="steps-img bg-warning" style="display:none"><i class="fas fa-clock status-bub" aria-hidden="true"></i></div>
+                                    }
+
+                                    else
+                                    {
+                                        @switch (Model.Notification.Status)
+                                        {
+
+                                            case WAS.Application.Common.Enum.Status.FirstLevelRejected:
+                                                <div class="steps-img bg-danger"><i class="fas fa-times status-bub" aria-hidden="true"></i></div>
+                                                <h3 class="steps-name">
+                                                    Rejected
+                                                </h3>
+                                                <div class="text-center">
+                                                    <a href="#"><span class="username ad-user" data-useremail="@Model.Notification.ApprovedBy"></span></a><br />
+                                                    @if (@Model.Notification.FirstLevelApproverLocation != null && @Model.Notification.FirstLevelApproverLocation != "")
+                                                    {
+                                                        <span class="description userWithLocation"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> @Model.Notification.FirstLevelApproverLocation</span><br />
+                                                    }
+                                                    <span class="description timeSpanConvert timeUpdated" utcTime="@Model.Notification.ApprovedDate?.ToString()" timeZone="@Model.Notification.ApprovedTimeZone"></span>
+                                                </div>
+                                                break;
+                                            case WAS.Application.Common.Enum.Status.Submitted:
+                                                <div class="steps-img bg-warning"><i class="fas fa-clock status-bub" aria-hidden="true"></i></div>
+                                                <h3 class="steps-name">
+                                                    Approval Pending
+                                                </h3>
+                                                break;
+                                            default:
+
+                                                <img src="@picture" class="user-image img-circle elevation-2 steps-img" alt="User Image" data-useremail="@Model.Notification.ApprovedBy">
+                                                <h3 class="steps-name">Approved</h3>
+                                                <div class="text-center">
+                                                    <a href="#"><span class="username ad-user" data-useremail="@Model.Notification.ApprovedBy"></span></a><br />
+                                                    @if (@Model.Notification.FirstLevelApproverLocation != null && @Model.Notification.FirstLevelApproverLocation != "")
+                                                    {
+                                                        <span class="description userWithLocation"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> @Model.Notification.FirstLevelApproverLocation</span><br />
+                                                    }
+                                                    <span class="description timeSpanConvert timeUpdated" utcTime="@Model.Notification.ApprovedDate?.ToString()" timeZone="@Model.Notification.ApprovedTimeZone"></span>
+                                                </div>
+
+                                                break;
+                                        }
+
+                                    }
+
+                                </div>
+
+                                <div class="steps-two">
+
+                                    @if (Model.Notification.IsApprovalRequired == false)
+                                    {
+                                        <div class="steps-img bg-warning" style="display:none;"><i class="fas fa-clock status-bub" aria-hidden="true"></i></div>
+
+                                    }
+                                    else
+                                    {
+                                        @switch (Model.Notification.Status)
+                                        {
+                                            case WAS.Application.Common.Enum.Status.Submitted:
+                                                <div class="steps-img bg-warning"><i class="fas fa-clock status-bub" aria-hidden="true"></i></div>
+                                                <h3 class="steps-name">
+                                                    Final Approval Pending
+                                                </h3>
+                                                break;
+                                            case WAS.Application.Common.Enum.Status.FirstLevelApproved:
+                                                if (Model.Notification.IsPrivateNotification && (Model.Notification.IsApprovalRequired ?? false))
+                                                {
+
+                                                    <img src="@picture" class="user-image img-circle elevation-2 steps-img" style="margin-top: 3px;" alt="User Image" data-useremail="@Model.Notification.ApproverForPrivate">
+                                                    <h3 class="steps-name">Pending with</h3>
+                                                    <div class="text-center">
+                                                        <a href="#"><span class="username ad-user" data-useremail="@Model.Notification.ApproverForPrivate"></span></a><br />
+                                                        @if (@Model.Notification.PrivateApproverLocation != null && @Model.Notification.PrivateApproverLocation != "")
+                                                        {
+                                                            <span class="description userWithLocation"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> @Model.Notification.PrivateApproverLocation</span><br />
+                                                        }
+                                                    </div>
+
+                                                }
+                                                else
+                                                {
+                                                    <div class="steps-img bg-warning"><i class="fas fa-clock status-bub" aria-hidden="true"></i></div>
+                                                    <h3 class="steps-name">
+                                                        Final Approval Pending
+                                                    </h3>
+                                                }
+                                                break;
+                                            case WAS.Application.Common.Enum.Status.FirstLevelRejected:
+                                                <div class="steps-img bg-default"><i class="fas fa-clipboard-check status-bub" aria-hidden="true"></i></div>
+                                                <h3 class="steps-name">
+                                                    Communication Team
+                                                </h3>
+                                                <div class="text-center">
+                                                </div>
+                                                break;
+                                            case WAS.Application.Common.Enum.Status.SecondLevelApproved:
+                                                <img src="@picture" class="user-image img-circle elevation-2 steps-img" alt="User Image" data-useremail="@Model.Notification.FinalApprovalBy">
+                                                <h3 class="steps-name">Approved</h3>
+                                                <div class="text-center">
+                                                    <a href="#"><span class="username ad-user" data-useremail="@Model.Notification.FinalApprovalBy"></span></a><br />
+                                                    @if (@Model.Notification.SecondLevelApproverLocation != null && @Model.Notification.SecondLevelApproverLocation != "")
+                                                    {
+                                                        <span class="description userWithLocation"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> @Model.Notification.SecondLevelApproverLocation</span><br />
+                                                    }
+                                                    <span class="description timeSpanConvert timeUpdated" utcTime="@Model.Notification.FinalApprovalDate?.ToString()" timeZone="@Model.Notification.FinalApprovalTimeZone"></span>
+                                                </div>
+                                                break;
+                                            case WAS.Application.Common.Enum.Status.SecondLevelRejected:
+                                                <div class="steps-img bg-danger"><i class="fas fa-times status-bub" aria-hidden="true"></i></div>
+                                                <h3 class="steps-name">
+                                                    Rejected
+                                                </h3>
+                                                <div class="text-center">
+                                                    <a href="#"><span class="username ad-user" data-useremail="@Model.Notification.FinalApprovalBy"></span></a><br />
+                                                    @if (@Model.Notification.SecondLevelApproverLocation != null && @Model.Notification.SecondLevelApproverLocation != "")
+                                                    {
+                                                        <span class="description userWithLocation"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> @Model.Notification.SecondLevelApproverLocation</span><br />
+                                                    }
+                                                    <span class="description timeSpanConvert timeUpdated" utcTime="@Model.Notification.FinalApprovalDate?.ToString()" timeZone="@Model.Notification.FinalApprovalTimeZone"></span>
+                                                </div>
+                                                break;
+                                            case WAS.Application.Common.Enum.Status.Sent:
+                                                <img src="@picture" class="user-image img-circle elevation-2 steps-img" alt="User Image" data-useremail="@Model.Notification.FinalApprovalBy">
+                                                <h3 class="steps-name">Approved</h3>
+                                                <div class="text-center">
+                                                    <a href="#"><span class="username ad-user" data-useremail="@Model.Notification.FinalApprovalBy"></span></a><br />
+                                                    @if (@Model.Notification.SecondLevelApproverLocation != null && @Model.Notification.SecondLevelApproverLocation != "")
+                                                    {
+                                                        <span class="description userWithLocation"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> @Model.Notification.SecondLevelApproverLocation</span><br />
+                                                    }
+                                                    <span class="description timeSpanConvert timeUpdated" utcTime="@Model.Notification.FinalApprovalDate?.ToString()" timeZone="@Model.Notification.FinalApprovalTimeZone"></span>
+                                                </div>
+                                                break;
+                                            case WAS.Application.Common.Enum.Status.Failed:
+                                                <img src="@picture" class="user-image img-circle elevation-2 steps-img" alt="User Image" data-useremail="@Model.Notification.FinalApprovalBy">
+                                                <h3 class="steps-name">Approved</h3>
+                                                <div class="text-center">
+                                                    <a href="#"><span class="username ad-user" data-useremail="@Model.Notification.FinalApprovalBy"></span></a><br />
+                                                    @if (@Model.Notification.SecondLevelApproverLocation != null && @Model.Notification.SecondLevelApproverLocation != "")
+                                                    {
+                                                        <span class="description userWithLocation"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> @Model.Notification.SecondLevelApproverLocation</span><br />
+                                                    }
+                                                    <span class="description timeSpanConvert timeUpdated" utcTime="@Model.Notification.FinalApprovalDate?.ToString()" timeZone="@Model.Notification.FinalApprovalTimeZone"></span>
+                                                </div>
+                                                break;
+                                        }
+                                    }
+
+                                </div>
+
+                                <div class="steps-three @classForStepthree">
+                                    @switch (Model.Notification.Status)
+                                    {
+                                        case WAS.Application.Common.Enum.Status.Sent:
+                                            <div class="steps-img bg-success"><i class="fas fa-clipboard-check status-bub" aria-hidden="true"></i></div>
+                                            <h3 class="steps-name">
+                                                Sent to
+                                            </h3>
+                                            <div class="text-center">
+                                                <span class="username">
+                                                    <a href="#">
+                                                        @string.Join(", ", @Model.Notification.GroupSubscribers.Select(x => x.GroupName).ToList()) @if (Model.Notification.GroupSubscribers.Any() && Model.Notification.SubscriberNames.Any())
+                                                        {<span>, </span>} @string.Join(", ", @Model.Notification.SubscriberNames.ToList())
+                                                    </a><br>
+                                                </span>
+                                                <span class="description timeSpanConvert timeUpdated" utcTime="@Model.Notification.SentDate.ToString()" timeZone="@Model.Notification.CreatedTimeZone"></span>
+                                            </div>
+                                            break;
+
+                                        case WAS.Application.Common.Enum.Status.SecondLevelApproved:
+
+                                            @if (Model.Notification.ScheduledTime > DateTime.UtcNow)
+                                            {
+                                                <div class="steps-img bg-default"><i class="fas fa-clipboard-check status-bub" aria-hidden="true"></i></div>
+                                                <h3 class="steps-name">
+                                                    Scheduled
+                                                </h3>
+                                                <div class="text-center">
+                                                    <span class="description timeSpanConvert timeUpdated" utcTime="@Model.Notification.ScheduledTime?.ToString()" timeZone="@Model.Notification.TimeZone"></span>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="steps-img bg-success classAlignCenter AlignSpinnerFlex notification-sending"><i class="spinner-border" aria-hidden="true"></i></div>
+                                                <h3 class="steps-name">
+                                                    Sending . .
+                                                </h3>
+                                            }
+                                            break;
+
+                                        case WAS.Application.Common.Enum.Status.Failed:
+                                            <div class="steps-img bg-danger"><i class="fas fa-times status-bub notification-failed" aria-hidden="true"></i></div>
+                                            <h3 class="steps-name">
+                                                Sending Failed
+                                            </h3>
+                                            break;
+                                        default:
+                                            <div class="steps-img bg-default"><i class="fas fa-clipboard-check status-bub" aria-hidden="true"></i></div>
+                                            <h3 class="steps-name">
+                                                Scheduled
+                                            </h3>
+                                            <div class="text-center">
+                                                <span class="description timeSpanConvert timeUpdated" utcTime="@Model.Notification.ScheduledTime?.ToString()" timeZone="@Model.Notification.TimeZone"></span>
+                                            </div>
+                                            break;
+                                    }
+                                </div>
+
+                            </div><!-- /.steps-timeline -->
+
+                        }
+                    </section>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card-body customMobilePadding">
+            <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                @if (Model.Notification.IsText)
+                {
+                    <li class="nav-Model.Notification">
+                        <a class="nav-link @typeClass report-tab" data-tab="text" id="custom-tabs-three-home-tab" data-toggle="pill" href="#@("textTab" + i)" role="tab" aria-controls="custom-tabs-three-home" aria-selected=@areaSelected><i class="fas fa-sms" aria-hidden="true"></i> SMS</a>
+                    </li>
+                    typeClass = "";
+                    areaSelected = "false";
+                }
+
+                @if (Model.Notification.IsVoice)
+                {
+
+                    <li class="nav-Model.Notification">
+                        <a class="nav-link @typeClass report-tab" data-tab="voice" id="custom-tabs-three-messages-tab" data-toggle="pill" href="#@("voiceTab" + i)" role="tab" aria-controls="custom-tabs-three-messages" aria-selected=@areaSelected><i class="fas fa-microphone-alt" aria-hidden="true"></i> Voice</a>
+                    </li>
+                    typeClass = "";
+                    areaSelected = "false";
+
+                }
+
+                @if (Model.Notification.IsEmail)
+                {
+                    <li class="nav-Model.Notification">
+                        <a class="nav-link @typeClass report-tab" data-tab="email" id="custom-tabs-three-profile-tab" data-toggle="pill" href="#@("emailTab" + i)" role="tab" aria-controls="custom-tabs-three-profile" aria-selected=@areaSelected><i class="fas fa-envelope-open-text" aria-hidden="true"></i> Email</a>
+                    </li>
+                    typeClass = "";
+                    areaSelected = "false";
+
+                }
+
+                @if (Model.Notification.IsWhatsApp)
+                {
+                    <li class="nav-Model.Notification">
+                        <a class="nav-link @typeClass report-tab" data-tab="whatsapp" id="custom-tabs-three-whatsapp-tab" data-toggle="pill" href="#@("whatsappTab" + i)" role="tab" aria-controls="custom-tabs-three-whatsapp" aria-selected=@areaSelected><i class="fab fa-whatsapp-square" aria-hidden="true"></i> WhatsApp</a>
+                    </li>
+                    typeClass = "";
+                    areaSelected = "false";
+                }
+            </ul>
+        </div>
+        <div class="card-body customMobilePadding">
+            <div class="tab-content" id="custom-tabs-three-tabContent">
+                @if (Model.Notification.IsText)
+                {
+                    <div class="tab-pane fade @contentClass" id="@("textTab" + i)" role="tabpanel" aria-labelledby="custom-tabs-three-home-tab">
+                        <div class="row m-0">
+                            <div class="col-sm-12">
+                                @Model.Notification.TextMessage
+                            </div>
+                            <div class="card-body pl-0 pr-0">
+                                @if (!hideDetailsforOthers)
+                                {
+                                    <div class="row m-0">
+                                        <div class="col-lg-6 customMobilePadding">
+                                            <div class="card card-outline card-primary customMobileShadow customBBottom">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Members & Group</h3>
+                                                    <div class="card-tools">
+                                                    </div>
+                                                    <!-- /.card-tools -->
+                                                </div>
+                                                <!-- /.card-header -->
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="info-box ">
+                                                                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-user-friends" aria-hidden="true"></i></span>
+
+                                                                <div class="info-box-content">
+                                                                    <span class="info-box-text">Total Members </span>
+                                                                    <span class="info-box-number">@Model.Notification.TextSentToCount</span>
+                                                                </div>
+                                                                <!-- /.info-box-content -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            @foreach (var group in Model.Notification.GroupSubscribers)
+                                                            {
+                                                                <div class="chip">
+                                                                    <div class="chip-head" title="@group.TextSubscribersCount out of @group.GroupSubscriberCount member(s) preferred for SMS notification in this group">@group.TextSubscribersCount</div>
+                                                                    <div class="chip-content">@group.GroupName</div>
+                                                                </div>
+                                                            }
+                                                            @foreach (var people in Model.Notification.SubscriberNames)
+                                                            {
+                                                                <div class="chip">
+                                                                    <div class="chip-content">@people</div>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <p id="smsTab" class="member-count-info position-relative"><i aria-hidden="true" class="fas fa-info-circle"></i>Members & Group shows subscriber(s) count during the creation of this notification</p>
+                                                </div>
+                                            </div>
+                                            <!-- /.card-body -->
+                                        </div>
+
+                                        @if ((Model.Notification.Status == WAS.Application.Common.Enum.Status.Sent || Model.Notification.Status == WAS.Application.Common.Enum.Status.Failed) && @Model.Notification.TextSentToCount > 0)
+                                        {
+                                            <div class="col-lg-6 customMobilePadding">
+                                                <div class="card card-outline card-primary customMobileShadow customBBottom">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">SMS Delivery Report</h3>
+                                                        <div class="card-tools">
+                                                            <button type="button" class="btn btn-tool btn-reset" onclick="RefreshChart(@i, 'textContainer', '@Model.Notification.Id', '.text-spin')">
+                                                                <i class="fas fa-sync-alt text-spin" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                                        <!-- /.card-tools -->
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    @if (Model.Notification.DeliveryStatusText.Any())
+                                                    {
+                                                        <div class="card-body text-center delivery-report">
+                                                            <ejs-accumulationchart id="@("textContainer" + i)" width="440" height="300" pointClick="getfailureReport" notificationId="@Model.Notification.Id" typeof="SMS">
+                                                                <e-accumulation-series-collection>
+                                                                    <e-accumulation-series dataSource="Model.Notification.DeliveryStatusText" xName="Status" yName="Count" name="SMS Delivery Status" startAngle="270" endAngle="90" radius="90%" innerRadius="40%" explode="true" height="150" pointColorMapping="Color">
+                                                                    </e-accumulation-series>
+                                                                </e-accumulation-series-collection>
+                                                                <e-accumulationchart-legendsettings visible="true"></e-accumulationchart-legendsettings>
+                                                                <e-accumulationchart-tooltipsettings enable="true"></e-accumulationchart-tooltipsettings>
+                                                            </ejs-accumulationchart>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        await Html.RenderPartialAsync("~/Views/Event/_NoDeliveryReport.cshtml");
+                                                    }
+                                                    <!-- /.card-body -->
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    contentClass = "";
+                }
+
+                @if (Model.Notification.IsVoice)
+                {
+                    <div class="tab-pane fade @contentClass" id="@("voiceTab" + i)" role="tabpanel" aria-labelledby="custom-tabs-three-profile-tab">
+                        <div class="col-sm-12 mb-3">
+                            @Model.Notification.VoiceMessage
+                        </div>
+                        <div class="row m-0">
+                            <div class="col-sm-12">
+                                <dl class="row">
+                                    <dt class="col-sm-3">Repeat count</dt>
+                                    <dd class="col-sm-9">
+                                        @Model.Notification.VoiceRepeatCount
+                                    </dd>
+                                </dl>
+                            </div>
+
+                            <div class="card-body pl-0 pr-0">
+                                @if (!hideDetailsforOthers)
+                                {
+                                    <div class="row m-0">
+                                        <div class="col-lg-6 customMobilePadding">
+                                            <div class="card card-outline card-primary customMobileShadow customBBottom">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Members & Group</h3>
+                                                    <div class="card-tools">
+                                                    </div>
+                                                    <!-- /.card-tools -->
+                                                </div>
+                                                <!-- /.card-header -->
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="info-box ">
+                                                                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-user-friends" aria-hidden="true"></i></span>
+
+                                                                <div class="info-box-content">
+                                                                    <span class="info-box-text">Total Members </span>
+                                                                    <span class="info-box-number">@Model.Notification.VoiceSentToCount</span>
+                                                                </div>
+                                                                <!-- /.info-box-content -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            @foreach (var group in Model.Notification.GroupSubscribers)
+                                                            {
+                                                                <div class="chip">
+                                                                    <div class="chip-head" title="@group.VoiceSubscribersCount out of @group.GroupSubscriberCount member(s) preferred for Voice notification in this group">@group.VoiceSubscribersCount</div>
+                                                                    <div class="chip-content">@group.GroupName</div>
+                                                                </div>
+                                                            }
+                                                            @foreach (var people in Model.Notification.SubscriberNames)
+                                                            {
+                                                                <div class="chip">
+                                                                    <div class="chip-content">@people</div>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <p id="voiceTab" class="member-count-info position-relative"><i aria-hidden="true" class="fas fa-info-circle"></i>Members & Group shows subscriber(s) count during the creation of this notification</p>
+                                                </div>
+                                            </div>
+                                            <!-- /.card-body -->
+                                        </div>
+
+                                        @if ((Model.Notification.Status == WAS.Application.Common.Enum.Status.Sent || Model.Notification.Status == WAS.Application.Common.Enum.Status.Failed) && @Model.Notification.VoiceSentToCount > 0)
+                                        {
+                                            <div class="col-lg-6 customMobilePadding">
+                                                <div class="card card-outline card-primary customMobileShadow customBBottom">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">Voice Delivery Report</h3>
+                                                        <div class="card-tools">
+                                                            <button type="button" class="btn btn-tool btn-reset" onclick="RefreshChart(@i, 'voiceContainer', '@Model.Notification.Id', '.voice-spin')">
+                                                                <i class="fas fa-sync-alt voice-spin" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                                        <!-- /.card-tools -->
+                                                    </div>
+                                                    @if (Model.Notification.DeliveryStatusVoice.Any())
+                                                    {
+                                                        <div class="card-body text-center delivery-report">
+                                                            <ejs-accumulationchart id="@("voiceContainer" + i)" width="440" height="300" pointClick="getfailureReport" notificationId="@Model.Notification.Id" typeof="Voice">
+                                                                <e-accumulation-series-collection>
+                                                                    <e-accumulation-series dataSource="Model.Notification.DeliveryStatusVoice" xName="Status" yName="Count" name="Voice Delivery Status" startAngle="270" endAngle="90" radius="90%" innerRadius="40%" explode="true" height="150" pointColorMapping="Color">
+                                                                    </e-accumulation-series>
+                                                                </e-accumulation-series-collection>
+                                                                <e-accumulationchart-legendsettings visible="true"></e-accumulationchart-legendsettings>
+                                                                <e-accumulationchart-tooltipsettings enable="true"></e-accumulationchart-tooltipsettings>
+                                                            </ejs-accumulationchart>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        await Html.RenderPartialAsync("~/Views/Event/_NoDeliveryReport.cshtml");
+                                                    }
+                                                    <!-- /.card-body -->
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+
+                    </div>
+                    contentClass = "";
+                }
+
+                @if (Model.Notification.IsEmail)
+                {
+                    <div class="tab-pane fade @contentClass" id="@("emailTab" + i)" role="tabpanel" aria-labelledby="custom-tabs-three-messages-tab">
+                        <div class="col-sm-12 mb-3">
+                            @Model.Notification.EmailMessage
+                        </div>
+                        <div class="row m-0">
+                            <div class="col-sm-12">
+                                <dl class="row">
+                                    <dt class="col-sm-3">Subject</dt>
+                                    <dd class="col-sm-9"> @Model.Notification.EmailSubject</dd>
+                                    <dt class="col-sm-3">Attachment</dt>
+                                    <dd class="col-sm-9">
+                                        @if (Model.Notification.EmailAttachments.Any())
+                                        {
+                                            foreach (var ea in Model.Notification.EmailAttachments)
+                                            {
+                                                <a href="@Url.Action("ViewAttachment", "Notification", new { NotificationEmailId = ea.NotificationEmailId, FileName = ea.FileName })"
+                                                   target="popup"
+                                                   onclick="window.open('@Url.Action("ViewAttachment", "Notification", new { NotificationEmailId = ea.NotificationEmailId, FileName = ea.FileName })', 'popup', 'width=600,height=600,scrollbars=no,resizable=no');return false;">
+                                                    @ea.FileName
+                                                </a>
+                                                <br />
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @("No attachment found")
+                                        }
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div class="col-lg-6 customMobilePadding">
+                                @if (!hideDetailsforOthers)
+                                {
+                                    <div class="card card-outline card-primary customMobileShadow customBBottom">
+                                        <div class="card-header">
+                                            <h3 class="card-title">Members & Group</h3>
+                                            <div class="card-tools">
+                                            </div>
+                                            <!-- /.card-tools -->
+                                        </div>
+                                        <!-- /.card-header -->
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="info-box ">
+                                                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-user-friends" aria-hidden="true"></i></span>
+
+                                                        <div class="info-box-content">
+                                                            <span class="info-box-text">Total Members </span>
+                                                            <span class="info-box-number">@Model.Notification.EmailSentToCount</span>
+                                                        </div>
+                                                        <!-- /.info-box-content -->
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    @foreach (var group in Model.Notification.GroupSubscribers)
+                                                    {
+                                                        <div class="chip">
+                                                            <div class="chip-head" title="@group.EmailSubscribersCount out of @group.GroupSubscriberCount member(s) preferred for Email notification in this group">@group.EmailSubscribersCount</div>
+                                                            <div class="chip-content">@group.GroupName</div>
+                                                        </div>
+                                                    }
+                                                    @foreach (var people in Model.Notification.SubscriberNames)
+                                                    {
+                                                        <div class="chip">
+                                                            <div class="chip-content">@people</div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <p id="emailTab" class="member-count-info position-relative"><i aria-hidden="true" class="fas fa-info-circle"></i>Members & Group shows subscriber(s) count during the creation of this notification</p>
+                                        </div>
+                                    </div>
+                                }
+                                <!-- /.card-body -->
+                            </div>
+                        </div>
+
+                    </div>
+                    contentClass = "";
+                }
+
+                @if (Model.Notification.IsWhatsApp)
+                {
+                    <div class="tab-pane fade @contentClass" id="@("whatsappTab" + i)" role="tabpanel" aria-labelledby="custom-tabs-three-whatsapp-tab">
+                        <div class="row m-0">
+                            <div class="col-sm-12">
+                                @Model.Notification.WhatsAppMessage
+                            </div>
+                            <div class="card-body pr-0 pl-0">
+                                @if (!hideDetailsforOthers)
+                                {
+                                    <div class="row m-0">
+                                        <div class="col-lg-6 customMobilePadding">
+                                            <div class="card card-outline card-primary customMobileShadow customBBottom">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Members & Group</h3>
+                                                    <div class="card-tools">
+                                                    </div>
+                                                    <!-- /.card-tools -->
+                                                </div>
+                                                <!-- /.card-header -->
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="info-box ">
+                                                                <span class="info-box-icon bg-success elevation-1"><i class="fas fa-user-friends" aria-hidden="true"></i></span>
+
+                                                                <div class="info-box-content">
+                                                                    <span class="info-box-text">Total Members </span>
+                                                                    <span class="info-box-number">@Model.Notification.WhatsAppSentToCount</span>
+                                                                </div>
+                                                                <!-- /.info-box-content -->
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            @foreach (var group in Model.Notification.GroupSubscribers)
+                                                            {
+                                                                <div class="chip">
+                                                                    <div class="chip-head" title="@group.WhatsAppSubscribersCount out of @group.GroupSubscriberCount member(s) preferred for WhatsApp notification in this group">@group.WhatsAppSubscribersCount</div>
+                                                                    <div class="chip-content">@group.GroupName</div>
+                                                                </div>
+                                                            }
+                                                            @foreach (var people in Model.Notification.SubscriberNames)
+                                                            {
+                                                                <div class="chip">
+                                                                    <div class="chip-content">@people</div>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <p id="whatsappTab" class="member-count-info position-relative"><i aria-hidden="true" class="fas fa-info-circle"></i>Members & Group shows subscriber(s) count during the creation of this notification</p>
+                                                </div>
+                                            </div>
+                                            <!-- /.card-body -->
+                                        </div>
+
+                                        @if ((Model.Notification.Status == WAS.Application.Common.Enum.Status.Sent || Model.Notification.Status == WAS.Application.Common.Enum.Status.Failed) && @Model.Notification.WhatsAppSentToCount > 0)
+                                        {
+                                            <div class="col-lg-6 customMobilePadding">
+                                                <div class="card card-outline card-primary customMobileShadow customBBottom">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title">WhatsApp Delivery Report</h3>
+                                                        <div class="card-tools">
+                                                            <button type="button" class="btn btn-tool btn-reset" onclick="RefreshChart(@i, 'whatsappContainer', '@Model.Notification.Id', '.whatsapp-spin')">
+                                                                <i class="fas fa-sync-alt whatsapp-spin" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                                        <!-- /.card-tools -->
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    @if (Model.Notification.DeliveryStatusWhatsApp.Any())
+                                                    {
+                                                        <div class="card-body text-center delivery-report">
+                                                            <ejs-accumulationchart id="@("whatsappContainer" + i)" width="440" height="300" pointClick="getfailureReport" notificationId="@Model.Notification.Id" typeof="WhatsApp">
+                                                                <e-accumulation-series-collection>
+                                                                    <e-accumulation-series dataSource="Model.Notification.DeliveryStatusWhatsApp" xName="Status" yName="Count" name="WhatsApp Delivery Status" startAngle="270" endAngle="90" radius="90%" innerRadius="40%" explode="true" height="150" pointColorMapping="Color">
+                                                                    </e-accumulation-series>
+                                                                </e-accumulation-series-collection>
+                                                                <e-accumulationchart-legendsettings visible="true"></e-accumulationchart-legendsettings>
+                                                                <e-accumulationchart-tooltipsettings enable="true"></e-accumulationchart-tooltipsettings>
+                                                            </ejs-accumulationchart>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        await Html.RenderPartialAsync("~/Views/Event/_NoDeliveryReport.cshtml");
+                                                    }
+                                                    <!-- /.card-body -->
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    contentClass = "";
+                }
+            </div>
+        </div>
+
+        <div>
+            @if (ViewData["Review"] != null && ViewData["Review"].ToString() != "GlobalAdministrator" && @Model.Notification.CreatedBy != @User.Identity.Name)
+            {
+                <br />
+                <form action="/WAS/Notification/Approve" method="post">
+                    <input class="form-control form-control-sm" name="Comment" type="text" placeholder="Type a comment">
+                    <input type="hidden" name="Id" value="@Model.Notification.Id" />
+                    <input type="hidden" name="ApprovalLevel" value="@ViewData["Review"]" />
+                    <input type="hidden" name="ApprovedTimeZone" value="" id="idFirstLevelActionTimezone" />
+                    <input type="hidden" name="FinalApprovalTimeZone" value="" id="idSecondLevelActionTimezone" />
+
+                    <br>
+                    <div class="card-footer">
+                        <div class="float-right">
+                            <button type="submit" formaction="/WAS/Notification/Reject" class="btn btn-outline-danger classApproverAction">Reject</button>
+                            <button type="submit" class="btn bg-gradient-success classApproverAction">Approve</button>
+                        </div>
+                    </div>
+                </form>
+            }
+        </div>
+
+        @if (Model.Notification.IncomingMessages.Any())
+        {
+            <div class="WasNotificationRespose">
+                <div class="card NotificationResponse customMobileShadow customBBottom">
+                    <div class="card-header card-outline card-primary">
+                        Notification Response
+                    </div>
+                    @foreach (var item in Model.Notification.IncomingMessages)
+                    {
+                        <div class="ResponseOuter">
+                            <div class="card-body">
+                                <div class="ResponseIn">
+                                    <img class="direct-chat-img user-image img-circle" src="@picture" alt="User Image" data-useremail="@item.SubscriberEmail" width="40" title="Responded User Image" />
+                                    <div class="shadow-sm py-2 px-3 mb-3 bg-white rounded WasChatBox">
+                                        <div class="clearfix mb-2 chatHeaderWas">
+                                            <div class="direct-chat-info float-left">
+                                                <span class="direct-chat-name mr-2 username ad-user" data-useremail="@item.SubscriberEmail"></span>
+                                                <span class="direct-chat-timestamp timeSpanConvert" utcTime="@item.CreatedDate.ToString()"></span>
+                                            </div>
+                                            <div class="float-right">
+                                                @if (item.IsText)
+                                                {
+                                                    <img src="/was/img/ic_text.svg" alt="" title="Text Response" width="20" />
+                                                }
+                                                else if (item.IsEmail)
+                                                {
+                                                    <img src="/was/img/ic_Mail.svg" alt="" title="Email Response" width="20" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="/was/img/ic_WhatsApp.svg" alt="" title="WhatsApp Response" width="20" />
+                                                }
+                                            </div>
+                                        </div>
+                                        <p class="m-0 text">@item.Message</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script src="~/was/js/Notification/refreshChart.js"></script>
+<ejs-scripts></ejs-scripts>

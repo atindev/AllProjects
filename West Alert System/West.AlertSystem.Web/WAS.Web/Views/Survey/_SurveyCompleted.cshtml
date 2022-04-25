@@ -1,0 +1,12 @@
+﻿@model string;
+@{
+    string userName = (string)ViewData["CurrUser"];
+}
+<div class="surveyExpired shadow-lg  @Model" id="idSurveyCompleted">
+    <div class="surveyExpiredHead position-relative text-center WelcomeUserSurvey ">
+        <img src="~/was/img/email_start_survey.svg" alt="" width="60" />
+        <p>Thankyou</p>
+        <h3>@userName</h3>
+    </div>
+    <h4 id="idAlertText">You have already completed this survey</h4>
+</div>

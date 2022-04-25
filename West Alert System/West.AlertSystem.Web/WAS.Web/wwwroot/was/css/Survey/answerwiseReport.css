@@ -1,0 +1,13 @@
+﻿.headerText {
+    font-size: 1.1rem !important;
+}
+.spinner-border {
+    margin-top: 18%;
+    margin-left: 17%;
+}
+.classNoBoxShadow{
+    box-shadow:none !important;
+}
+.classDisplayFlex{
+    display:flex;
+}

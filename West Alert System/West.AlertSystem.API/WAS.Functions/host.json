@@ -1,0 +1,47 @@
+{
+  "version": "2.0",
+  "logging": {
+    "applicationInsights": {
+      "samplingExcludedTypes": "Request",
+      "samplingSettings": {
+        "isEnabled": true
+      }
+    }
+  },
+  "Values": {
+    "AzureWebJobsStorage": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzureWebJobsStorage/8332bec0aa414fd6bf5dfbd6a2c8a417)",
+    "ConnectionStringAdmin": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/ConnectionStringAdmin/06d5d375f7d4428c88e61a92b17a1861)",
+    "FromEmailAddress": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/FromEmailAddress/043dca5491b64ded91335b62f71cb324)",
+    "FromName": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/FromName/1077199ea3494665b8e11f75c2bad9bc)",
+    "SendGridApiKey": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/SendGridApiKey/fdbd5c46670a442098a5dc00fa4fbacf)",
+    "WasUrl": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/WasUrl/c62f1145a19148f09375225771339936)"
+  },
+  "AzStorage": {
+    "EmailAttachmentContainer": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzStorage--EmailAttachmentContainer/6a81ec8a8d8b47618bea74a3ec1f7305)",
+    "EmailNotificationQueue": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzStorage--EmailNotificationQueue/0467c929ee494a3f846d2047d77f77d7)",
+    "EmailSendGridTemplateID": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzStorage--EmailSendGridTemplateID/1091de034e214d7e805c49629611ed99)",
+    "PersonalEmailTemplate": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzStorage--PersonalEmailTemplate/c84e97c9e76f41cead598475ec827416)",
+    "SasToken": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzStorage--SasToken/555fed467e514111ad8e2a6fdc3d4a3a)",
+    "SmsNotificationQueue": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzStorage--SmsNotificationQueue/000e2d9f15524e5db4b424762845fe27)",
+    "StorageAccountName": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzStorage--StorageAccountName/cd6f46261dbc4f66a45a84c3aa31132d)",
+    "StorageAccountUrl": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzStorage--StorageAccountUrl/ad7fea3172334ee8b34b92ad999b9499)",
+    "StorageConnectionString": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzStorage--StorageConnectionString/342cb646347b41ecbe3ad4fe5b6f5cfe)",
+    "StorageKey": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzStorage--StorageKey/7a8b123beecc4e10bd8b2b3ca8b0c729)",
+    "SubscriptionConfirmationTemplateID": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzStorage--SubscriptionConfirmationTemplateID/a442a9ecef634274af3b55448427c2d3)",
+    "VoiceNotificationQueue": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzStorage--VoiceNotificationQueue/e50f7909b7064f578cc408bf5369f2a4)",
+    "WhatsAppNotificationQueue": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzStorage--WhatsAppNotificationQueue/8623af962b944d2cbc796b6052b596fc)",
+    "WorkEmailSendGridTemplateID": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzStorage--WorkEmailSendGridTemplateID/43968e427eff462fb0a148cc497f6a9a)",
+    "WorkEmailTemplate": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/AzStorage--WorkEmailTemplate/5fdc21b7a44b430a9c1e90ead5d4b1e1)"
+  },
+  "Graph": {
+    "ClientId": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/Graph--ClientId/fd2d159442ef42c3a96611f0e18d385b)",
+    "ClientSecret": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/Graph--ClientSecret/74716356ca6347138daf921422caa132)",
+    "TenantId": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/Graph--TenantId/13a23605f427483ab32400edda202b8a)",
+    "GraphBaseURL": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/Graph--GraphBaseURL/12c7cf4618ab40568f0d9e318bd7844d)"
+  },
+  "Twilio": {
+    "AccountSid": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/Twilio--AccountSid/5a389caaa6034252b1a674a81df11786)",
+    "AuthToken": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/Twilio--AuthToken/7e82447dbce3454ea31ab7594be2b6ad)",
+    "FromNumber": "@Microsoft.KeyVault(SecretUri=https://was-keyvault-dev.vault.azure.net/secrets/Twilio--FromNumber/06fcdea28a1f4050bd2188e65ed1bed8)"
+  }
+}
