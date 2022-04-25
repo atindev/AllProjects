@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Enterprise.Models">
+      <HintPath>..\..\..\..\..\source\repos\EnterpriseRepository\Enterprise.Models\bin\Debug\netcoreapp2.1\Enterprise.Models.dll</HintPath>
+    </Reference>
+    <Reference Include="Enterprise.Repository">
+      <HintPath>..\..\..\..\..\source\repos\EnterpriseRepository\Enterprise.Repository\bin\Debug\netcoreapp2.1\Enterprise.Repository.dll</HintPath>
+    </Reference>
+    <Reference Include="West.Manufacturing.Model">
+      <HintPath>..\..\..\..\..\source\repos\ManufacturingPOC\MfgSystems.API\bin\Debug\netcoreapp2.1\West.Manufacturing.Model.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicHandler", "DynamicHandler\DynamicHandler.csproj", "{3969FAF6-D664-4C3D-A71D-2F5156911BBF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3969FAF6-D664-4C3D-A71D-2F5156911BBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3969FAF6-D664-4C3D-A71D-2F5156911BBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3969FAF6-D664-4C3D-A71D-2F5156911BBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3969FAF6-D664-4C3D-A71D-2F5156911BBF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FD6BEABB-DB5A-4F23-B21B-D70B23D10C26}
+	EndGlobalSection
+EndGlobal

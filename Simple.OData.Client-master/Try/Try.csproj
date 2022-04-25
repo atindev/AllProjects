@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Simple.OData.Client.Core">
+      <HintPath>..\build\Debug\Simple.OData.Client.V4.Adapter\net452\Simple.OData.Client.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Simple.OData.Client.V4.Adapter">
+      <HintPath>..\build\Debug\Simple.OData.Client.V4.Adapter\net452\Simple.OData.Client.V4.Adapter.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

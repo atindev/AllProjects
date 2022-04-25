@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScaleLibrary_NetStandard", "ScaleLibrary_NetStandard.csproj", "{DFF4A1C2-169B-4726-92E9-E277904B4423}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DFF4A1C2-169B-4726-92E9-E277904B4423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFF4A1C2-169B-4726-92E9-E277904B4423}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFF4A1C2-169B-4726-92E9-E277904B4423}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFF4A1C2-169B-4726-92E9-E277904B4423}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0FA1CBCD-A4DF-47C9-BE7C-BD617A486CA6}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TryCharts.chartPageCopy"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:chart="clr-namespace:Syncfusion.SfChart.XForms;assembly=Syncfusion.SfChart.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <chart:SfChart Grid.Row="0">
+                <chart:SfChart.Legend>
+                    <chart:ChartLegend
+                        DockPosition="Right"
+                        IconHeight="12"
+                        IconWidth="16"
+                        IsIconVisible="True"
+                        OverflowMode="Scroll"
+                        ToggleSeriesVisibility="True">
+                        <chart:ChartLegend.LabelStyle>
+                            <chart:ChartLegendLabelStyle
+                                Margin="5"
+                                Font="Bold,14"
+                                TextColor="Black" />
+                        </chart:ChartLegend.LabelStyle>
+                    </chart:ChartLegend>
+                </chart:SfChart.Legend>
+                <chart:SfChart.Series>
+                    <chart:PieSeries
+                        AnimationDuration="0.6"
+                        ConnectorLineType="Bezier"
+                        DataMarkerPosition="OutsideExtended"
+                        EnableAnimation="True"
+                        EnableSmartLabels="True"
+                        ExplodeOnTouch="True"
+                        GroupMode="Value"
+                        ItemsSource="{Binding ChartValueList}"
+                        LegendIcon="Rectangle"
+                        XBindingPath="StatusDescription"
+                        YBindingPath="StatusTimeSpan">
+                        <chart:PieSeries.ColorModel>
+                            <chart:ChartColorModel Palette="Metro" />
+                        </chart:PieSeries.ColorModel>
+                        <chart:PieSeries.DataMarker>
+                            <chart:ChartDataMarker LabelContent="Percentage" />
+                        </chart:PieSeries.DataMarker>
+                    </chart:PieSeries>
+                </chart:SfChart.Series>
+            </chart:SfChart>
+
+            <chart:SfChart
+                x:Name="barChart"
+                Grid.Row="1"
+                WidthRequest="0.8">
+                <chart:SfChart.Legend>
+                    <chart:ChartLegend
+                        DockPosition="Bottom"
+                        IconHeight="12"
+                        IconWidth="16"
+                        IsIconVisible="True"
+                        OverflowMode="Scroll"
+                        ToggleSeriesVisibility="True">
+                        <chart:ChartLegend.LabelStyle>
+                            <chart:ChartLegendLabelStyle
+                                Margin="5"
+                                Font="Bold,14"
+                                TextColor="Black" />
+                        </chart:ChartLegend.LabelStyle>
+                    </chart:ChartLegend>
+                </chart:SfChart.Legend>
+                <chart:SfChart.SecondaryAxis>
+                    <chart:NumericalAxis IsInversed="True" />
+                </chart:SfChart.SecondaryAxis>
+            </chart:SfChart>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Simple.OData.Client" Version="5.12.0" />
+    <PackageReference Include="West.Manufacturing.Common.Util" Version="1.0.5.56" />
+    <PackageReference Include="West.Manufacturing.Model" Version="1.0.30.28" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Order_DVV_Comp.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Order.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

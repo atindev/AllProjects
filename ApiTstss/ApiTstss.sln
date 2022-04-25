@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiTstss", "ApiTstss.csproj", "{CACB713A-A45F-472D-980D-8C6C23358ECE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CACB713A-A45F-472D-980D-8C6C23358ECE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CACB713A-A45F-472D-980D-8C6C23358ECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CACB713A-A45F-472D-980D-8C6C23358ECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CACB713A-A45F-472D-980D-8C6C23358ECE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2EB0CF7D-3778-4EE8-9FD7-5F4E3C174CE8}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TryCharts.chartPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:chart="clr-namespace:Syncfusion.SfChart.XForms;assembly=Syncfusion.SfChart.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackLayout Grid.Row="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Label x:Name="Weight" Grid.Row="0" />
+                    <Label x:Name="WeightSuccess" Grid.Row="1" />
+                    <Label x:Name="WeightError" Grid.Row="2" />
+                </Grid>
+            </StackLayout>
+            <StackLayout Grid.Row="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Label x:Name="Tare" Grid.Row="0" />
+                    <Label x:Name="TareSuccess" Grid.Row="1" />
+                    <Label x:Name="TareError" Grid.Row="2" />
+                </Grid>
+            </StackLayout>
+            <Button
+                Grid.Row="2"
+                Clicked="Button_Clicked"
+                Text="GetWeight" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
